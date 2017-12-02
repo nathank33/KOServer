@@ -1,0 +1,24 @@
+# Ignore our specific config files
+*.ini
+
+# Ignore zips
+*.zip
+*.rar
+*.7z
+
+# Ignore large server file stuff
+*.aievt
+*.log
+bin/Map/
+bin/Logs/
+.*Debug/
+.*Release/
+
+# Ignore Visual Studio files
+Source/.vs
+*.exe
+*.ilk
+*.pdb
+*.lib
+# .*vcxproj.*
+# .sln
