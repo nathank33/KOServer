@@ -1,0 +1,16 @@
+514 still in 	SaveEvent(UID, 5143);
+514 still in 	SaveEvent(UID, 5144);
+514 still in 	SaveEvent(UID, 5146);
+514 still in 	SelectMsg(UID, 2, savenum, 5142, NPC, 32, 193);
+514 still in 		SelectMsg(UID, 4, savenum, 5143, NPC, 41, 1030, 27, 193);
+514 still in 			SelectMsg(UID, 2, savenum, 5140, NPC, 18, 1029);
+514 still in 			SelectMsg(UID, 2, savenum, 5140, NPC, 18, 1032);
+514 still in 			SelectMsg(UID, 2, savenum, 5140, NPC, 18, 1033);
+514 still in 	SaveEvent(UID, 5145);   
+514 still in local savenum = 514;
+514 still in 	SelectMsg(UID, 2, savenum, 5144, NPC, 3006, 1121);
+514 still in 	SelectMsg(UID, 2, savenum, 5145, NPC, 3006, 1121);
+514 still in 		SelectMsg(UID, 2, savenum, 5147, NPC, 10, 1124);
+514 still in 		SelectMsg(UID, 2, savenum, 5146, NPC, 10, 193);
+514 still in 	SelectMsg(UID, 4, savenum, 5148, NPC, 22, 1125, 23, 1131);
+514 still in 	SelectMsg(UID, 2, savenum, 5149, NPC, 10, 193);

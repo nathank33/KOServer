@@ -1,0 +1,10 @@
+831 still in local savenum = 1831;
+new_line: local savenum = 128;
+831 still in 	MonsterCount = CountMonsterQuestSub(UID, 1831, 1);
+new_line: 	MonsterCount = CountMonsterQuestSub(UID, 128, 1);
+new_line: local savenum = 403;
+new_line: 	MonsterCount = CountMonsterQuestSub(UID, 403, 1);
+new_line: local savenum = 146;
+new_line: 	MonsterCount = CountMonsterQuestSub(UID, 146, 1);
+new_line: local savenum = 415;
+new_line: 	MonsterCount = CountMonsterQuestSub(UID, 415, 1);

@@ -1,0 +1,21 @@
+id_map: {11111: 11111, 974: 1119}
+974 still in  SelectMsg(UID, 3, 974, 8075, NPC, 4481, 101, 8265, 102, 3019, 203);
+new_line:   SelectMsg(UID, 2, 1119, 8084, NPC, 18, 204);
+974 still in  SelectMsg(UID, 16, 974, NPC);
+974 still in SelectMsg(UID, 3, 974, 11705, NPC, 8246, 208, 8254, 209, 8258 , 210, 8265, 211);
+new_line: SelectMsg(UID, 2, 1119, 11686, NPC, 8247,212);
+new_line: SelectMsg(UID, 2, 1119, 11687, NPC, 8248,213);
+new_line: SelectMsg(UID, 2, 1119, 11688, NPC, 8249,214);
+new_line: SelectMsg(UID, 2, 1119, 11689, NPC, 8250,215);
+new_line: SelectMsg(UID, 2, 1119, 11690, NPC, 8251,216);
+new_line: SelectMsg(UID, 2, 1119, 11691, NPC, 8252,217);
+new_line: SelectMsg(UID, 2, 1119, 11692, NPC, 8253,218);
+new_line: SelectMsg(UID, 2, 1119, 11693, NPC, 40223,219);
+new_line:  SelectMsg(UID, 2, 1119, 11695, NPC, 8255,220);
+new_line:  SelectMsg(UID, 2, 1119, 11696, NPC, 8256,221);
+new_line:  SelectMsg(UID, 2, 1119, 11697, NPC, 40223,222);
+new_line:   SelectMsg(UID, 2, 1119, 8084, NPC, 18, 204);
+new_line:  SelectMsg(UID, 2, 1119, 11699, NPC, 8259,223);
+new_line:  SelectMsg(UID, 2, 1119, 11700, NPC, 8260,224);
+new_line:  SelectMsg(UID, 2, 1119, 11701, NPC, 8256,225);
+new_line:  SelectMsg(UID, 2, 1119, 11702, NPC, 40223,226);

@@ -1,0 +1,24 @@
+id_map: {1025: 341, 1027: 370, 1028: 356, 1029: 342, 986: 279, 987: 280, 988: 281, 989: 282, 990: 283, 991: 284}
+new_line: local savenum = 280;
+new_line: 	MonsterCount = CountMonsterQuestSub(UID, 280, 1);
+new_line: local savenum = 281;
+new_line: 	MonsterCount = CountMonsterQuestSub(UID, 281, 1);
+new_line: local savenum = 282;
+new_line: 	MonsterCount = CountMonsterQuestSub(UID, 282, 1);
+new_line: local savenum = 283;
+new_line: 	MonsterCount = CountMonsterQuestSub(UID, 283, 1);
+new_line: local savenum = 284;
+new_line: 	MonsterCount = CountMonsterQuestSub(UID, 284, 1);
+new_line: local savenum = 279;
+new_line: 	MonsterCount = CountMonsterQuestSub(UID, 279, 1);
+new_line: local savenum = 341;
+new_line: 	MonsterCount = CountMonsterQuestSub(UID, 341, 1);
+new_line: local savenum = 342;
+new_line: 	MonsterCount = CountMonsterQuestSub(UID, 342, 1);
+new_line: local savenum = 356;
+new_line: 	MonsterCount1 = CountMonsterQuestSub(UID, 356, 1);
+new_line: 	MonsterCount2 = CountMonsterQuestSub(UID, 342, 1);
+new_line: 	MonsterCount3 = CountMonsterQuestSub(UID, 342, 1);
+new_line: local savenum = 370;
+new_line: 	MonsterCount1 = CountMonsterQuestSub(UID, 370, 1);
+new_line: 	MonsterCount2 = CountMonsterQuestSub(UID, 370, 2);

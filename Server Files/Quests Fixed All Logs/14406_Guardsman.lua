@@ -1,0 +1,10 @@
+898 still in 	SaveEvent(UID, 8980);
+898 still in 	SaveEvent(UID, 8983);
+898 still in 	SaveEvent(UID, 8982);
+898 still in 	SaveEvent(UID, 8981);
+new_line: 		SelectMsg(UID, 2, 480, 8683, NPC, 10, 9360);
+new_line: 		SelectMsg(UID, 2, 480, 8254, NPC, 10, 193);
+new_line: 	SelectMsg(UID, 4, 480, 8247, NPC, 22, 9353, 23, 9354);
+new_line: 	SelectMsg(UID, 2, 480, 8418, NPC, 3014, 193);
+new_line: 		SelectMsg(UID, 2, 480, 8558, NPC, 18, 9358);
+new_line: 		SelectMsg(UID, 4, 480, 8560, NPC, 41, 9359, 27, 193);
