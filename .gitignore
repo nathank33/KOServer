@@ -7,9 +7,7 @@
 *.7z
 
 # Ignore large server file stuff
-*.aievt
 *.log
-bin/Map/
 bin/Logs/
 Debug/
 Release/
