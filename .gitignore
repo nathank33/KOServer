@@ -11,8 +11,8 @@
 *.log
 bin/Map/
 bin/Logs/
-.*Debug/
-.*Release/
+Debug/
+Release/
 
 # Ignore Visual Studio files
 Source/.vs
