@@ -49,48 +49,46 @@
 #define NORMAL					0X03		// ����
 #define	FAIL					0X04		// ���� 
 
-enum ItemMovementType
-{
-	ITEM_INVEN_SLOT			= 1,
-	ITEM_SLOT_INVEN			= 2,
-	ITEM_INVEN_INVEN		= 3,
-	ITEM_SLOT_SLOT			= 4,
-	ITEM_INVEN_ZONE			= 5,
-	ITEM_ZONE_INVEN			= 6,
-	ITEM_INVEN_TO_COSP		= 7,  // Inventory -> Cospre bag
-	ITEM_COSP_TO_INVEN		= 8,  // Cospre bag -> Inventory
-	ITEM_INVEN_TO_MBAG		= 9,  // Inventory -> Magic bag
-	ITEM_MBAG_TO_INVEN		= 10, // Magic bag -> Inventory
-	ITEM_MBAG_TO_MBAG		= 11,  // Magic bag -> Magic bag
-	ITEM_INVEN_TO_PET		= 12, // Inventory -> Pet
-	ITEM_PET_TO_INVEN		= 13 // Pet -> Inventory
+enum ItemMovementType {
+	ITEM_INVEN_SLOT = 1,
+	ITEM_SLOT_INVEN = 2,
+	ITEM_INVEN_INVEN = 3,
+	ITEM_SLOT_SLOT = 4,
+	ITEM_INVEN_ZONE = 5,
+	ITEM_ZONE_INVEN = 6,
+	ITEM_INVEN_TO_COSP = 7,  // Inventory -> Cospre bag
+	ITEM_COSP_TO_INVEN = 8,  // Cospre bag -> Inventory
+	ITEM_INVEN_TO_MBAG = 9,  // Inventory -> Magic bag
+	ITEM_MBAG_TO_INVEN = 10, // Magic bag -> Inventory
+	ITEM_MBAG_TO_MBAG = 11,  // Magic bag -> Magic bag
+	ITEM_INVEN_TO_PET = 12, // Inventory -> Pet
+	ITEM_PET_TO_INVEN = 13 // Pet -> Inventory
 
 };
 
-enum ItemSlotType
-{
-	ItemSlot1HEitherHand		= 0,
-	ItemSlot1HRightHand			= 1,
-	ItemSlot1HLeftHand			= 2,
-	ItemSlot2HRightHand			= 3,
-	ItemSlot2HLeftHand			= 4,
-	ItemSlotPauldron			= 5,
-	ItemSlotPads				= 6,
-	ItemSlotHelmet				= 7,
-	ItemSlotGloves				= 8,
-	ItemSlotBoots				= 9,
-	ItemSlotEarring				= 10,
-	ItemSlotNecklace			= 11,
-	ItemSlotRing				= 12,
-	ItemSlotShoulder			= 13,
-	ItemSlotBelt				= 14,
-	ItemSlotPet					= 20,
-	ItemSlotBag					= 25,
-	ItemSlotCospreGloves		= 100,
-	ItemSlotCosprePauldron		= 105,
-	ItemSlotCospreHelmet		= 107,
-	ItemSlotCospreWings			= 110,
-	ItemSlotCospreFairy			= 111
+enum ItemSlotType {
+	ItemSlot1HEitherHand = 0,
+	ItemSlot1HRightHand = 1,
+	ItemSlot1HLeftHand = 2,
+	ItemSlot2HRightHand = 3,
+	ItemSlot2HLeftHand = 4,
+	ItemSlotPauldron = 5,
+	ItemSlotPads = 6,
+	ItemSlotHelmet = 7,
+	ItemSlotGloves = 8,
+	ItemSlotBoots = 9,
+	ItemSlotEarring = 10,
+	ItemSlotNecklace = 11,
+	ItemSlotRing = 12,
+	ItemSlotShoulder = 13,
+	ItemSlotBelt = 14,
+	ItemSlotPet = 20,
+	ItemSlotBag = 25,
+	ItemSlotCospreGloves = 100,
+	ItemSlotCosprePauldron = 105,
+	ItemSlotCospreHelmet = 107,
+	ItemSlotCospreWings = 110,
+	ItemSlotCospreFairy = 111
 };
 
 // Item Weapon Type Define
@@ -191,13 +189,12 @@ enum ItemSlotType
 #define PRO_SKILL3			0x07
 #define PRO_SKILL4			0x08
 
-enum SkillPointCategory
-{
-	SkillPointFree		= 0,
-	SkillPointCat1		= 5,
-	SkillPointCat2		= 6,
-	SkillPointCat3		= 7,
-	SkillPointMaster	= 8
+enum SkillPointCategory {
+	SkillPointFree = 0,
+	SkillPointCat1 = 5,
+	SkillPointCat2 = 6,
+	SkillPointCat3 = 7,
+	SkillPointMaster = 8
 };
 
 /////////////////////////////////////////////////////////////
@@ -229,14 +226,13 @@ enum SkillPointCategory
 
 //////////////////////////////////////////////////////////////
 // USER ABNORMAL STATUS TYPES
-enum AbnormalType
-{
-	ABNORMAL_INVISIBLE		= 0,	// Hides character completely (for GM visibility only).
-	ABNORMAL_NORMAL			= 1,	// Shows character. This is the default for players.
-	ABNORMAL_GIANT			= 2,	// Enlarges character.
-	ABNORMAL_DWARF			= 3,	// Shrinks character.
-	ABNORMAL_BLINKING		= 4,	// Forces character to start blinking.
-	ABNORMAL_GIANT_TARGET	= 6		// Enlarges character and shows "Hit!" effect.
+enum AbnormalType {
+	ABNORMAL_INVISIBLE = 0,	// Hides character completely (for GM visibility only).
+	ABNORMAL_NORMAL = 1,	// Shows character. This is the default for players.
+	ABNORMAL_GIANT = 2,	// Enlarges character.
+	ABNORMAL_DWARF = 3,	// Shrinks character.
+	ABNORMAL_BLINKING = 4,	// Forces character to start blinking.
+	ABNORMAL_GIANT_TARGET = 6		// Enlarges character and shows "Hit!" effect.
 };
 
 //////////////////////////////////////////////////////////////
@@ -250,8 +246,7 @@ enum AbnormalType
 #define REGENE_MAGIC		1
 #define REGENE_ZONECHANGE	2
 
-struct _CLASS_COEFFICIENT
-{
+struct _CLASS_COEFFICIENT {
 	uint16	sClassNum;
 	float	ShortSword;
 	float	Sword;
@@ -270,22 +265,17 @@ struct _CLASS_COEFFICIENT
 };
 
 // Dropped loot/chest.
-struct _LOOT_ITEM
-{
+struct _LOOT_ITEM {
 	uint32 nItemID;
 	uint16 sCount;
-	_LOOT_ITEM()
-	{
-	}
-	_LOOT_ITEM(uint32 nItemID, uint16 sCount)
-	{
+	_LOOT_ITEM() {}
+	_LOOT_ITEM(uint32 nItemID, uint16 sCount) {
 		this->nItemID = nItemID;
 		this->sCount = sCount;
 	}
 };
 
-struct _LOOT_BUNDLE
-{
+struct _LOOT_BUNDLE {
 	uint32 nBundleID;
 	_LOOT_ITEM Items[NPC_HAVE_ITEM_LIST];
 	uint8 ItemsCount;
@@ -294,8 +284,7 @@ struct _LOOT_BUNDLE
 	uint16 LooterID;
 };
 
-struct	_EXCHANGE_ITEM
-{
+struct	_EXCHANGE_ITEM {
 	uint32	nItemID;
 	uint32	nCount;
 	uint16	sDurability;
@@ -304,21 +293,18 @@ struct	_EXCHANGE_ITEM
 	uint64	nSerialNum;
 };
 
-enum ItemRace
-{
-	RACE_TRADEABLE_IN_48HR	= 19, // These items can't be traded until 48 hours from the time of creation
-	RACE_UNTRADEABLE		= 20  // Cannot be traded or sold.
+enum ItemRace {
+	RACE_TRADEABLE_IN_48HR = 19, // These items can't be traded until 48 hours from the time of creation
+	RACE_UNTRADEABLE = 20  // Cannot be traded or sold.
 };
 
-enum SellType
-{
-	SellTypeNormal		= 0, // sell price is 1/4 of the purchase price
-	SellTypeFullPrice	= 1, // sell price is the same as the purchase price
-	SellTypeNoRepairs	= 2  // sell price is 1/4 of the purchase price, item cannot be repaired.
+enum SellType {
+	SellTypeNormal = 0, // sell price is 1/4 of the purchase price
+	SellTypeFullPrice = 1, // sell price is the same as the purchase price
+	SellTypeNoRepairs = 2  // sell price is 1/4 of the purchase price, item cannot be repaired.
 };
 
-struct _ITEM_CRASH
-{
+struct _ITEM_CRASH {
 	uint32	Index;
 	uint8	Flag;
 	uint32  ItemID;
@@ -326,8 +312,7 @@ struct _ITEM_CRASH
 	uint16  SuccessRate;
 };
 
-struct _ITEM_TABLE
-{
+struct _ITEM_TABLE {
 	uint32	m_iNum;
 	std::string	m_sName;
 	uint8	m_bKind;
@@ -425,14 +410,12 @@ struct _ITEM_TABLE
 	INLINE bool isBelt() { return GetKind() == ACCESSORY_BELT; }
 };
 
-struct _ZONE_SERVERINFO
-{
+struct _ZONE_SERVERINFO {
 	short		sServerNo;
 	std::string	strServerIP;
 };
 
-struct _KNIGHTS_CAPE
-{
+struct _KNIGHTS_CAPE {
 	uint16	sCapeIndex;
 	uint32	nReqCoins;
 	uint32	nReqClanPoints;	// clan point requirement
@@ -440,8 +423,7 @@ struct _KNIGHTS_CAPE
 	uint8	byRanking;		// clan rank requirement (e.g. royal, accredited, etc)
 };
 
-struct _KNIGHTS_SIEGE_WARFARE
-{
+struct _KNIGHTS_SIEGE_WARFARE {
 	uint16	sCastleIndex;
 	uint16	sMasterKnights;
 	uint8	bySiegeType;
@@ -482,16 +464,14 @@ struct _KNIGHTS_SIEGE_WARFARE
 	uint16	sRequestList_10;
 };
 
-struct _KNIGHTS_ALLIANCE
-{
+struct _KNIGHTS_ALLIANCE {
 	uint16	sMainAllianceKnights;
 	uint16	sSubAllianceKnights;
 	uint16	sMercenaryClan_1;
 	uint16	sMercenaryClan_2;
 };
 
-struct _START_POSITION
-{
+struct _START_POSITION {
 	uint16	ZoneID;
 	uint16	sKarusX;
 	uint16	sKarusZ;
@@ -505,23 +485,20 @@ struct _START_POSITION
 	uint8	bRangeZ;
 };
 
-struct _KNIGHTS_RATING
-{
+struct _KNIGHTS_RATING {
 	uint32 nRank;
 	uint16 sClanID;
 	uint32 nPoints;
 };
 
-struct _USER_RANK
-{
+struct _USER_RANK {
 	uint16	nRank;  // shIndex for USER_KNIGHTS_RANK
 	std::string strUserID[2];
 	uint32	nSalary; // nMoney for USER_KNIGHTS_RANK
 	uint32	nLoyalty[2]; // nKarusLoyaltyMonthly/nElmoLoyaltyMonthly for USER_PERSONAL_RANK
 };
 
-struct _PET_DATA
-{
+struct _PET_DATA {
 	uint64	m_Serial; // Pet items specified serial number
 	std::string strPetName; // Pets name
 	uint8	m_sClass; // Pets class
@@ -539,15 +516,14 @@ struct _PET_DATA
 #define ITEMS_IN_SPECIAL_EXCHANGE_GROUP 10
 #define ITEMS_IN_EXCHANGE_GROUP 5
 
-struct _ITEM_MIX
-{
+struct _ITEM_MIX {
 	uint32	nIndex;
 	uint16	sNpcNum;
 	uint8	bType;
 	uint8	bStatus;
 	std::string	strName;
 
-	uint16	sSuccessEffect,bSuccessRate,sFailEffect,bBonusRate;
+	uint16	sSuccessEffect, bSuccessRate, sFailEffect, bBonusRate;
 
 	uint32	nOriginItemNum[ITEMS_IN_SPECIAL_ORIGIN_GROUP];
 	uint16	sOriginItemCount[ITEMS_IN_SPECIAL_ORIGIN_GROUP];
@@ -556,8 +532,7 @@ struct _ITEM_MIX
 	uint16	sExchangeItemCount[ITEMS_IN_SPECIAL_EXCHANGE_GROUP];
 };
 
-struct _ITEM_EXCHANGE
-{
+struct _ITEM_EXCHANGE {
 	uint32	nIndex;
 	uint8	bRandomFlag;
 
@@ -567,11 +542,10 @@ struct _ITEM_EXCHANGE
 	uint32	nExchangeItemNum[ITEMS_IN_EXCHANGE_GROUP];
 	uint32	sExchangeItemCount[ITEMS_IN_EXCHANGE_GROUP];
 
-	uint32	Unk1,Unk2,Unk3,Unk4,Unk5;
+	uint32	Unk1, Unk2, Unk3, Unk4, Unk5;
 };
 
-struct _ITEM_EXCHANGE_EXP
-{
+struct _ITEM_EXCHANGE_EXP {
 	uint32	nIndex;
 	uint8	bRandomFlag;
 
@@ -579,8 +553,7 @@ struct _ITEM_EXCHANGE_EXP
 	uint32	sExchangeItemCount[ITEMS_IN_EXCHANGE_GROUP];
 };
 
-struct _MINING_ITEM
-{
+struct _MINING_ITEM {
 	uint32	nMiningID;
 	uint32	nExchangeItemNum;
 	uint16	sExchangeItemRate;
@@ -588,8 +561,7 @@ struct _MINING_ITEM
 };
 
 #define MAX_ITEMS_REQ_FOR_UPGRADE 8
-struct _ITEM_UPGRADE
-{
+struct _ITEM_UPGRADE {
 	uint32	nIndex;
 	uint16	sNpcNum;
 	int8	bOriginType;
@@ -606,44 +578,38 @@ struct _ITEM_UPGRADE
 	INLINE bool isTransform() { return Getscroll() == 379256000; }
 };
 
-enum ItemTriggerType
-{
+enum ItemTriggerType {
 	TriggerTypeAttack = 3,
 	TriggerTypeDefend = 13
 };
 
-struct _ITEM_OP
-{
+struct _ITEM_OP {
 	uint32	nItemID;
 	uint8	bTriggerType;
 	uint32	nSkillID;
 	uint8	bTriggerRate;
 };
 
-struct _ITEM_DUPER
-{
+struct _ITEM_DUPER {
 	uint32	     n_Index;
 	uint32		 d_ItemID;
 	uint64		 d_Serial;
 };
 
-struct _ILEGAL_ITEMS
-{
+struct _ILEGAL_ITEMS {
 	uint32		i_Index;
 	uint32		i_ItemID;
 };
 
-struct _MERCHANT_LIST
-{
+struct _MERCHANT_LIST {
 	std::string	strUserName;
-	
+
 	uint16	strUserID;
 	uint32	ItemID[12];
 	uint32	Price[12];
 	uint8	Type;
 };
-struct _ACHIEVE_ITEM
-{
+struct _ACHIEVE_ITEM {
 	uint16 TitleID;
 	uint16 sQuestID;
 	uint16 StrengthBonus;
@@ -670,11 +636,10 @@ struct _ACHIEVE_ITEM
 	uint16 XPBonusPercent;
 	uint16 CONT;
 	uint16 AttackBonus;
-	int16 ACBonus;	
+	int16 ACBonus;
 };
 
-struct _SET_ITEM
-{
+struct _SET_ITEM {
 	uint32 SetIndex;
 
 	uint16 HPBonus;
@@ -706,8 +671,7 @@ struct _SET_ITEM
 	uint8 NPBonus;
 };
 
-struct _QUEST_HELPER
-{
+struct _QUEST_HELPER {
 	uint32	nIndex;
 	uint8	bMessageType;
 	uint8	bLevel;
@@ -726,50 +690,43 @@ struct _QUEST_HELPER
 	std::string strLuaFilename;
 };
 
-struct _USER_SEAL_ITEM
-{
+struct _USER_SEAL_ITEM {
 	uint64 nSerialNum;
 	uint32 nItemID;
 	uint8 bSealType;
 };
 
-struct _PREMIUM_TYPE
-{
+struct _PREMIUM_TYPE {
 	uint8 PremiumType;
 	uint16 PremiumTime;
 };
 
-struct _ITEM_REPURCHASE
-{
+struct _ITEM_REPURCHASE {
 	uint32		nNum;
 	uint32		tRepTime;
 };
 
 #define QUEST_MOB_GROUPS		4
 #define QUEST_MOBS_PER_GROUP	4
-struct _QUEST_MONSTER
-{
+struct _QUEST_MONSTER {
 	uint16	sQuestNum;
-	uint16	sNum[QUEST_MOB_GROUPS][QUEST_MOBS_PER_GROUP]; 
+	uint16	sNum[QUEST_MOB_GROUPS][QUEST_MOBS_PER_GROUP];
 	uint16	sCount[QUEST_MOB_GROUPS];
 
-	_QUEST_MONSTER()
-	{
+	_QUEST_MONSTER() {
 		memset(&sCount, 0, sizeof(sCount));
 		memset(&sNum, 0, sizeof(sNum));
 	}
 };
 
-enum SpecialQuestIDs
-{
-	QUEST_KILL_GROUP1	= 32001,
-	QUEST_KILL_GROUP2	= 32002,
-	QUEST_KILL_GROUP3	= 32003,
-	QUEST_KILL_GROUP4	= 32004,
+enum SpecialQuestIDs {
+	QUEST_KILL_GROUP1 = 32001,
+	QUEST_KILL_GROUP2 = 32002,
+	QUEST_KILL_GROUP3 = 32003,
+	QUEST_KILL_GROUP4 = 32004,
 };
 
-struct _RENTAL_ITEM
-{
+struct _RENTAL_ITEM {
 	uint32	nRentalIndex;
 	uint32	nItemID;
 	uint16	sDurability;
@@ -783,8 +740,7 @@ struct _RENTAL_ITEM
 	std::string strBorrowerCharID;
 };
 
-struct _PREMIUM_ITEM
-{
+struct _PREMIUM_ITEM {
 	uint8	Type;
 	uint16	ExpRestorePercent;
 	uint16	NoahPercent;
@@ -794,8 +750,7 @@ struct _PREMIUM_ITEM
 	uint16	ItemSellPercent;
 };
 
-struct _PREMIUM_ITEM_EXP
-{
+struct _PREMIUM_ITEM_EXP {
 	uint16	nIndex;
 	uint8	Type;
 	uint8	MinLevel;
@@ -803,8 +758,7 @@ struct _PREMIUM_ITEM_EXP
 	uint16	sPercent;
 };
 
-struct _USER_RANKING 
-{
+struct _USER_RANKING {
 	uint16 m_socketID;
 	uint8 m_bNation;
 	uint32 m_iLoyaltyDaily;
@@ -815,22 +769,19 @@ struct _USER_RANKING
 };
 
 
-struct _TEMPLE_EVENT_USER
-{
+struct _TEMPLE_EVENT_USER {
 	uint16 m_socketID;
 	uint16 m_bEventRoom;
 };
 
-struct _EVENT_TRIGGER
-{
+struct _EVENT_TRIGGER {
 	uint32 nIndex;
 	uint16 bNpcType;
 	uint32 sNpcID;
 	uint32 nTriggerNum;
 };
 
-struct _USER_DAILY_OP
-{
+struct _USER_DAILY_OP {
 	std::string strUserId;
 	int32 ChaosMapTime;
 	int32 UserRankRewardTime;
@@ -842,15 +793,13 @@ struct _USER_DAILY_OP
 	int32 UserLoyaltyWingRewardTime;
 };
 
-struct _MONUMENT_INFORMATION
-{
+struct _MONUMENT_INFORMATION {
 	uint16 sSid;
 	uint16 sNid;
 	int32 RepawnedTime;
 };
 
-struct _MONSTER_CHALLENGE
-{
+struct _MONSTER_CHALLENGE {
 	uint16 sIndex;
 	uint8 bStartTime1;
 	uint8 bStartTime2;
@@ -859,8 +808,7 @@ struct _MONSTER_CHALLENGE
 	uint8 bLevelMax;
 };
 
-struct _EVENT_TIMES
-{
+struct _EVENT_TIMES {
 	uint16 sIndex;
 	uint8 bTime1;
 	uint8 bTime2;
@@ -870,8 +818,7 @@ struct _EVENT_TIMES
 	uint8 AllDays;
 };
 
-struct _MONSTER_CHALLENGE_SUMMON_LIST
-{
+struct _MONSTER_CHALLENGE_SUMMON_LIST {
 	uint16 sIndex;
 	uint8 bLevel;
 	uint8 bStage;
@@ -884,8 +831,7 @@ struct _MONSTER_CHALLENGE_SUMMON_LIST
 	uint8 bRange;
 };
 
-struct _EVENT_STATUS
-{
+struct _EVENT_STATUS {
 	int16 ActiveEvent;
 	int8 ZoneID;
 	uint8 LastEventRoom;
@@ -897,7 +843,7 @@ struct _EVENT_STATUS
 	uint16 KarusDeathCount[MAX_TEMPLE_EVENT_ROOM];
 	uint16 m_sBdwMiniTimer[MAX_TEMPLE_EVENT_ROOM];
 	uint8 m_sMiniTimerNation[MAX_TEMPLE_EVENT_ROOM];
-	
+
 	uint16 JuraidKarusGateID1[MAX_TEMPLE_EVENT_ROOM];
 	uint16 JuraidKarusGateID2[MAX_TEMPLE_EVENT_ROOM];
 	uint16 JuraidKarusGateID3[MAX_TEMPLE_EVENT_ROOM];
@@ -945,7 +891,7 @@ struct _EVENT_STATUS
 	uint32	m_nBorderDefenseWarPrizeLoserItem;
 	uint8	m_nBorderDefenseWarMAXLEVEL;
 	uint8	m_nBorderDefenseWarMINLEVEL;
-	
+
 	bool	m_nJuraidMountainOdulTipi;
 	uint32	m_nJuraidMountainPrizeWonItemNo1;
 	uint32	m_nJuraidMountainPrizeWonItemNo2;
@@ -964,8 +910,7 @@ struct _EVENT_STATUS
 
 };
 
-struct _START_POSITION_RANDOM
-{
+struct _START_POSITION_RANDOM {
 	uint16 sIndex;
 	uint8 ZoneID;
 	uint16 PosX;
@@ -973,122 +918,117 @@ struct _START_POSITION_RANDOM
 	uint8 Radius;
 };
 
-struct _USER_ITEM
-{
+struct _USER_ITEM {
 	uint32 nItemID;
 	std::vector<uint64> nItemSerial;
 };
 
 
-enum BuffType
-{
-	BUFF_TYPE_NONE					= 0,
-	BUFF_TYPE_HP_MP					= 1,
-	BUFF_TYPE_AC					= 2,
-	BUFF_TYPE_SIZE					= 3,
-	BUFF_TYPE_DAMAGE				= 4,
-	BUFF_TYPE_ATTACK_SPEED			= 5,
-	BUFF_TYPE_SPEED					= 6,
-	BUFF_TYPE_STATS					= 7,
-	BUFF_TYPE_RESISTANCES			= 8,
-	BUFF_TYPE_ACCURACY				= 9,
-	BUFF_TYPE_MAGIC_POWER			= 10,
-	BUFF_TYPE_EXPERIENCE			= 11,
-	BUFF_TYPE_WEIGHT				= 12,
-	BUFF_TYPE_WEAPON_DAMAGE			= 13,
-	BUFF_TYPE_WEAPON_AC				= 14,
-	BUFF_TYPE_LOYALTY				= 15,
-	BUFF_TYPE_NOAH_BONUS			= 16,
-	BUFF_TYPE_PREMIUM_MERCHANT		= 17,
-	BUFF_TYPE_ATTACK_SPEED_ARMOR	= 18,  // Berserker
-	BUFF_TYPE_DAMAGE_DOUBLE			= 19,  // Critical Point
-	BUFF_TYPE_DISABLE_TARGETING		= 20,  // Smoke Screen / Light Shock
-	BUFF_TYPE_BLIND					= 21,  // Blinding (Strafe)
-	BUFF_TYPE_FREEZE				= 22,  // Freezing Distance
-	BUFF_TYPE_INSTANT_MAGIC			= 23,  // Instantly Magic
-	BUFF_TYPE_DECREASE_RESIST		= 24,  // Minor resist
-	BUFF_TYPE_MAGE_ARMOR			= 25,  // Fire / Ice / Lightning Armor
-	BUFF_TYPE_PROHIBIT_INVIS		= 26,  // Source Marking
-	BUFF_TYPE_RESIS_AND_MAGIC_DMG	= 27,  // Elysian Web
-	BUFF_TYPE_TRIPLEAC_HALFSPEED	= 28,  // Wall of Iron
-	BUFF_TYPE_BLOCK_CURSE			= 29,  // Counter Curse
-	BUFF_TYPE_BLOCK_CURSE_REFLECT	= 30,  // Curse Refraction
-	BUFF_TYPE_MANA_ABSORB			= 31,  // Outrage / Frenzy
-	BUFF_TYPE_IGNORE_WEAPON			= 32,  // Weapon cancellation
-	BUFF_TYPE_VARIOUS_EFFECTS		= 33,  // ... whatever the event item grants.
-	BUFF_TYPE_PASSION_OF_SOUL		= 35,  // Passion of the Soul
-	BUFF_TYPE_FIRM_DETERMINATION	= 36,  // Firm Determination
-	BUFF_TYPE_ATTACK_MAGIC_ATTACK	= 37,  // increases attack and magic attack percent
-	BUFF_TYPE_ATTACK_TIME			= 39,  // increases attack by ** minutes
-	BUFF_TYPE_SPEED2				= 40,  // Cold Wave
-	BUFF_TYPE_ARMORED				= 41,  // Armored Skin
-	BUFF_TYPE_UNK_EXPERIENCE		= 42,  // unknown buff type, used for something relating to XP.
-	BUFF_TYPE_ATTACK_RANGE_ARMOR	= 43,  // Inevitable Murderous
-	BUFF_TYPE_MIRROR_DAMAGE_PARTY	= 44,  // Minak's Thorn
-	BUFF_TYPE_DAGGER_BOW_DEFENSE	= 45,  // Eskrima
-	BUFF_TYPE_GM_BUFF				= 46,
-	BUFF_TYPE_STUN					= 47,
-	BUFF_TYPE_FISHING				= 48,  // FISHING Skill
-	BUFF_TYPE_DEVIL_TRANSFORM       = 49,
-	BUFF_TYPE_DRAKEY				= 50,
-	BUFF_TYPE_SPEED3				= 52,
-	BUFF_TYPE_LOYALTY_AMOUNT		= 55,  // Santa's Present
-	BUFF_TYPE_NO_RECALL				= 150, // "Cannot use against the ones to be summoned"
-	BUFF_TYPE_REDUCE_TARGET			= 151, // "Reduction" (reduces target's stats, but enlarges their character to make them easier to attack)
-	BUFF_TYPE_SILENCE_TARGET		= 152, // Silences the target to prevent them from using any skills (or potions)
-	BUFF_TYPE_NO_POTIONS			= 153, // "No Potion" prevents target from using potions.
-	BUFF_TYPE_KAUL_TRANSFORMATION	= 154, // Transforms the target into a Kaul (a pig thing), preventing you from /town'ing or attacking, but increases defense.
-	BUFF_TYPE_UNDEAD				= 155, // User becomes undead, increasing defense but preventing the use of potions and converting all health received into damage.
-	BUFF_TYPE_UNSIGHT				= 156, // Blocks the caster's sight (not the target's).
-	BUFF_TYPE_BLOCK_PHYSICAL_DAMAGE	= 157, // Blocks all physical damage.
-	BUFF_TYPE_BLOCK_MAGICAL_DAMAGE	= 158, // Blocks all magical/skill damage.
-	BUFF_TYPE_UNK_POTION			= 159, // unknown potion, "Return of the Warrior", "Comeback potion", perhaps some sort of revive?
-	BUFF_TYPE_SLEEP					= 160, // Zantman (Sandman)
-	BUFF_TYPE_INC_CONTRIBUTION		= 162, // Increase of the contribution
-	BUFF_TYPE_INVISIBILITY_POTION	= 163, // "Unidentified potion"
-	BUFF_TYPE_GODS_BLESSING			= 164, // Increases your defense/max HP 
-	BUFF_TYPE_HELP_COMPENSATION		= 165, // Compensation for using the help system (to help, ask for help, both?)
-	BUFF_TYPE_UNKNOW				= 166, // Unknow Skill Buff type
-	BUFF_TYPE_IMIR_ROAR				= 167, // Creates a physical damage immune area around 10 meter radius of the caster for 20 seconds.
-	BUFF_TYPE_LOGOS_HORNS			= 168, // Creates a magic damage immune area around 10 meter radius of the caster for 20 seconds.
-	BUFF_TYPE_DROP_RATE				= 169, // During the 2-hour, +10% item drop rate.
-	BUFF_TYPE_MAMA_MAGPIE			= 170, // Magpie is transformed into a mother
-	BUFF_TYPE_BATTLE_CRY			= 171, // Battle Cry
-	BUFF_TYPE_ATTACK_AMMONUT2		= 172, // Attack increased by 5%
+enum BuffType {
+	BUFF_TYPE_NONE = 0,
+	BUFF_TYPE_HP_MP = 1,
+	BUFF_TYPE_AC = 2,
+	BUFF_TYPE_SIZE = 3,
+	BUFF_TYPE_DAMAGE = 4,
+	BUFF_TYPE_ATTACK_SPEED = 5,
+	BUFF_TYPE_SPEED = 6,
+	BUFF_TYPE_STATS = 7,
+	BUFF_TYPE_RESISTANCES = 8,
+	BUFF_TYPE_ACCURACY = 9,
+	BUFF_TYPE_MAGIC_POWER = 10,
+	BUFF_TYPE_EXPERIENCE = 11,
+	BUFF_TYPE_WEIGHT = 12,
+	BUFF_TYPE_WEAPON_DAMAGE = 13,
+	BUFF_TYPE_WEAPON_AC = 14,
+	BUFF_TYPE_LOYALTY = 15,
+	BUFF_TYPE_NOAH_BONUS = 16,
+	BUFF_TYPE_PREMIUM_MERCHANT = 17,
+	BUFF_TYPE_ATTACK_SPEED_ARMOR = 18,  // Berserker
+	BUFF_TYPE_DAMAGE_DOUBLE = 19,  // Critical Point
+	BUFF_TYPE_DISABLE_TARGETING = 20,  // Smoke Screen / Light Shock
+	BUFF_TYPE_BLIND = 21,  // Blinding (Strafe)
+	BUFF_TYPE_FREEZE = 22,  // Freezing Distance
+	BUFF_TYPE_INSTANT_MAGIC = 23,  // Instantly Magic
+	BUFF_TYPE_DECREASE_RESIST = 24,  // Minor resist
+	BUFF_TYPE_MAGE_ARMOR = 25,  // Fire / Ice / Lightning Armor
+	BUFF_TYPE_PROHIBIT_INVIS = 26,  // Source Marking
+	BUFF_TYPE_RESIS_AND_MAGIC_DMG = 27,  // Elysian Web
+	BUFF_TYPE_TRIPLEAC_HALFSPEED = 28,  // Wall of Iron
+	BUFF_TYPE_BLOCK_CURSE = 29,  // Counter Curse
+	BUFF_TYPE_BLOCK_CURSE_REFLECT = 30,  // Curse Refraction
+	BUFF_TYPE_MANA_ABSORB = 31,  // Outrage / Frenzy
+	BUFF_TYPE_IGNORE_WEAPON = 32,  // Weapon cancellation
+	BUFF_TYPE_VARIOUS_EFFECTS = 33,  // ... whatever the event item grants.
+	BUFF_TYPE_PASSION_OF_SOUL = 35,  // Passion of the Soul
+	BUFF_TYPE_FIRM_DETERMINATION = 36,  // Firm Determination
+	BUFF_TYPE_ATTACK_MAGIC_ATTACK = 37,  // increases attack and magic attack percent
+	BUFF_TYPE_ATTACK_TIME = 39,  // increases attack by ** minutes
+	BUFF_TYPE_SPEED2 = 40,  // Cold Wave
+	BUFF_TYPE_ARMORED = 41,  // Armored Skin
+	BUFF_TYPE_UNK_EXPERIENCE = 42,  // unknown buff type, used for something relating to XP.
+	BUFF_TYPE_ATTACK_RANGE_ARMOR = 43,  // Inevitable Murderous
+	BUFF_TYPE_MIRROR_DAMAGE_PARTY = 44,  // Minak's Thorn
+	BUFF_TYPE_DAGGER_BOW_DEFENSE = 45,  // Eskrima
+	BUFF_TYPE_GM_BUFF = 46,
+	BUFF_TYPE_STUN = 47,
+	BUFF_TYPE_FISHING = 48,  // FISHING Skill
+	BUFF_TYPE_DEVIL_TRANSFORM = 49,
+	BUFF_TYPE_DRAKEY = 50,
+	BUFF_TYPE_SPEED3 = 52,
+	BUFF_TYPE_LOYALTY_AMOUNT = 55,  // Santa's Present
+	BUFF_TYPE_NO_RECALL = 150, // "Cannot use against the ones to be summoned"
+	BUFF_TYPE_REDUCE_TARGET = 151, // "Reduction" (reduces target's stats, but enlarges their character to make them easier to attack)
+	BUFF_TYPE_SILENCE_TARGET = 152, // Silences the target to prevent them from using any skills (or potions)
+	BUFF_TYPE_NO_POTIONS = 153, // "No Potion" prevents target from using potions.
+	BUFF_TYPE_KAUL_TRANSFORMATION = 154, // Transforms the target into a Kaul (a pig thing), preventing you from /town'ing or attacking, but increases defense.
+	BUFF_TYPE_UNDEAD = 155, // User becomes undead, increasing defense but preventing the use of potions and converting all health received into damage.
+	BUFF_TYPE_UNSIGHT = 156, // Blocks the caster's sight (not the target's).
+	BUFF_TYPE_BLOCK_PHYSICAL_DAMAGE = 157, // Blocks all physical damage.
+	BUFF_TYPE_BLOCK_MAGICAL_DAMAGE = 158, // Blocks all magical/skill damage.
+	BUFF_TYPE_UNK_POTION = 159, // unknown potion, "Return of the Warrior", "Comeback potion", perhaps some sort of revive?
+	BUFF_TYPE_SLEEP = 160, // Zantman (Sandman)
+	BUFF_TYPE_INC_CONTRIBUTION = 162, // Increase of the contribution
+	BUFF_TYPE_INVISIBILITY_POTION = 163, // "Unidentified potion"
+	BUFF_TYPE_GODS_BLESSING = 164, // Increases your defense/max HP 
+	BUFF_TYPE_HELP_COMPENSATION = 165, // Compensation for using the help system (to help, ask for help, both?)
+	BUFF_TYPE_UNKNOW = 166, // Unknow Skill Buff type
+	BUFF_TYPE_IMIR_ROAR = 167, // Creates a physical damage immune area around 10 meter radius of the caster for 20 seconds.
+	BUFF_TYPE_LOGOS_HORNS = 168, // Creates a magic damage immune area around 10 meter radius of the caster for 20 seconds.
+	BUFF_TYPE_DROP_RATE = 169, // During the 2-hour, +10% item drop rate.
+	BUFF_TYPE_MAMA_MAGPIE = 170, // Magpie is transformed into a mother
+	BUFF_TYPE_BATTLE_CRY = 171, // Battle Cry
+	BUFF_TYPE_ATTACK_AMMONUT2 = 172, // Attack increased by 5%
 };
 
-enum FlyingSantaOrAngel
-{
-	FLYING_NONE		= 0,
-	FLYING_SANTA	= 1,
-	FLYING_ANGEL	= 2
+enum FlyingSantaOrAngel {
+	FLYING_NONE = 0,
+	FLYING_SANTA = 1,
+	FLYING_ANGEL = 2
 };
 
-enum UserInfoOpCode
-{
-UserInfo = 1, 
-UserInfoNick = 2,
-UserInfoAll = 3,
-UserInfoShow = 4
+enum UserInfoOpCode {
+	UserInfo = 1,
+	UserInfoNick = 2,
+	UserInfoAll = 3,
+	UserInfoShow = 4
 };
 
 
-enum AchieveOpcodes
-{
-AchieveError			 = 0,
-AchieveSuccess			 = 1,
-AchieveUnknown2			 = 2,
-AchieveTitleShow		 = 3,
-AchieveMainPage			 = 4,
-AchieveUnknown			 = 5,
-AchieveUnknown6			 = 6,
-AchieveUnknown7			 = 7,
-AchieveUnknown8			 = 8,
-AchieveUnknown9			 = 9,
-AchieveCoverTitle		 = 10,
-AchieveSkillTitle		 = 11,
-AchieveCoverTitleReset   = 12,
-AchieveSkillTitleReset   = 13
+enum AchieveOpcodes {
+	AchieveError = 0,
+	AchieveSuccess = 1,
+	AchieveUnknown2 = 2,
+	AchieveTitleShow = 3,
+	AchieveMainPage = 4,
+	AchieveUnknown = 5,
+	AchieveUnknown6 = 6,
+	AchieveUnknown7 = 7,
+	AchieveUnknown8 = 8,
+	AchieveUnknown9 = 9,
+	AchieveCoverTitle = 10,
+	AchieveSkillTitle = 11,
+	AchieveCoverTitleReset = 12,
+	AchieveSkillTitleReset = 13
 };
 
 

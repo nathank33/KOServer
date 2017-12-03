@@ -5,8 +5,7 @@
 #define CONF_LOGIN_SERVER	"./LogIn.ini"
 #define _LISTEN_PORT		15100
 
-struct _SERVER_INFO
-{
+struct _SERVER_INFO {
 	std::string strServerIP;
 	std::string strLanIP;
 	std::string strServerName;
@@ -20,20 +19,17 @@ struct _SERVER_INFO
 	std::string strElMoradKingName;
 	std::string strElMoradNotice;
 
-	_SERVER_INFO()
-	{
+	_SERVER_INFO() {
 		sUserCount = sServerID = sGroupID = sPlayerCap = sFreePlayerCap = 0;
 	}
 };
 
-struct News
-{
+struct News {
 	uint8 Content[4096];
 	size_t Size;
 };
 
-struct _VERSION_INFO
-{
+struct _VERSION_INFO {
 	uint16 sVersion;
 	uint16 sHistoryVersion;
 	std::string strFilename;

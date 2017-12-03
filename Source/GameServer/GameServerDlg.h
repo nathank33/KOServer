@@ -25,9 +25,8 @@ typedef std::map<std::string, CUser *>  NameMap;
 typedef std::map<std::string, CBot *>  BotNameMap;
 typedef  std::map<uint16, uint16>          ForgettenTempleMonsterList;
 
-class CGameServerDlg
-{
-public:	
+class CGameServerDlg {
+public:
 	CGameServerDlg();
 	bool Startup();
 
@@ -114,10 +113,10 @@ public:
 	void ReqUpdateConcurrent();
 
 	void SendFlyingSantaOrAngel();
-	void Send_CommandChat(Packet *pkt, int nation , CUser* pExceptUser = nullptr);
+	void Send_CommandChat(Packet *pkt, int nation, CUser* pExceptUser = nullptr);
 	void SendItemZoneUsers(uint8 ZoneID, uint32 nItemID, uint16 sCount = 1, uint32 Time = 0);
 	void KickOutZoneUsers(uint8 ZoneID, uint8 TargetZoneID = 0, uint8 bNation = Nation::ALL);
-	void SendItemEventRoom(uint16 nEventRoom,uint32 nItemID, uint16 sCount = 1);
+	void SendItemEventRoom(uint16 nEventRoom, uint32 nItemID, uint16 sCount = 1);
 	uint64 GenerateItemSerial();
 	int KickOutAllUsers();
 	void CheckAliveUser();
@@ -125,7 +124,7 @@ public:
 	void WritePacketLog();
 	uint16 GetKnightsAllMembers(uint16 sClanID, Packet & result, uint16 & pktSize, bool bClanLeader);
 	void GetUserRank(CUser *pUser);
-	void Announcement(uint16 type, int nation= Nation::ALL, int chat_type=8, CUser* pExceptUser = nullptr, CNpc *pExpectNpc = nullptr);
+	void Announcement(uint16 type, int nation = Nation::ALL, int chat_type = 8, CUser* pExceptUser = nullptr, CNpc *pExpectNpc = nullptr);
 	void SnowBanishLosers();
 	void SnowBattleZoneClose();
 	void SnowBattleZoneOpenTimer();
@@ -156,7 +155,7 @@ public:
 	void AutoNoticeEventTimer();
 	uint8 GetMonsterChallengeTime();
 	void EventZoneTimer();
-	
+
 	int32	m_byEventTime;
 	int32	m_byEventRemainingTime;
 	int32	m_sEventTimeDelay;
@@ -168,8 +167,8 @@ public:
 	void	ArdreamEventZoneClose();
 	void	CZEventZoneClose();
 	void	CheckEventTime();
-	
-	
+
+
 	time_t	m_lastBlessTime;
 	time_t	m_lastBorderTime;
 	uint8 GetEventZoneTime();
@@ -177,7 +176,7 @@ public:
 	void TempleEventStart();
 	void JuraidTempleEventStart();
 	void TempleEventTeleportUsers();
-	uint8 TempleEventGetRoomUsers(uint16 nEventRoom = 0,uint8 nNation = 0);
+	uint8 TempleEventGetRoomUsers(uint16 nEventRoom = 0, uint8 nNation = 0);
 	void MonsterStoneSummon(uint16 EventRoom, uint8 ZoneID);
 	void TempleEventSummon();
 	void TempleEventFinish(uint16 m_sEventRoom = 0, uint8 m_bNation = 0);
@@ -207,19 +206,19 @@ public:
 	uint16 Zone3Boss[MAX_MONSTER_STONE_EVENT_ROOM];
 	bool IsBusy2[MAX_MONSTER_STONE_EVENT_ROOM];
 	bool IsBusy3[MAX_MONSTER_STONE_EVENT_ROOM];
-	uint32 KCmiktari,KCmiktari2;
+	uint32 KCmiktari, KCmiktari2;
 	uint32	LastPetID;
 	uint32	LastRingID;
-	bool KCaktifmi, onbesinde,RoyalG1,KCaktifmi2;
-	bool AutoNovice,AutoMaster,AutoSkills;
+	bool KCaktifmi, onbesinde, RoyalG1, KCaktifmi2;
+	bool AutoNovice, AutoMaster, AutoSkills;
 	Packet BoardCache[2];
 	void ReloadKnightAndUserRanks();
 	void SetPlayerRankingRewards(uint16 ZoneID);
 
 	bool	OfflineMerchanting;
 
-	uint8 Dakika1,Dakika2;
-	uint8 HediyeKC,HediyeKC2;
+	uint8 Dakika1, Dakika2;
+	uint8 HediyeKC, HediyeKC2;
 
 	bool CastleSiegeWarAttack(CUser *pUser, CUser *pTargetUser);
 	void UpdateSiege(int16 m_sCastleIndex, int16 m_sMasterKnights, int16 m_bySiegeType, int16 m_byWarDay, int16 m_byWarTime, int16 m_byWarMinute);
@@ -230,7 +229,7 @@ public:
 	void AddDatabaseRequest(Packet & pkt, CUser *pUser = nullptr);
 	// TerminitionTime
 
-	void TerminitionTime(uint8 sNewZone,uint16 Time);
+	void TerminitionTime(uint8 sNewZone, uint16 Time);
 
 	// Get info for NPCs in regions around user (WIZ_REQ_NPCIN)
 	void NpcInOutForMe(CUser* pSendUser);
@@ -242,7 +241,7 @@ public:
 	void GetRegionNpcList(C3DMap* pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, uint16 nEventRoom = 0);
 
 	// Get list of NPCs for regions around user (WIZ_NPC_REGION)
-	void RegionNpcInfoForMe(CUser* pSendUser);	
+	void RegionNpcInfoForMe(CUser* pSendUser);
 
 	// Get raw list of all units in regions surrounding pOwner.
 	void GetUnitListFromSurroundingRegions(Unit * pOwner, std::vector<uint16> * pList);
@@ -260,7 +259,7 @@ public:
 	void MerchantUserInOutForMe(CUser* pSendUser);
 
 	// Get war status
-	INLINE bool isWarOpen() { return m_byBattleOpen != NO_BATTLE;} 
+	INLINE bool isWarOpen() { return m_byBattleOpen != NO_BATTLE; }
 
 	// Get list of merchants in region
 	void GetRegionMerchantUserIn(C3DMap* pMap, uint16 region_x, uint16 region_z, Packet & pkt, uint16 & t_count, uint16 nEventRoom = 0);
@@ -273,8 +272,7 @@ public:
 	void HandleConsoleCommand(const char * msg);
 
 	template <ChatType chatType>
-	INLINE void SendChat(const char * msg, uint8 byNation = Nation::ALL, bool bFormatNotice = false)
-	{
+	INLINE void SendChat(const char * msg, uint8 byNation = Nation::ALL, bool bFormatNotice = false) {
 		Packet result;
 		std::string buffer;
 
@@ -288,8 +286,7 @@ public:
 	}
 
 	template <ChatType chatType>
-	INLINE void SendChatToZone(const char * msg, uint8 ZoneID, uint8 byNation = Nation::ALL, bool bFormatNotice = false)
-	{
+	INLINE void SendChatToZone(const char * msg, uint8 ZoneID, uint8 byNation = Nation::ALL, bool bFormatNotice = false) {
 		Packet result;
 		std::string buffer;
 
@@ -303,8 +300,7 @@ public:
 	}
 
 	template <ChatType chatType>
-	INLINE void SendFormattedChat(const char * msg, uint8 byNation = Nation::ALL, bool bFormatNotice = false, va_list args = nullptr)
-	{
+	INLINE void SendFormattedChat(const char * msg, uint8 byNation = Nation::ALL, bool bFormatNotice = false, va_list args = nullptr) {
 		char buffer[512];
 		vsnprintf(buffer, sizeof(buffer), msg, args);
 		SendChat<chatType>(buffer, byNation, bFormatNotice);
@@ -312,8 +308,7 @@ public:
 	}
 
 	template <ChatType chatType>
-	void SendFormattedChat(const char * msg, uint8 byNation = Nation::ALL, bool bFormatNotice = false, ...)
-	{
+	void SendFormattedChat(const char * msg, uint8 byNation = Nation::ALL, bool bFormatNotice = false, ...) {
 		va_list ap;
 		va_start(ap, byNation);
 		SendFormattedChat<chatType>(msg, byNation, bFormatNotice, ap);
@@ -322,32 +317,27 @@ public:
 
 	/* The following are simply wrappers for more readable SendChat() calls */
 
-	INLINE void SendNotice(const char *msg, uint8 byNation = Nation::ALL) 
-	{
+	INLINE void SendNotice(const char *msg, uint8 byNation = Nation::ALL) {
 		SendChat<PUBLIC_CHAT>(msg, byNation, true);
 	}
 
 	template <ChatType chatType>
-	INLINE void SendNotice(const char *msg, uint8 ZoneID, uint8 byNation = Nation::ALL, bool bFormatNotice = false)
-	{
+	INLINE void SendNotice(const char *msg, uint8 ZoneID, uint8 byNation = Nation::ALL, bool bFormatNotice = false) {
 		SendChatToZone<chatType>(msg, ZoneID, byNation, bFormatNotice);
 	}
 
-	void SendFormattedNotice(const char *msg, uint8 byNation = Nation::ALL, ...)
-	{
+	void SendFormattedNotice(const char *msg, uint8 byNation = Nation::ALL, ...) {
 		va_list ap;
 		va_start(ap, byNation);
 		SendFormattedChat<PUBLIC_CHAT>(msg, byNation, true, ap);
 		va_end(ap);
 	}
 
-	INLINE void SendAnnouncement(const char *msg, uint8 byNation = Nation::ALL)
-	{
+	INLINE void SendAnnouncement(const char *msg, uint8 byNation = Nation::ALL) {
 		SendChat<WAR_SYSTEM_CHAT>(msg, byNation, true);
 	}
 
-	void SendFormattedAnnouncement(const char *msg, uint8 byNation = Nation::ALL, ...)
-	{
+	void SendFormattedAnnouncement(const char *msg, uint8 byNation = Nation::ALL, ...) {
 		va_list ap;
 		va_start(ap, byNation);
 		SendFormattedChat<WAR_SYSTEM_CHAT>(msg, byNation, true, ap);
@@ -361,8 +351,8 @@ public:
 	void Send_OldRegions(Packet *pkt, int old_x, int old_z, C3DMap *pMap, int x, int z, CUser* pExceptUser = nullptr, uint16 nEventRoom = 0);
 	void Send_NewRegions(Packet *pkt, int new_x, int new_z, C3DMap *pMap, int x, int z, CUser* pExceptUser = nullptr, uint16 nEventRoom = 0);
 
-	void Send_NearRegion(Packet *pkt, C3DMap *pMap, int region_x, int region_z, float curx, float curz, CUser* pExceptUser=nullptr, uint16 nEventRoom = 0);
-	void Send_FilterUnitRegion(Packet *pkt, C3DMap *pMap, int x, int z, float ref_x, float ref_z, CUser* pExceptUser=nullptr, uint16 nEventRoom = 0);
+	void Send_NearRegion(Packet *pkt, C3DMap *pMap, int region_x, int region_z, float curx, float curz, CUser* pExceptUser = nullptr, uint16 nEventRoom = 0);
+	void Send_FilterUnitRegion(Packet *pkt, C3DMap *pMap, int x, int z, float ref_x, float ref_z, CUser* pExceptUser = nullptr, uint16 nEventRoom = 0);
 
 	void Send_Zone_Matched_Class(Packet *pkt, uint8 bZoneID, CUser* pExceptUser, uint8 nation, uint8 seekingPartyOptions, uint16 nEventRoom = 0);
 	void Send_Zone(Packet *pkt, uint8 bZoneID, CUser* pExceptUser = nullptr, uint8 nation = Nation::ALL, uint16 nEventRoom = 0, float fRange = 0.0f);
@@ -372,16 +362,16 @@ public:
 
 	void GetServerResource(int nResourceID, std::string * result, ...);
 	_START_POSITION *GetStartPosition(int nZoneID);
-	
+
 	int64 GetExpByLevel(int nLevel);
 	int64 GetPetExpByLevel(int nLevel);
 	C3DMap * GetZoneByID(int zoneID);
-	
+
 	CBot * GetBotPtr(std::string findName, NameType type);
 	CUser * GetUserPtr(std::string findName, NameType type);
 	CUser * GetUserPtr(uint16 sUserId);
 	CNpc  * GetNpcPtr(uint16 sNpcId);
-	
+
 	_ACHIEVE_MONSTER	* GetAchieveMonsterPointer(uint32 ID);
 	_ACHIEVE_WAR		* GetAchieveWarPointer(uint32 ID);
 	_ACHIEVE_TITLE		* GetAchieveTitlePointer(uint32 ID);
@@ -513,7 +503,7 @@ public:
 	ItemCrashArray						m_ItemCrashArray;
 	ItemDupersArray						m_ItemDupersArray;
 	IlegalItemsArray					m_IlegalItemsArray;
-	
+
 	MerchantListArray					m_MerchantListArray;
 
 	Atomic<uint16>				m_sPartyIndex;
@@ -528,7 +518,7 @@ public:
 	uint8 m_byWeather;
 	uint16 m_sWeatherAmount;
 	int m_nCastleCapture;
-	uint8 m_ReloadKnightAndUserRanksMinute , m_DevakillSecond;
+	uint8 m_ReloadKnightAndUserRanksMinute, m_DevakillSecond;
 
 	uint8   m_byBattleOpen, m_byOldBattleOpen;
 	uint8  m_byBattleZone, m_byBattleZoneType, m_bVictory, m_byOldVictory, m_bResultDelayVictory, m_bKarusFlag, m_bElmoradFlag, m_bMiddleStatueNation;
@@ -574,7 +564,7 @@ public:
 	uint32	m_nBorderDefenseWarPrizeLoserItem[BORDER_DEFENSE_WAR_EVENT_COUNT];
 	uint8	m_nBorderDefenseWarMAXLEVEL[BORDER_DEFENSE_WAR_EVENT_COUNT];
 	uint8	m_nBorderDefenseWarMINLEVEL[BORDER_DEFENSE_WAR_EVENT_COUNT];
-	
+
 	bool	m_nJuraidMountainOdulTipi[JURAD_MOUNTAIN_EVENT_COUNT];
 	uint32	m_nJuraidMountainPrizeWonItemNo1[JURAD_MOUNTAIN_EVENT_COUNT];
 	uint32	m_nJuraidMountainPrizeWonItemNo2[JURAD_MOUNTAIN_EVENT_COUNT];
@@ -604,8 +594,8 @@ public:
 	uint32	m_nChaosPrizeLoserLoyalty[CHAOS_EVENT_COUNT];
 	uint32	m_nChaosPrizeLoserItem[CHAOS_EVENT_COUNT];
 	uint32	m_nChaosPrizeLoserExp[CHAOS_EVENT_COUNT];
-	
-	
+
+
 	uint8	m_nPVPMonumentNation[MAX_ZONE_ID];
 	uint8	m_nEventMonumentNation[MAX_ZONE_ID];
 
@@ -616,8 +606,8 @@ public:
 	uint8	m_nPlayerRankingResetTime;
 	std::string  m_sPlayerRankingsRewardZones;
 	uint32  m_nPlayerRankingKnightCashReward;
-	uint32  m_nPlayerRankingLoyaltyReward,m_Grade1,m_Grade2,m_Grade3,m_Grade4,m_Drop1,m_Drop2,m_Drop3,m_Drop4,m_Drop5,m_gDrop1,m_gDrop2,
-		m_gDrop3,m_gDrop4,m_gDrop5,m_sling,f_Drop1,f_Drop2,f_Drop3,gf_Drop1,gf_Drop2,gf_Drop3;
+	uint32  m_nPlayerRankingLoyaltyReward, m_Grade1, m_Grade2, m_Grade3, m_Grade4, m_Drop1, m_Drop2, m_Drop3, m_Drop4, m_Drop5, m_gDrop1, m_gDrop2,
+		m_gDrop3, m_gDrop4, m_gDrop5, m_sling, f_Drop1, f_Drop2, f_Drop3, gf_Drop1, gf_Drop2, gf_Drop3;
 	uint8 m_AutoNoticeIsActive;
 	std::string m_AutoNotice;
 	std::string m_AutoNoticeText;
@@ -630,12 +620,12 @@ public:
 
 	uint8	m_bSantaOrAngel;
 	uint8	m_sRankResetHour;
-	
+
 	int TotalMiningExchangeRate;
 	int TotalGoldenMiningExchangeRate;
 	uint32 bRandArrayNormalMattock[10000];
 	uint32 bRandArrayGoldenMattock[10000];
-		
+
 
 	// National Points Settings
 	int m_Loyalty_Ardream_Source;
@@ -711,7 +701,7 @@ public:
 		m_characterNameLock, m_BotcharacterNameLock,
 		m_questNpcLock;
 
-	
+
 	bool m_IsDupeUpdateProcess;
 	bool m_IlegalItemsUpdateProcess;
 
@@ -726,10 +716,10 @@ public:
 	uint8 KarusBaseMilitaryCampCount, ElmoradBaseMilitaryCampCount, KarusEslantMilitaryCampCount, ElmoradEslantMilitaryCampCount, MoradonMilitaryCampCount;
 
 	// XP/coin/NP events
-	uint8 m_byNPEventAmount, m_byExpEventAmount, m_byCoinEventAmount,m_byPKZoneExpEventAmount,Reskillmoney,Restatmoney;
+	uint8 m_byNPEventAmount, m_byExpEventAmount, m_byCoinEventAmount, m_byPKZoneExpEventAmount, Reskillmoney, Restatmoney;
 	uint8 MAXLVLINI;
 	uint8	MaxLevel62Control;
-		// EXP 2, EXP 10 , EXP 50, EXP 100, EXP 500, EXP 1000, EXP TOTAL
+	// EXP 2, EXP 10 , EXP 50, EXP 100, EXP 500, EXP 1000, EXP TOTAL
 	int m_byExpx2, m_byExpx10, m_byExpx50, m_byExpx100, m_byExpx500, m_byExpx1000, m_byExpTotal;
 	// Gold 2, Gold 10 , Gold 50, Gold 100, Gold 500, Gold 1000, Gold TOTAL
 	int m_byGoldx2, m_byGoldx10, m_byGoldx50, m_byGoldx100, m_byGoldx500, m_byGoldx1000, m_byGoldTotal;
@@ -748,9 +738,9 @@ public:
 	FILE *m_fpCheat;
 	FILE *m_fpMerchant;
 	FILE *m_fpTrade;
-	
 
-	
+
+
 	void WriteMerchantUserLogFile(std::string & logMessage);
 	void WriteTradeUserLogFile(std::string & logMessage);
 	void WriteDeathUserLogFile(std::string & logMessage);
@@ -775,7 +765,7 @@ public:
 	void CleanupServerCommands();
 
 	static ServerCommandTable s_commandTable;
-	
+
 	COMMAND_HANDLER(HandleReloadDupeCommand);
 	COMMAND_HANDLER(HandleReloadIlegalItemsCommand);
 	COMMAND_HANDLER(HandleNoticeCommand);

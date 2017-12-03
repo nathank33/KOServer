@@ -6,8 +6,7 @@
 
 typedef CSTLMap <int>			mapNpcArray;
 
-struct _RoomEvent
-{
+struct _RoomEvent {
 	short	sNumber;			// 명령어, 조건문 번호
 	short	sOption_1;			// option 1 (몬스터의 번호를 주로 가지고 있음)
 	short	sOption_2;			// option 2 (몬스터의 마리수)
@@ -15,15 +14,13 @@ struct _RoomEvent
 
 class CNpc;
 
-enum RoomStatus
-{
-	RoomStatusInitialised	= 1,
-	RoomStatusInProgress	= 2,
-	RoomStatusCleared		= 3
+enum RoomStatus {
+	RoomStatusInitialised = 1,
+	RoomStatusInProgress = 2,
+	RoomStatusCleared = 3
 };
 
-class CRoomEvent  
-{
+class CRoomEvent {
 public:
 	INLINE RoomStatus GetStatus() { return m_byStatus; }
 
@@ -68,9 +65,9 @@ public:
 private:
 	void Initialize();
 	bool  CheckEvent(int event_num);
-	bool  RunEvent( int event_num );
-	bool  CheckMonsterCount( int sid, int count, int type );
-	CNpc* GetNpcPtr( int sid );
-	void  EndEventSay( int option1, int option2 );
+	bool  RunEvent(int event_num);
+	bool  CheckMonsterCount(int sid, int count, int type);
+	CNpc* GetNpcPtr(int sid);
+	void  EndEventSay(int option1, int option2);
 
 };

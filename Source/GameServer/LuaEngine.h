@@ -22,8 +22,7 @@ typedef std::vector<uint8> BytecodeBuffer;
 typedef std::map<std::string, BytecodeBuffer> ScriptBytecodeMap;
 class CUser;
 class CNpc;
-class CLuaScript
-{
+class CLuaScript {
 public:
 	CLuaScript();
 	bool Initialise();
@@ -49,8 +48,7 @@ private:
 };
 
 class RWLock;
-class CLuaEngine
-{
+class CLuaEngine {
 public:
 	CLuaEngine();
 	bool Initialise();

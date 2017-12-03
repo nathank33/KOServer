@@ -6,8 +6,7 @@ uint32 THREADCALL ZoneEventThreadProc(void * lpParam /* = nullptr */);
 typedef std::set<CNpc *> NpcSet;
 
 class CNpc;
-class CNpcThread  
-{
+class CNpcThread {
 public:
 	CNpcThread();
 	void AddNPC(CNpc * pNpc);

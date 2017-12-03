@@ -1,16 +1,14 @@
 #pragma once
 
-class CCoefficientSet : public OdbcRecordset
-{
+class CCoefficientSet : public OdbcRecordset {
 public:
-	CCoefficientSet(OdbcConnection * dbConnection, CoefficientArray * pMap) 
+	CCoefficientSet(OdbcConnection * dbConnection, CoefficientArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("COEFFICIENT"); }
 	virtual tstring GetColumns() { return _T("sClass, ShortSword, Sword, Axe, Club, Spear, Pole, Staff, Bow, Hp, Mp, Sp, Ac, Hitrate, Evasionrate"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_CLASS_COEFFICIENT *pData = new _CLASS_COEFFICIENT;
 
 		_dbCommand->FetchUInt16(1, pData->sClassNum);

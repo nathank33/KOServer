@@ -1,16 +1,14 @@
 #pragma once
 
-class CUserDailyOpSet : public OdbcRecordset
-{
+class CUserDailyOpSet : public OdbcRecordset {
 public:
-	CUserDailyOpSet(OdbcConnection * dbConnection, UserDailyOpMap * pMap) 
+	CUserDailyOpSet(OdbcConnection * dbConnection, UserDailyOpMap * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("USER_DAILY_OP"); }
 	virtual tstring GetColumns() { return _T("strUserId, ChaosMapTime, UserRankRewardTime, PersonalRankRewardTime, KingWingTime, WarderKillerTime1, WarderKillerTime2, KeeperKillerTime, UserLoyaltyWingRewardTime"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_USER_DAILY_OP * pData = new _USER_DAILY_OP;
 
 		int i = 1;
@@ -24,8 +22,7 @@ public:
 		_dbCommand->FetchInt32(i++, pData->KeeperKillerTime);
 		_dbCommand->FetchInt32(i++, pData->UserLoyaltyWingRewardTime);
 
-		if (pData->strUserId.empty())
-		{
+		if (pData->strUserId.empty()) {
 			delete pData;
 			return true;
 		}
@@ -34,8 +31,7 @@ public:
 		return true;
 	}
 
-	virtual void InsertToMap(_USER_DAILY_OP * pData) 
-	{
+	virtual void InsertToMap(_USER_DAILY_OP * pData) {
 		if (!pData->strUserId.empty())
 			m_pMap->insert(make_pair(pData->strUserId, pData));
 	}

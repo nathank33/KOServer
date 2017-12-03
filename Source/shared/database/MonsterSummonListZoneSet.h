@@ -1,16 +1,14 @@
- #pragma once
+#pragma once
 
-class CMonsterSummonListZoneSet : public OdbcRecordset
-{
+class CMonsterSummonListZoneSet : public OdbcRecordset {
 public:
-	CMonsterSummonListZoneSet(OdbcConnection * dbConnection, MonsterSummonListZoneArray * pMap) 
+	CMonsterSummonListZoneSet(OdbcConnection * dbConnection, MonsterSummonListZoneArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("MONSTER_SUMMON_LIST_ZONE"); }
 	virtual tstring GetColumns() { return _T("nIndex, ZoneID, sSid, byFamily"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_MONSTER_SUMMON_LIST_ZONE * pData = new _MONSTER_SUMMON_LIST_ZONE;
 
 		_dbCommand->FetchUInt32(1, pData->nIndex);

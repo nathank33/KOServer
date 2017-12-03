@@ -57,14 +57,13 @@ const struct luaL_Reg gFuncs[] =
 #define DECLARE_LUA_GETTER(name) DECLARE_LUA_FUNCTION(name) { LUA_RETURN(LUA_GET_INSTANCE()->name()); }
 
 /**
-* Start of helper template functions 
+* Start of helper template functions
 **/
 
 // Creates Lua userdata & assigns it to the predefined class's metatable
 // so that we can use the object directly within Lua.
-template <typename T> INLINE void lua_tpush(lua_State * L, T arg) 
-{
-	T * udata = (T *)lua_newuserdata(L, sizeof(T *));
+template <typename T> INLINE void lua_tpush(lua_State * L, T arg) {
+	T * udata = (T *) lua_newuserdata(L, sizeof(T *));
 	*udata = arg;
 	luaL_setmetatable(L, arg->LUA_CLASS_METATABLE);
 }
@@ -74,14 +73,14 @@ template <> INLINE void lua_tpush(lua_State * L, std::string arg) { lua_pushlstr
 
 // char *
 template <> INLINE void lua_tpush(lua_State * L, const char * arg) { lua_pushstring(L, arg); }
-template <> INLINE void lua_tpush(lua_State * L, char * arg)  { lua_pushstring(L, arg); }
+template <> INLINE void lua_tpush(lua_State * L, char * arg) { lua_pushstring(L, arg); }
 
 // Retrieves userdata from the start but does NOT enforce type checks. Shouldn't use this if we can help it.
-template <typename T> INLINE T lua_to(lua_State * L, int idx) { return *(T *)lua_touserdata(L, idx); }
-template <typename T> INLINE T lua_to_default(lua_State * L, int idx, T def) { return *(T *)lua_touserdata(L, idx); } // userdata must NOT be optional.
+template <typename T> INLINE T lua_to(lua_State * L, int idx) { return *(T *) lua_touserdata(L, idx); }
+template <typename T> INLINE T lua_to_default(lua_State * L, int idx, T def) { return *(T *) lua_touserdata(L, idx); } // userdata must NOT be optional.
 
 // Retrieves userdata from the stack and enforces type checks
-template <typename T> INLINE T lua_to(lua_State * L, int idx, const char * name) { return *(T *)luaL_checkudata(L, idx, name); }
+template <typename T> INLINE T lua_to(lua_State * L, int idx, const char * name) { return *(T *) luaL_checkudata(L, idx, name); }
 
 // 'Numbers' are defined as double by default
 template <> INLINE void lua_tpush<double>(lua_State * L, double arg) { lua_pushnumber(L, arg); }
@@ -89,7 +88,7 @@ template <> INLINE void lua_tpush<float>(lua_State * L, float arg) { lua_pushnum
 
 // Required parameters
 template <> INLINE double lua_to<double>(lua_State * L, int idx) { return luaL_checknumber(L, idx); }
-template <> INLINE float lua_to<float>(lua_State * L, int idx) { return (float)luaL_checknumber(L, idx); }
+template <> INLINE float lua_to<float>(lua_State * L, int idx) { return (float) luaL_checknumber(L, idx); }
 template <> INLINE unsigned int lua_to<unsigned int>(lua_State * L, int idx) { return luaL_checkunsigned(L, idx); }
 template <> INLINE unsigned short lua_to<unsigned short>(lua_State * L, int idx) { return luaL_checkunsigned(L, idx); }
 template <> INLINE unsigned char lua_to<unsigned char>(lua_State * L, int idx) { return luaL_checkunsigned(L, idx); }
@@ -101,7 +100,7 @@ template <> INLINE const char * lua_to<const char *>(lua_State * L, int idx) { r
 
 // Optional parameters
 template <> INLINE double lua_to_default<double>(lua_State * L, int idx, double def) { return luaL_optnumber(L, idx, def); }
-template <> INLINE float lua_to_default<float>(lua_State * L, int idx, float def) { return (float)luaL_optnumber(L, idx, def); }
+template <> INLINE float lua_to_default<float>(lua_State * L, int idx, float def) { return (float) luaL_optnumber(L, idx, def); }
 template <> INLINE unsigned int lua_to_default<unsigned int>(lua_State * L, int idx, unsigned int def) { return luaL_optunsigned(L, idx, def); }
 template <> INLINE unsigned short lua_to_default<unsigned short>(lua_State * L, int idx, unsigned short def) { return luaL_optunsigned(L, idx, def); }
 template <> INLINE unsigned char lua_to_default<unsigned char>(lua_State * L, int idx, unsigned char def) { return luaL_optunsigned(L, idx, def); }
@@ -124,8 +123,7 @@ template <> INLINE void lua_tpush<signed char>(lua_State * L, signed char arg) {
 template <> INLINE void lua_tpush<bool>(lua_State * L, bool arg) { lua_pushboolean(L, arg); }
 
 // Shortcut for setting an arbitrary global value.
-template <typename T> INLINE void lua_tsetglobal(lua_State * L, const char * szGlobalName, T arg) 
-{
+template <typename T> INLINE void lua_tsetglobal(lua_State * L, const char * szGlobalName, T arg) {
 	lua_tpush<T>(L, arg);
 	lua_setglobal(L, szGlobalName);
 }
@@ -137,8 +135,7 @@ template <typename T> INLINE void lua_tsetglobal(lua_State * L, const char * szG
 #define lua_bindclass(L, Class) lua_createclass(L, Class::LUA_CLASS_METHOD_TABLE, Class::LUA_CLASS_METATABLE)
 
 // Binds the specified Lua class with the specified methods.
-INLINE void lua_createclass(lua_State * L, const luaL_Reg * methods, const char * name)
-{
+INLINE void lua_createclass(lua_State * L, const luaL_Reg * methods, const char * name) {
 	luaL_newmetatable(L, name);
 	luaL_setfuncs(L, methods, 0);
 	lua_pushvalue(L, -1);

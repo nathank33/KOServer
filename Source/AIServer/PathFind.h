@@ -1,17 +1,15 @@
 #pragma once
 
 // temporary
-struct CPoint
-{
+struct CPoint {
 	CPoint() {}
 	CPoint(int x, int y) : x(x), y(y) {}
 	int x, y;
 };
 
-class CRect
-{
+class CRect {
 public:
-	CRect(int x1, int y1, int x3, int y3) 
+	CRect(int x1, int y1, int x3, int y3)
 		: A(x1, y1), C(x3, y3) {}
 	bool PtInRect(int x, int y) { return (x >= A.x && x <= C.x && y >= A.y && y <= C.y); }
 private:
@@ -36,8 +34,7 @@ public:
 	STACK *NextStackPtr;
 };
 
-class CPathFind  
-{
+class CPathFind {
 public:
 	bool IsBlankMap(int x, int y);
 	void SetMap(int x, int y, MAP * pMap, int16 min_x, int16 min_y);
@@ -57,7 +54,7 @@ public:
 	_PathNode *Pop();
 
 protected:
-	long	m_lMapUse;	
+	long	m_lMapUse;
 	_PathNode *m_pOpen, *m_pClosed;
 	STACK *m_pStack;
 	MAP *m_pMap;

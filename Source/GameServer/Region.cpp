@@ -8,21 +8,18 @@
 *
 * @param	pUser	The user to add.
 */
-void CRegion::Add(CUser * pUser)
-{
+void CRegion::Add(CUser * pUser) {
 	Guard lock(m_lock);
 	m_RegionUserArray.insert(pUser->GetID());
 }
 
-void CRegion::Add(CBot * pBot)
-{
+void CRegion::Add(CBot * pBot) {
 	Guard lock(m_lock);
 	m_RegionBotArray.insert(pBot->GetID());
 }
 
 
-void CRegion::Remove(CBot * pBot)
-{
+void CRegion::Remove(CBot * pBot) {
 	Guard lock(m_lock);
 	m_RegionBotArray.erase(pBot->GetID());
 }
@@ -33,8 +30,7 @@ void CRegion::Remove(CBot * pBot)
 *
 * @param	pUser	The user to remove.
 */
-void CRegion::Remove(CUser * pUser)
-{
+void CRegion::Remove(CUser * pUser) {
 	Guard lock(m_lock);
 	m_RegionUserArray.erase(pUser->GetID());
 }
@@ -44,8 +40,7 @@ void CRegion::Remove(CUser * pUser)
 *
 * @param	pNpc	The NPC to add.
 */
-void CRegion::Add(CNpc * pNpc)
-{
+void CRegion::Add(CNpc * pNpc) {
 	Guard lock(m_lock);
 	m_RegionNpcArray.insert(pNpc->GetID());
 }
@@ -57,8 +52,7 @@ void CRegion::Add(CNpc * pNpc)
 *
 * @param	pNpc	The NPC to remove.
 */
-void CRegion::Remove(CNpc * pNpc)
-{
+void CRegion::Remove(CNpc * pNpc) {
 	Guard lock(m_lock);
 	m_RegionNpcArray.erase(pNpc->GetID());
 }

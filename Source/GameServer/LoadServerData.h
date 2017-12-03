@@ -24,7 +24,7 @@ typedef CSTLMapOnlyLoad	<_MAGIC_TYPE4>				Magictype4Array;
 typedef CSTLMapOnlyLoad <_MAGIC_TYPE5>				Magictype5Array;
 typedef CSTLMapOnlyLoad <_MAGIC_TYPE6>				Magictype6Array;
 typedef CSTLMapOnlyLoad <_MAGIC_TYPE7>				Magictype7Array;
-typedef CSTLMapOnlyLoad <_MAGIC_TYPE8>				Magictype8Array; 
+typedef CSTLMapOnlyLoad <_MAGIC_TYPE8>				Magictype8Array;
 typedef CSTLMapOnlyLoad <_MAGIC_TYPE9>				Magictype9Array;
 typedef CSTLMap <CNpc>						NpcArray;
 typedef CSTLMap <CBot>						BotArray;
@@ -54,14 +54,14 @@ typedef CSTLMapOnlyLoad <_ACHIEVE_WAR>				AchieveWarArray;
 typedef CSTLMapOnlyLoad <_ACHIEVE_COM>				AchieveComArray;
 typedef CSTLMapOnlyLoad <_ACHIEVE_MAIN>				AchieveMainArray;
 typedef CSTLMapOnlyLoad <_ACHIEVE_MONSTER>			AchieveMonsterArray;
-typedef std::map<uint64,_CYPHERRING_DATA *>	CypherRingArray;
+typedef std::map<uint64, _CYPHERRING_DATA *>	CypherRingArray;
 typedef CSTLMap <_ITEM_DUPER>				ItemDupersArray;
 typedef CSTLMap <_ILEGAL_ITEMS>				IlegalItemsArray;
 
 typedef CSTLMap <_MERCHANT_LIST>				MerchantListArray;
 
 
-typedef std::map<std::string, _USER_RANK *>			UserNameRankMap; 
+typedef std::map<std::string, _USER_RANK *>			UserNameRankMap;
 typedef std::map<uint8, _USER_RANK *>				UserRankMap;
 
 typedef std::vector<_QUEST_HELPER *>				QuestHelperList;
@@ -78,7 +78,7 @@ typedef CSTLMapOnlyLoad <_PREMIUM_ITEM>						PremiumItemArray;
 typedef CSTLMapOnlyLoad <_PREMIUM_ITEM_EXP>					PremiumItemExpArray;
 
 typedef CSTLMap <_USER_RANKING>						UserRankingArray;
-typedef std::map<std::string, _USER_DAILY_OP *>		UserDailyOpMap; 
+typedef std::map<std::string, _USER_DAILY_OP *>		UserDailyOpMap;
 
 typedef CSTLMap <_TEMPLE_EVENT_USER>				TempleEventUserArray;
 typedef CSTLMapOnlyLoad <_KNIGHTS_SIEGE_WARFARE>			KnightsSiegeWarfareArray;

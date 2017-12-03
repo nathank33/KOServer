@@ -6,8 +6,7 @@ typedef std::map <std::string, _VERSION_INFO *> VersionInfoList;
 typedef std::vector<_SERVER_INFO *>	ServerInfoList;
 
 class LoginSession;
-class LoginServer
-{
+class LoginServer {
 	friend class CDBProcess;
 public:
 	LoginServer();

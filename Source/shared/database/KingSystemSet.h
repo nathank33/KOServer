@@ -1,16 +1,14 @@
 #pragma once
 
-class CKingSystemSet : public OdbcRecordset
-{
+class CKingSystemSet : public OdbcRecordset {
 public:
-	CKingSystemSet(OdbcConnection * dbConnection, KingSystemArray * pMap) 
+	CKingSystemSet(OdbcConnection * dbConnection, KingSystemArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("KING_SYSTEM"); }
 	virtual tstring GetColumns() { return _T("byNation, byType, sYear, byMonth, byDay, byHour, byMinute, byImType, sImYear, byImMonth, byImDay, byImHour, byImMinute, byNoahEvent, byNoahEvent_Day, byNoahEvent_Hour, byNoahEvent_Minute, sNoahEvent_Duration, byExpEvent, byExpEvent_Day, byExpEvent_Hour, byExpEvent_Minute, sExpEvent_Duration, nTribute, byTerritoryTariff, nTerritoryTax, nNationalTreasury, strKingName, strImRequestID"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		CKingSystem * pData;
 		uint8 byNation;
 		uint32 i = 1;
@@ -26,8 +24,7 @@ public:
 		pData = m_pMap->GetData(byNation);
 
 		// We don't? Create one.
-		if (pData == nullptr)
-		{
+		if (pData == nullptr) {
 			pData = new CKingSystem();
 
 			// We don't need to check if it exists, because if it did
@@ -80,7 +77,7 @@ public:
 		if (pMap != nullptr)
 			pMap->SetTariff(pData->m_nTerritoryTariff);
 
-		
+
 		/* Names are so hard to remember. */
 		_dbCommand->FetchString(i++, pData->m_strKingName);
 		_dbCommand->FetchString(i++, pData->m_strImRequestID);

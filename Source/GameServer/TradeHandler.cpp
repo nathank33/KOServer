@@ -4,15 +4,13 @@
 
 using namespace std;
 
-void CUser::ExchangeProcess(Packet & pkt)
-{
+void CUser::ExchangeProcess(Packet & pkt) {
 	uint8 opcode = pkt.read<uint8>();
 
 	if (isStoreOpen() || isGM() || isMerchanting() || isSellingMerchant() || isBuyingMerchant() || isDead() || m_bMerchantStatex)
 		opcode = 8;
 
-	switch (opcode)
-	{
+	switch (opcode) {
 	case EXCHANGE_REQ:
 		ExchangeReq(pkt);
 		break;
@@ -31,17 +29,15 @@ void CUser::ExchangeProcess(Packet & pkt)
 	}
 }
 
-void CUser::ExchangeReq(Packet & pkt)
-{
+void CUser::ExchangeReq(Packet & pkt) {
 	Packet result(WIZ_EXCHANGE);
 	CUser * pUser;
 	uint16 destid;
 
 	if (isDead() || isStoreOpen() || isMerchanting() || m_bMerchantStatex)
 		goto fail_return;
-	
-	else if (isTrading())
-	{
+
+	else if (isTrading()) {
 		ExchangeCancel();
 		return;
 	}
@@ -54,7 +50,7 @@ void CUser::ExchangeReq(Packet & pkt)
 		|| pUser->isTrading()
 		|| pUser->m_bMerchantStatex
 		|| pUser->GetZoneID() != GetZoneID()
-		|| !isInRange(pUser->GetX(),pUser->GetZ(),RANGE_50M)
+		|| !isInRange(pUser->GetX(), pUser->GetZ(), RANGE_50M)
 		|| (GetNation() != GetNation() && GetMap()->canTradeWithOtherNation()))
 		goto fail_return;
 
@@ -64,14 +60,13 @@ void CUser::ExchangeReq(Packet & pkt)
 	if (pUser->isDead() || pUser->isStoreOpen() || pUser->isMerchanting())
 		goto fail_return;
 
-	if (GetLevel() < 20 || pUser->GetLevel() < 20) 
-	{
-	Packet resultmer;
-	std::string bufferpro = string_format("[Trade Message] must be at least 20 level"); 
-	ChatPacket::Construct(&resultmer, 7, &bufferpro);
-	Send(&resultmer);
-	goto fail_return;
-	} 
+	if (GetLevel() < 20 || pUser->GetLevel() < 20) {
+		Packet resultmer;
+		std::string bufferpro = string_format("[Trade Message] must be at least 20 level");
+		ChatPacket::Construct(&resultmer, 7, &bufferpro);
+		Send(&resultmer);
+		goto fail_return;
+	}
 
 	result << uint8(EXCHANGE_REQ) << GetSocketID();
 	pUser->Send(&result);
@@ -82,19 +77,17 @@ fail_return:
 	Send(&result);
 }
 
-void CUser::ExchangeAgree(Packet & pkt)
-{
+void CUser::ExchangeAgree(Packet & pkt) {
 	uint8 bResult = pkt.read<uint8>();
 	CUser *pUser = g_pMain->GetUserPtr(m_sExchangeUser);
-	if (pUser == nullptr || pUser == this) 
-	{
+	if (pUser == nullptr || pUser == this) {
 		m_sExchangeUser = -1;
 		return;
 	}
 
-	if (pUser->isDead() 
+	if (pUser->isDead()
 		|| isDead()
-		|| pUser->isStoreOpen() 
+		|| pUser->isStoreOpen()
 		|| isStoreOpen()
 		|| pUser->isMerchanting()
 		|| isMerchanting()
@@ -103,8 +96,7 @@ void CUser::ExchangeAgree(Packet & pkt)
 		|| !pUser->isTrading()
 		|| !isTrading()
 		|| pUser->GetZoneID() != GetZoneID()
-		|| !isInRange(pUser->GetX(),pUser->GetZ(),RANGE_50M))
-	{
+		|| !isInRange(pUser->GetX(), pUser->GetZ(), RANGE_50M)) {
 		m_sExchangeUser = -1;
 		return;
 	}
@@ -117,20 +109,19 @@ void CUser::ExchangeAgree(Packet & pkt)
 	}
 
 	string errorMessage = string_format(_T("TRADE uId-%s- tId-%s- r-%d- Z-%d- X-%d- Y-%d-"),
-		GetName().c_str(),pUser->GetName().c_str(),bResult,GetZoneID(), uint16(GetX()), uint16(GetZ()));
-		g_pMain->WriteTradeUserLogFile(errorMessage);
+		GetName().c_str(), pUser->GetName().c_str(), bResult, GetZoneID(), uint16(GetX()), uint16(GetZ()));
+	g_pMain->WriteTradeUserLogFile(errorMessage);
 
 	Packet result(WIZ_EXCHANGE, uint8(EXCHANGE_AGREE));
 	result << uint16(bResult);
 	pUser->Send(&result);
 }
 
-void CUser::ExchangeAdd(Packet & pkt)
-{
-	if (!isTrading() 
-		|| isDead() 
-		|| isStoreOpen() 
-		|| isMerchanting() 
+void CUser::ExchangeAdd(Packet & pkt) {
+	if (!isTrading()
+		|| isDead()
+		|| isStoreOpen()
+		|| isMerchanting()
 		|| m_bMerchantStatex)
 		return;
 
@@ -147,43 +138,39 @@ void CUser::ExchangeAdd(Packet & pkt)
 	if (pUser == nullptr
 		|| pUser == this
 		|| pUser->isDead()
-		|| isDead())
-	{
+		|| isDead()) {
 		ExchangeCancel();
 		return;
 	}
 
-	if (pUser->isDead() || pUser->isStoreOpen() 
-		|| pUser->isMerchanting() 
-		|| pUser->m_bMerchantStatex 
+	if (pUser->isDead() || pUser->isStoreOpen()
+		|| pUser->isMerchanting()
+		|| pUser->m_bMerchantStatex
 		|| !pUser->isTrading())
 		goto add_fail;
 
 	pkt >> pos >> nItemID >> count;
 
-	if(count == 0)
+	if (count == 0)
 		goto add_fail;
 
 	_ITEM_TABLE *pTable = g_pMain->GetItemPtr(nItemID);
 	if (pTable == nullptr
-		|| (nItemID != ITEM_GOLD 
-		&& (pos >= HAVE_MAX // Invalid position
-		|| (nItemID >= ITEM_NO_TRADE && nItemID < ITEM_NO_TRADE_MAX) // Cannot be traded, stored or sold.
-		|| pTable->m_bRace == RACE_UNTRADEABLE)) // Cannot be traded or sold.
+		|| (nItemID != ITEM_GOLD
+			&& (pos >= HAVE_MAX // Invalid position
+				|| (nItemID >= ITEM_NO_TRADE && nItemID < ITEM_NO_TRADE_MAX) // Cannot be traded, stored or sold.
+				|| pTable->m_bRace == RACE_UNTRADEABLE)) // Cannot be traded or sold.
 		|| m_bExchangeOK)
 		goto add_fail;
 
-	if (nItemID == ITEM_GOLD)
-	{
-		if (count <= 0 || count > m_iGold) 
+	if (nItemID == ITEM_GOLD) {
+		if (count <= 0 || count > m_iGold)
 			goto add_fail;
 
 		// If we have coins in the list already
 		// add to the amount of coins listed.
-		foreach (itr, m_ExchangeItemList)
-		{
-			if ((*itr)->nItemID == ITEM_GOLD)
-			{
+		foreach(itr, m_ExchangeItemList) {
+			if ((*itr)->nItemID == ITEM_GOLD) {
 				(*itr)->nCount += count;
 				bAdd = false; /* don't need to add a new entry */
 				break;
@@ -191,23 +178,18 @@ void CUser::ExchangeAdd(Packet & pkt)
 		}
 
 		m_iGold -= count;
-	}
-	else if ((pSrcItem = GetItem(SLOT_MAX + pos)) != nullptr && pSrcItem->nNum == nItemID)
-	{
+	} else if ((pSrcItem = GetItem(SLOT_MAX + pos)) != nullptr && pSrcItem->nNum == nItemID) {
 		if (pSrcItem->sCount < count
 			|| pSrcItem->isRented()
 			|| pSrcItem->isSealed()
 			|| pSrcItem->isBound()
 			|| pSrcItem->isDuplicate()
-			|| pSrcItem->nExpirationTime !=0)
+			|| pSrcItem->nExpirationTime != 0)
 			goto add_fail;
 
-		if (pTable->m_bCountable)
-		{
-			foreach (itr, m_ExchangeItemList)
-			{
-				if ((*itr)->nItemID == nItemID)
-				{
+		if (pTable->m_bCountable) {
+			foreach(itr, m_ExchangeItemList) {
+				if ((*itr)->nItemID == nItemID) {
 					(*itr)->nCount += count;
 					bAdd = false;
 					break;
@@ -215,31 +197,27 @@ void CUser::ExchangeAdd(Packet & pkt)
 			}
 		}
 
-		if(pTable->isStackable())
-		pSrcItem->sCount -= count;
+		if (pTable->isStackable())
+			pSrcItem->sCount -= count;
 		else
-		pSrcItem->sCount = 0;
+			pSrcItem->sCount = 0;
 
 
 		duration = pSrcItem->sDuration;
 		nSerialNum = pSrcItem->nSerialNum;
-	}
-	else
+	} else
 		goto add_fail;
 
-	foreach (itr, m_ExchangeItemList)
-	{
-		if ((*itr)->nItemID == ITEM_GOLD)
-		{
+	foreach(itr, m_ExchangeItemList) {
+		if ((*itr)->nItemID == ITEM_GOLD) {
 			bGold = true;
 			break;
 		}
 	}
-	if ((int)m_ExchangeItemList.size() > (bGold ? 13 : 12))
+	if ((int) m_ExchangeItemList.size() > (bGold ? 13 : 12))
 		goto add_fail;
 
-	if (bAdd)
-	{
+	if (bAdd) {
 		_EXCHANGE_ITEM * pItem = new _EXCHANGE_ITEM;
 		pItem->nItemID = nItemID;
 		pItem->sDurability = duration;
@@ -256,7 +234,7 @@ void CUser::ExchangeAdd(Packet & pkt)
 
 	result << uint8(EXCHANGE_OTHERADD)
 		<< nItemID << count << duration;
-	SetSpecialItemData(pSrcItem,result);
+	SetSpecialItemData(pSrcItem, result);
 	pUser->Send(&result);
 	return;
 
@@ -265,8 +243,7 @@ add_fail:
 	Send(&result);
 }
 
-void CUser::ExchangeDecide()
-{
+void CUser::ExchangeDecide() {
 	CUser *pUser = g_pMain->GetUserPtr(m_sExchangeUser);
 	if (pUser == nullptr
 		|| pUser->isDead()
@@ -277,26 +254,23 @@ void CUser::ExchangeDecide()
 		|| isStoreOpen()
 		|| isMerchanting()
 		|| m_bExchangeOK
-		|| m_sExchangeUser == -1)
-	{
+		|| m_sExchangeUser == -1) {
 		ExchangeCancel();
 		return;
 	}
 
-	if(pUser->isDead()
+	if (pUser->isDead()
 		|| !pUser->isTrading()
 		|| pUser->m_bMerchantStatex
-		|| pUser->isStoreOpen() 
-		|| pUser->isMerchanting())
-	{
+		|| pUser->isStoreOpen()
+		|| pUser->isMerchanting()) {
 		pUser->ExchangeCancel();
 		ExchangeCancel();
 		return;
 	}
 
 	Packet result(WIZ_EXCHANGE);
-	if (!pUser->m_bExchangeOK)
-	{
+	if (!pUser->m_bExchangeOK) {
 		m_bExchangeOK = 1;
 		result << uint8(EXCHANGE_OTHERDECIDE);
 		pUser->Send(&result);
@@ -304,8 +278,7 @@ void CUser::ExchangeDecide()
 	}
 
 	// Did the exchange requirements fail?
-	if (!CheckExchange() || !pUser->CheckExchange())
-	{
+	if (!CheckExchange() || !pUser->CheckExchange()) {
 		// At this stage, neither user has their items exchanged.
 		// However, their coins were removed -- these will be removed by ExchangeFinish().
 		result << uint8(EXCHANGE_DONE) << uint8(0);
@@ -314,9 +287,7 @@ void CUser::ExchangeDecide()
 
 		ExchangeCancel();
 		pUser->ExchangeCancel();
-	}
-	else
-	{
+	} else {
 		ExecuteExchange();
 		pUser->ExecuteExchange();
 
@@ -325,11 +296,10 @@ void CUser::ExchangeDecide()
 			<< GetCoins()
 			<< uint16(pUser->m_ExchangeItemList.size());
 
-		foreach (itr, pUser->m_ExchangeItemList)
-		{
-			result	<< (*itr)->bDstPos << (*itr)->nItemID
+		foreach(itr, pUser->m_ExchangeItemList) {
+			result << (*itr)->bDstPos << (*itr)->nItemID
 				<< uint16((*itr)->nCount) << (*itr)->sDurability;
-			pUser->SetExchangeSpecialItemData((*itr),result);
+			pUser->SetExchangeSpecialItemData((*itr), result);
 		}
 		Send(&result);
 
@@ -339,23 +309,20 @@ void CUser::ExchangeDecide()
 			<< pUser->GetCoins()
 			<< uint16(m_ExchangeItemList.size());
 
-		foreach (itr, m_ExchangeItemList)
-		{
-			
-			result	<< (*itr)->bDstPos << (*itr)->nItemID
+		foreach(itr, m_ExchangeItemList) {
+
+			result << (*itr)->bDstPos << (*itr)->nItemID
 				<< uint16((*itr)->nCount) << (*itr)->sDurability;
-			SetExchangeSpecialItemData((*itr),result);
+			SetExchangeSpecialItemData((*itr), result);
 		}
 		pUser->Send(&result);
 		DateTime time;
-		foreach (itr, pUser->m_ExchangeItemList)
-		{
-			g_pMain->WriteTradeUserLogFile(string_format("[ %d:%d:%d ] User Trade: %s - Recv Item User: %s  - Item: %d , count %d , Serial: %I64d \n", time.GetHour(),time.GetMinute(),time.GetSecond() ,  pUser->GetName().c_str() ,  GetName().c_str() , (*itr)->nItemID , (*itr)->nCount , (*itr)->nSerialNum ));
+		foreach(itr, pUser->m_ExchangeItemList) {
+			g_pMain->WriteTradeUserLogFile(string_format("[ %d:%d:%d ] User Trade: %s - Recv Item User: %s  - Item: %d , count %d , Serial: %I64d \n", time.GetHour(), time.GetMinute(), time.GetSecond(), pUser->GetName().c_str(), GetName().c_str(), (*itr)->nItemID, (*itr)->nCount, (*itr)->nSerialNum));
 		}
 
-		foreach (itr, m_ExchangeItemList)
-		{
-			g_pMain->WriteTradeUserLogFile(string_format("[ %d:%d:%d ] User Trade: %s - Recv Item User: %s  - Item: %d , count %d , Serial: %I64d \n", time.GetHour(),time.GetMinute(),time.GetSecond() , GetName().c_str()  , pUser->GetName().c_str() , (*itr)->nItemID , (*itr)->nCount , (*itr)->nSerialNum ));
+		foreach(itr, m_ExchangeItemList) {
+			g_pMain->WriteTradeUserLogFile(string_format("[ %d:%d:%d ] User Trade: %s - Recv Item User: %s  - Item: %d , count %d , Serial: %I64d \n", time.GetHour(), time.GetMinute(), time.GetSecond(), GetName().c_str(), pUser->GetName().c_str(), (*itr)->nItemID, (*itr)->nCount, (*itr)->nSerialNum));
 		}
 
 		SetUserAbility(false);
@@ -365,26 +332,23 @@ void CUser::ExchangeDecide()
 		pUser->SetUserAbility(false);
 		pUser->SendItemWeight();
 		pUser->ExchangeFinish();
-		}
+	}
 }
 
-void CUser::ExchangeCancel(bool bIsOnDeath)
-{
-	if (!isTrading() 
+void CUser::ExchangeCancel(bool bIsOnDeath) {
+	if (!isTrading()
 		|| (!bIsOnDeath && isDead()))
 		return;
 
 	// Restore coins and items...
-	while (m_ExchangeItemList.size())
-	{
+	while (m_ExchangeItemList.size()) {
 		_EXCHANGE_ITEM *pItem = m_ExchangeItemList.front();
-		if (pItem != nullptr)
-		{
+		if (pItem != nullptr) {
 			// Restore coins to owner
 			if (pItem->nItemID == ITEM_GOLD)
 				m_iGold += pItem->nCount;
 			// Restore items to owner
-			else if(GetItem(pItem->bSrcPos)->nNum == pItem->nItemID)
+			else if (GetItem(pItem->bSrcPos)->nNum == pItem->nItemID)
 				GetItem(pItem->bSrcPos)->sCount += pItem->nCount;
 
 			delete pItem;
@@ -396,12 +360,11 @@ void CUser::ExchangeCancel(bool bIsOnDeath)
 	CUser *pUser = g_pMain->GetUserPtr(m_sExchangeUser);
 	ExchangeFinish();
 
-	if (pUser != nullptr)
-	{
+	if (pUser != nullptr) {
 		pUser->ExchangeCancel();
 
 		string errorMessage = string_format(_T("TRADE_CANCEL uId-%s- tId-%s- Z-%d- X-%d- Y-%d-"),
-		GetName().c_str(),pUser->GetName().c_str(),GetZoneID(), uint16(GetX()), uint16(GetZ()));
+			GetName().c_str(), pUser->GetName().c_str(), GetZoneID(), uint16(GetX()), uint16(GetZ()));
 		g_pMain->WriteTradeUserLogFile(errorMessage);
 
 		Packet result(WIZ_EXCHANGE, uint8(EXCHANGE_CANCEL));
@@ -409,8 +372,7 @@ void CUser::ExchangeCancel(bool bIsOnDeath)
 	}
 }
 
-void CUser::ExchangeFinish()
-{
+void CUser::ExchangeFinish() {
 	m_sExchangeUser = -1;
 	m_bExchangeOK = 0;
 	m_ExchangeItemList.clear();
@@ -422,8 +384,7 @@ void CUser::ExchangeFinish()
 *
 * @return	true if it succeeds, false if it fails.
 */
-bool CUser::CheckExchange()
-{
+bool CUser::CheckExchange() {
 	uint32 money = 0;
 	uint16 weight = 0;
 
@@ -431,34 +392,31 @@ bool CUser::CheckExchange()
 	if (pUser == nullptr || pUser == this)
 		return false;
 
-	if (pUser->isDead() 
-		|| pUser->isStoreOpen() 
-		|| pUser->isMerchanting() 
+	if (pUser->isDead()
+		|| pUser->isStoreOpen()
+		|| pUser->isMerchanting()
 		|| pUser->m_bMerchantStatex)
 		return false;
 
-	if (isDead() 
-		|| isStoreOpen() 
-		|| isMerchanting() 
+	if (isDead()
+		|| isStoreOpen()
+		|| isMerchanting()
 		|| m_bMerchantStatex)
 		return false;
 
 
 	// Get the total number of free slots in the player's inventory
 	uint8 bFreeSlots = 0, bItemCount = 0;
-	for (uint8 i = SLOT_MAX; i < SLOT_MAX+HAVE_MAX; i++)
-	{
+	for (uint8 i = SLOT_MAX; i < SLOT_MAX + HAVE_MAX; i++) {
 		_ITEM_DATA * pItem = GetItem(i);
 		if (pItem->nNum == 0)
 			bFreeSlots++;
 	}
 
 	// Loop through the other user's list of items up for trade.
-	foreach (Iter, pUser->m_ExchangeItemList)
-	{
+	foreach(Iter, pUser->m_ExchangeItemList) {
 		// If we're trading coins, ensure we don't exceed our limit.
-		if ((*Iter)->nItemID == ITEM_GOLD)
-		{
+		if ((*Iter)->nItemID == ITEM_GOLD) {
 			money += (*Iter)->nCount;
 			if ((m_iGold + money) > COIN_MAX)
 				return false;
@@ -470,11 +428,11 @@ bool CUser::CheckExchange()
 		_ITEM_TABLE *pTable = g_pMain->GetItemPtr((*Iter)->nItemID);
 		if (pTable == nullptr)
 			return false;
-		
-		if(pTable->isStackable() 
-				&& (*Iter)->nItemID != 0 // slot in use
-				&& (*Iter)->nItemID != pTable->m_iNum)
-				return false;
+
+		if (pTable->isStackable()
+			&& (*Iter)->nItemID != 0 // slot in use
+			&& (*Iter)->nItemID != pTable->m_iNum)
+			return false;
 
 		// Is there enough room for this item?
 		// NOTE: Also ensures we have enough space in our inventory (with one exchange in mind anyway)
@@ -494,17 +452,14 @@ bool CUser::CheckExchange()
 	return ((weight + m_sItemWeight) <= m_sMaxWeight);
 }
 
-bool CUser::ExecuteExchange()
-{
+bool CUser::ExecuteExchange() {
 	CUser *pUser = g_pMain->GetUserPtr(m_sExchangeUser);
 	if (pUser == nullptr)
 		return false;
 
 	ItemList::iterator coinItr = pUser->m_ExchangeItemList.end();
-	foreach (Iter, pUser->m_ExchangeItemList)
-	{
-		if ((*Iter)->nItemID == ITEM_GOLD)
-		{
+	foreach(Iter, pUser->m_ExchangeItemList) {
+		if ((*Iter)->nItemID == ITEM_GOLD) {
 			m_iGold += (*Iter)->nCount;
 			coinItr = Iter;
 			continue;
@@ -520,21 +475,21 @@ bool CUser::ExecuteExchange()
 		_ITEM_DATA * pDstItem = GetItem(nSlot);
 		_ITEM_DATA * pSrcItem = pUser->GetItem((*Iter)->bSrcPos);
 
-		if(pDstItem->nNum != pSrcItem->nNum 
+		if (pDstItem->nNum != pSrcItem->nNum
 			&& pDstItem->nNum != 0)
 			continue;
 
 		pDstItem->nNum = pSrcItem->nNum;
-		if(pTable->isStackable())
-		pDstItem->sCount += (*Iter)->nCount;
+		if (pTable->isStackable())
+			pDstItem->sCount += (*Iter)->nCount;
 		else
-		pDstItem->sCount = (*Iter)->nCount;
+			pDstItem->sCount = (*Iter)->nCount;
 
 		if (pDstItem->sCount > MAX_ITEM_COUNT)
 			pDstItem->sCount = MAX_ITEM_COUNT;
 
 		pDstItem->sDuration = pSrcItem->sDuration;
-		
+
 		if (!pTable->isStackable() || (*Iter)->nCount == pDstItem->sCount)
 			pDstItem->nSerialNum = pSrcItem->nSerialNum;
 
@@ -552,7 +507,7 @@ bool CUser::ExecuteExchange()
 
 
 		string errorMessage = string_format(_T("TRADE_FINISH uId-%s- tId-%s- I-%d- Z-%d- X-%d- Y-%d-"),
-		GetName().c_str(),pUser->GetName().c_str(),pSrcItem->nNum,GetZoneID(), uint16(GetX()), uint16(GetZ()));
+			GetName().c_str(), pUser->GetName().c_str(), pSrcItem->nNum, GetZoneID(), uint16(GetX()), uint16(GetZ()));
 		g_pMain->WriteTradeUserLogFile(errorMessage);
 
 		// Remove the item from the other player.
@@ -562,8 +517,7 @@ bool CUser::ExecuteExchange()
 
 	// Remove coins from the list so it doesn't get sent
 	// with the rest of the packet.
-	if (coinItr != pUser->m_ExchangeItemList.end())
-	{
+	if (coinItr != pUser->m_ExchangeItemList.end()) {
 		delete *coinItr;
 		pUser->m_ExchangeItemList.erase(coinItr);
 	}

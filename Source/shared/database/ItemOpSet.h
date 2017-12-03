@@ -1,16 +1,14 @@
 #pragma once
 
-class CItemOpSet : public OdbcRecordset
-{
+class CItemOpSet : public OdbcRecordset {
 public:
-	CItemOpSet(OdbcConnection * dbConnection, ItemOpArray * pMap) 
+	CItemOpSet(OdbcConnection * dbConnection, ItemOpArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("ITEM_OP"); }
 	virtual tstring GetColumns() { return _T("nItemID, bTriggerType, nSkillID, bTriggerRate"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_ITEM_OP * pData = new _ITEM_OP;
 
 		_dbCommand->FetchUInt32(1, pData->nItemID);

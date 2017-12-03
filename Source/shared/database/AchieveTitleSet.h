@@ -1,15 +1,13 @@
 #pragma once
 
-class CAchieveTitleSet : public OdbcRecordset
-{
+class CAchieveTitleSet : public OdbcRecordset {
 public:
 	CAchieveTitleSet(OdbcConnection * dbConnection, AchieveTitleArray * pMap) : OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("ACHIEVE_TITLE"); }
 	virtual tstring GetColumns() { return _T("ID, Unknow1, Strength, Health, Dexterity, Intelligence, MagicPower, Attack, Defense, Contribution, ExpBonusPercent, ShortSwordDefense, JamadarDefense, SwordDefense, BlowDefense, AxeDefense, SpearDefense, ArrowDefense, FlameBonus, IceBonus, ElectricShockBonus, FlameResistence, IceResistence, ElectrickShockResistence, MagicResistence, SpellResistence, PoisonResistence"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		auto pData = new _ACHIEVE_TITLE;
 
 		auto i = 1;

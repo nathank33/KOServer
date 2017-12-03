@@ -1,15 +1,13 @@
 #pragma once
 
-enum GameEventType
-{
-	ZONE_CHANGE		= 1,
-	ZONE_TRAP_DEAD	= 2,
-	ZONE_TRAP_AREA	= 3
+enum GameEventType {
+	ZONE_CHANGE = 1,
+	ZONE_TRAP_DEAD = 2,
+	ZONE_TRAP_AREA = 3
 };
 
 class CUser;
-class CGameEvent
-{
+class CGameEvent {
 public:
 	CGameEvent();
 	void RunEvent(CUser* pUser = nullptr);

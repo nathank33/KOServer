@@ -1,16 +1,14 @@
 #pragma once
 
-class CKingCandidacyNoticeBoardSet : public OdbcRecordset
-{
+class CKingCandidacyNoticeBoardSet : public OdbcRecordset {
 public:
-	CKingCandidacyNoticeBoardSet(OdbcConnection * dbConnection, KingSystemArray * pMap) 
+	CKingCandidacyNoticeBoardSet(OdbcConnection * dbConnection, KingSystemArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("KING_CANDIDACY_NOTICE_BOARD"); }
 	virtual tstring GetColumns() { return _T("byNation, strUserID, strNotice"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		CKingSystem * pData;
 		uint8 byNation;
 

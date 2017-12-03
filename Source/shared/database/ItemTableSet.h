@@ -1,16 +1,14 @@
 #pragma once
 
-class CItemTableSet : public OdbcRecordset
-{
+class CItemTableSet : public OdbcRecordset {
 public:
-	CItemTableSet(OdbcConnection * dbConnection, ItemtableArray * pMap) 
+	CItemTableSet(OdbcConnection * dbConnection, ItemtableArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("ITEM"); }
 	virtual tstring GetColumns() { return _T("Num, ItemExt, ItemClass, strName, Kind, Slot, Race, Class, Damage, Delay, Range, Weight, Duration, BuyPrice, SellPrice, Ac, Countable, Effect1, Effect2, ReqLevel, ReqLevelMax, ReqRank, ReqTitle, ReqStr, ReqSta, ReqDex, ReqIntel, ReqCha, SellingGroup, ItemType, Hitrate, Evasionrate, DaggerAc, SwordAc, MaceAc, AxeAc, SpearAc, BowAc, FireDamage, IceDamage, LightningDamage, PoisonDamage, HPDrain, MPDamage, MPDrain, MirrorDamage, StrB, StaB, DexB, IntelB, ChaB, MaxHpB, MaxMpB, FireR, ColdR, LightningR, MagicR, PoisonR, CurseR, NPbuyPrice"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_ITEM_TABLE *pData = new _ITEM_TABLE;
 
 		int i = 1;

@@ -10,8 +10,7 @@ BOOL WINAPI _ConsoleHandler(DWORD dwCtrlType);
 
 bool g_bRunning = true;
 
-int main()
-{
+int main() {
 	SetConsoleTitle("Game Server for Knight Online v" STRINGIFY(__VERSION) " Max Online :" STRINGIFY(MAX_USER));
 
 	// Override the console handler
@@ -28,8 +27,7 @@ int main()
 	g_pMain = new CGameServerDlg();
 
 	// Start up server
-	if (g_pMain->Startup())
-	{
+	if (g_pMain->Startup()) {
 		// Reset Battle Zone Variables.
 		g_pMain->ResetBattleZone();
 
@@ -37,9 +35,7 @@ int main()
 
 		// Wait until console's signaled as closing
 		s_hEvent.Wait();
-	}
-	else
-	{
+	} else {
 		system("pause");
 	}
 
@@ -47,7 +43,7 @@ int main()
 
 	// This seems redundant, but it's not. 
 	// We still have the destructor for the dialog instance, which allows time for threads to properly cleanup.
-	g_bRunning = false; 
+	g_bRunning = false;
 
 	delete g_pMain;
 
@@ -58,8 +54,7 @@ int main()
 	return 0;
 }
 
-BOOL WINAPI _ConsoleHandler(DWORD dwCtrlType)
-{
+BOOL WINAPI _ConsoleHandler(DWORD dwCtrlType) {
 	s_hEvent.BeginSynchronized();
 	s_hEvent.Signal();
 	s_hEvent.EndSynchronized();

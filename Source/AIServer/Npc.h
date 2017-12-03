@@ -27,35 +27,30 @@
 #define MAX_MAGIC_TYPE3			20
 #define MAX_MAGIC_TYPE4			9
 
-struct  _NpcSkillList
-{
+struct  _NpcSkillList {
 	short	sSid;
 	uint8	tLevel;
 	uint8	tOnOff;
 };
 
-struct  _NpcDamagedList
-{
+struct  _NpcDamagedList {
 	uint16	GetID;
 	int	Damage;
 	uint32	lastdamagedt;
-	
-	INLINE void Reset()
-		{
-			GetID = -1;
-			Damage = 0;
-			lastdamagedt = 0;
-		}
+
+	INLINE void Reset() {
+		GetID = -1;
+		Damage = 0;
+		lastdamagedt = 0;
+	}
 };
 
-struct  _NpcGiveItem
-{
+struct  _NpcGiveItem {
 	int 	sSid;			// item serial number
 	short	count;			// item 갯수(돈은 단위)
 };
 
-struct _Target
-{
+struct _Target {
 	uint16	id;							// 공격대상 User uid
 	bool bSet;
 	float x;						// User의 x pos
@@ -63,19 +58,16 @@ struct _Target
 	float z;						// User의 z pos
 };
 
-struct _PattenPos
-{
+struct _PattenPos {
 	short x;
 	short z;
 };
 
-struct _PathList
-{
+struct _PathList {
 	_PattenPos pPattenPos[NPC_MAX_PATH_LIST];
 };
 
-struct _TargetHealer
-{
+struct _TargetHealer {
 	short	sNID;				// npc nid
 	short	sValue;				// 점수
 };
@@ -84,36 +76,32 @@ class MAP;
 
 #include "../GameServer/Unit.h"
 
-enum MonSearchType
-{
+enum MonSearchType {
 	MonSearchSameFamily,	// find any available mobs of the same family
 	MonSearchAny,			// find any available mob
 	MonSearchNeedsHealing	// find any mob that needs healing
 };
 
-enum CloseTargetResult
-{
+enum CloseTargetResult {
 	CloseTargetInvalid,
 	CloseTargetNotInRange,
 	CloseTargetInGeneralRange,
 	CloseTargetInAttackRange
 };
 
-enum NpcSpecialType
-{
-	NpcSpecialTypeNone				= 0,
-	NpcSpecialTypeCycleSpawn		= 7,
-	NpcSpecialTypeKarusWarder1		= 90,
-	NpcSpecialTypeKarusWarder2		= 91,
-	NpcSpecialTypeElmoradWarder1	= 92,
-	NpcSpecialTypeElmoradWarder2	= 93,
-	NpcSpecialTypeKarusKeeper		= 98,
-	NpcSpecialTypeElmoradKeeper		= 99
+enum NpcSpecialType {
+	NpcSpecialTypeNone = 0,
+	NpcSpecialTypeCycleSpawn = 7,
+	NpcSpecialTypeKarusWarder1 = 90,
+	NpcSpecialTypeKarusWarder2 = 91,
+	NpcSpecialTypeElmoradWarder1 = 92,
+	NpcSpecialTypeElmoradWarder2 = 93,
+	NpcSpecialTypeKarusKeeper = 98,
+	NpcSpecialTypeElmoradKeeper = 99
 };
 
 struct __Vector3;
-class CNpc : public Unit
-{
+class CNpc : public Unit {
 public:
 	uint16 GetID() { return m_sNid; }
 	INLINE uint16 GetProtoID() { return GetProto()->m_sSid; }
@@ -129,37 +117,34 @@ public:
 
 	void HpChange(int amount, Unit *pAttacker = nullptr, bool bSendToGameServer = true);
 	void MSpChange(int amount) {}
-	void NpcCalling(float fDis,float fDistance, __Vector3 oPos, __Vector3 cPost);
+	void NpcCalling(float fDis, float fDistance, __Vector3 oPos, __Vector3 cPost);
 
 	INLINE CNpcTable * GetProto() { return m_proto; }
 	INLINE uint8 GetType() { return GetProto()->m_tNpcType; }
 
-	INLINE bool isHealer() { return GetType() == NPC_HEALER; } 
+	INLINE bool isHealer() { return GetType() == NPC_HEALER; }
 
-	INLINE bool isGuard()
-	{
+	INLINE bool isGuard() {
 		return GetType() == NPC_GUARD || GetType() == NPC_PATROL_GUARD || GetType() == NPC_STORE_GUARD;
 	}
 
-	INLINE bool isGate() 
-	{
-		return GetType() == NPC_GATE 
+	INLINE bool isGate() {
+		return GetType() == NPC_GATE
 			|| GetType() == NPC_GATE2
-			|| GetType() == NPC_PHOENIX_GATE 
-			|| GetType() == NPC_SPECIAL_GATE 
+			|| GetType() == NPC_PHOENIX_GATE
+			|| GetType() == NPC_SPECIAL_GATE
 			|| GetType() == NPC_VICTORY_GATE
 			|| GetType() == NPC_GATE_LEVER
-			|| GetType() == NPC_BORDER_MONUMENT; 
+			|| GetType() == NPC_BORDER_MONUMENT;
 	}
 
-	INLINE bool isArtifact() 
-	{ 
-		return GetType() == NPC_ARTIFACT 
-			|| GetType() == NPC_DESTROYED_ARTIFACT 
-			|| GetType() == NPC_ARTIFACT1 
-			|| GetType() == NPC_ARTIFACT2 
-			|| GetType() == NPC_ARTIFACT3 
-			|| GetType() == NPC_ARTIFACT4; 
+	INLINE bool isArtifact() {
+		return GetType() == NPC_ARTIFACT
+			|| GetType() == NPC_DESTROYED_ARTIFACT
+			|| GetType() == NPC_ARTIFACT1
+			|| GetType() == NPC_ARTIFACT2
+			|| GetType() == NPC_ARTIFACT3
+			|| GetType() == NPC_ARTIFACT4;
 	}
 
 	INLINE bool isNonAttackingObject() { return isGate() || GetType() == NPC_GATE_LEVER || isArtifact() || GetType() == NPC_SCARECROW || GetType() == NPC_BORDER_MONUMENT || GetType() == NPC_CHAOS_STONE; }
@@ -168,7 +153,7 @@ public:
 	INLINE bool isDead() { return m_NpcState == NPC_DEAD || m_iHP <= 0; }
 	INLINE bool isAlive() { return !isDead(); }
 	INLINE bool isMonster() { return m_bMonster; }
-	INLINE int	GetMyPath() { return (m_sRealPathCount < 0) ? -m_sRealPathCount : m_sRealPathCount;}
+	INLINE int	GetMyPath() { return (m_sRealPathCount < 0) ? -m_sRealPathCount : m_sRealPathCount; }
 	INLINE bool hasTarget() { return m_Target.bSet; }
 
 	CNpcTable *m_proto;
@@ -313,7 +298,7 @@ public:
 	float m_fAdd_x;
 	float m_fAdd_z;
 
-	float m_fBattlePos_x;	
+	float m_fBattlePos_x;
 	float m_fBattlePos_z;
 
 	float m_fSecForRealMoveMetor;		// 초당 갈 수 있는 거리..(실제 클라이언트에 보내주는 거리)
@@ -449,7 +434,7 @@ public:
 	int  GetItemGrade(int item_grade);
 	int  GetItemCodeNumber(int level, int item_type);
 	int  GetWeaponItemCodeNumber(bool bWeapon);
-	int  GetPartyExp( int party_level, int man, int nNpcExp );
+	int  GetPartyExp(int party_level, int man, int nNpcExp);
 	void ChangeAbility(int iChangeType);
 	bool Teleport();
 

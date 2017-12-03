@@ -1,7 +1,6 @@
 #pragma once
 
-class CParty  
-{
+class CParty {
 public:
 	CParty();
 	virtual ~CParty();

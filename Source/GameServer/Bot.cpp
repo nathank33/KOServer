@@ -2,13 +2,11 @@
 #include "Map.h"
 #include "../shared/DateTime.h"
 
-CBot::CBot()
-{
+CBot::CBot() {
 	Initialize();
 }
 
-void CBot::Initialize()
-{
+void CBot::Initialize() {
 	MerchantChat.clear();
 	LastWarpTime = 0;
 	m_tLastKillTime = 0;
@@ -20,7 +18,7 @@ void CBot::Initialize()
 	for (int i = 0; i < STAT_COUNT; i++)
 		m_bRebStats[i] = 0;
 	m_sAchieveCoverTitle = 0;
-	
+
 	memset(&m_arSellMerchantItems, 0, sizeof(m_arSellMerchantItems));
 	memset(&m_arBuyMerchantItems, 0, sizeof(m_arBuyMerchantItems));
 	m_bMerchantState = MERCHANT_STATE_NONE;
@@ -31,7 +29,7 @@ void CBot::Initialize()
 	m_bIsChicken = false;
 	m_bIsHidingHelmet = false;
 	m_bIsHidingCospre = false;
-	
+
 	m_bPremiumMerchant = false;
 	m_bInParty = false;
 
@@ -68,11 +66,10 @@ void CBot::Initialize()
 
 }
 
-bool CBot::RegisterRegion()
-{
-	uint16 
-		new_region_x = GetNewRegionX(), new_region_z = GetNewRegionZ(), 
-		old_region_x = GetRegionX(),	old_region_z = GetRegionZ();
+bool CBot::RegisterRegion() {
+	uint16
+		new_region_x = GetNewRegionX(), new_region_z = GetNewRegionZ(),
+		old_region_x = GetRegionX(), old_region_z = GetRegionZ();
 
 	if (GetRegion() == nullptr || (old_region_x == new_region_x && old_region_z == new_region_z))
 		return false;
@@ -80,47 +77,41 @@ bool CBot::RegisterRegion()
 	AddToRegion(new_region_x, new_region_z);
 
 	RemoveRegion(old_region_x - new_region_x, old_region_z - new_region_z);
-	InsertRegion(new_region_x - old_region_x, new_region_z - old_region_z);	
+	InsertRegion(new_region_x - old_region_x, new_region_z - old_region_z);
 
 	return true;
 }
 
-void CBot::AddToRegion(int16 new_region_x, int16 new_region_z)
-{
+void CBot::AddToRegion(int16 new_region_x, int16 new_region_z) {
 	GetRegion()->Remove(this);
 	SetRegion(new_region_x, new_region_z);
 	GetRegion()->Add(this);
 }
 
-void CBot::RemoveRegion(int16 del_x, int16 del_z)
-{
+void CBot::RemoveRegion(int16 del_x, int16 del_z) {
 	ASSERT(GetMap() != nullptr);
 
 	Packet result;
 	GetInOut(result, INOUT_OUT);
-	g_pMain->Send_OldRegions(&result, del_x, del_z, GetMap(), GetRegionX(), GetRegionZ(),nullptr,0);
+	g_pMain->Send_OldRegions(&result, del_x, del_z, GetMap(), GetRegionX(), GetRegionZ(), nullptr, 0);
 }
 
-void CBot::InsertRegion(int16 insert_x, int16 insert_z)
-{
+void CBot::InsertRegion(int16 insert_x, int16 insert_z) {
 	ASSERT(GetMap() != nullptr);
 
 	Packet result;
 	GetInOut(result, INOUT_IN);
-	g_pMain->Send_NewRegions(&result, insert_x, insert_z, GetMap(), GetRegionX(), GetRegionZ(),nullptr,0);
+	g_pMain->Send_NewRegions(&result, insert_x, insert_z, GetMap(), GetRegionX(), GetRegionZ(), nullptr, 0);
 }
 
-void CBot::SetRegion(uint16 x /*= -1*/, uint16 z /*= -1*/) 
-{
-	m_sRegionX = x; m_sRegionZ = z; 
+void CBot::SetRegion(uint16 x /*= -1*/, uint16 z /*= -1*/) {
+	m_sRegionX = x; m_sRegionZ = z;
 	m_pRegion = m_pMap->GetRegion(x, z); // TODO: Clean this up
 }
 
-void CBot::StateChangeServerDirect(uint8 bType, uint32 nBuff)
-{
-	uint8 buff = *(uint8 *)&nBuff; // don't ask
-	switch (bType)
-	{
+void CBot::StateChangeServerDirect(uint8 bType, uint32 nBuff) {
+	uint8 buff = *(uint8 *) &nBuff; // don't ask
+	switch (bType) {
 	case 1:
 		m_bResHpType = buff;
 		break;
@@ -155,69 +146,59 @@ void CBot::StateChangeServerDirect(uint8 bType, uint32 nBuff)
 	}
 
 	Packet result(WIZ_STATE_CHANGE);
-	result << GetID() << bType << nBuff; 
+	result << GetID() << bType << nBuff;
 	SendToRegion(&result);
 }
 
-void CBot::GetInOut(Packet & result, uint8 bType)
-{
+void CBot::GetInOut(Packet & result, uint8 bType) {
 	result.Initialize(WIZ_USER_INOUT);
 	result << uint16(bType) << GetID();
 	if (bType != INOUT_OUT)
 		GetUserInfo(result);
 }
 
-void CBot::UserInOut(uint8 bType)
-{
+void CBot::UserInOut(uint8 bType) {
 	Packet result;
 	GetInOut(result, bType);
-	
-		Guard lock(g_pMain->m_BotcharacterNameLock);
-	if (bType == INOUT_OUT)
-	{
+
+	Guard lock(g_pMain->m_BotcharacterNameLock);
+	if (bType == INOUT_OUT) {
 		GetRegion()->Remove(this);
 		m_state = GAME_STATE_CONNECTED;
-		
+
 		std::string upperName = GetName();
 		STRTOUPPER(upperName);
 
 		g_pMain->m_BotcharacterNameMap.erase(upperName);
-	}
-	else
-	{
+	} else {
 		GetRegion()->Add(this);
 		m_state = GAME_STATE_INGAME;
 
-	std::string upperName = GetName();
-	STRTOUPPER(upperName);
-	g_pMain->m_BotcharacterNameMap[upperName] = this;
+		std::string upperName = GetName();
+		STRTOUPPER(upperName);
+		g_pMain->m_BotcharacterNameMap[upperName] = this;
 
 	}
 	SendToRegion(&result);
 }
 
-void CBot::SendToRegion(Packet *pkt)
-{
+void CBot::SendToRegion(Packet *pkt) {
 	g_pMain->Send_Region(pkt, GetMap(), GetRegionX(), GetRegionZ(), nullptr, 0);
 }
 
-void CBot::GetUserInfo(Packet & pkt)
-{
+void CBot::GetUserInfo(Packet & pkt) {
 
 	pkt.SByte();
-	pkt		<< GetName()
+	pkt << GetName()
 		<< uint16(m_bNation) << GetClanID() << m_bFame;
 
 	CKnights * pKnights = g_pMain->GetClanPtr(GetClanID());
-	if (pKnights == nullptr)
-	{
-		pkt	<< uint32(0) << uint16(0) << uint8(0) << uint16(-1) << uint32(0) << uint8(0);
-	}
-	else
-	{
+	if (pKnights == nullptr) {
+		pkt << uint32(0) << uint16(0) << uint8(0) << uint16(-1) << uint32(0) << uint8(0);
+	} else {
 		CKnights *aKnights = g_pMain->GetClanPtr(pKnights->GetAllianceID());
 
-		pkt	<< pKnights->GetAllianceID()
+		pkt << pKnights->GetAllianceID()
 			<< pKnights->m_strName
 			<< pKnights->m_byGrade << pKnights->m_byRanking
 			<< uint16(pKnights->m_sMarkVersion) // symbol/mark version
@@ -226,13 +207,13 @@ void CBot::GetUserInfo(Packet & pkt)
 			// not sure what this is, but it (just?) enables the clan symbol on the cape 
 			// value in dump was 9, but everything tested seems to behave as equally well...
 			// we'll probably have to implement logic to respect requirements.
-			<< uint8(1); 
+			<< uint8(1);
 	}
 	uint8 bInvisibilityType = m_bInvisibilityType;
 	if (bInvisibilityType != INVIS_NONE)
 		bInvisibilityType = INVIS_DISPEL_ON_MOVE;
 
-	pkt	<< m_bLevel << m_bRace << m_sClass
+	pkt << m_bLevel << m_bRace << m_sClass
 		<< GetSPosX() << GetSPosZ() << GetSPosY()
 		<< m_bFace << m_nHair
 		<< m_bResHpType << uint32(m_bAbnormalType)
@@ -249,23 +230,22 @@ void CBot::GetUserInfo(Packet & pkt)
 		<< int8(-1) << int8(-1); // NP ranks (total, monthly)
 
 
-	uint8 equippedItems[] = 
+	uint8 equippedItems[] =
 	{
 		BREAST, LEG, HEAD, GLOVE, FOOT, SHOULDER, RIGHTHAND, LEFTHAND, CWING, CHELMET, CLEFT, CRIGHT, CTOP, FAIRY
 	};
 
-	foreach_array (i, equippedItems) 
-	{
+	foreach_array(i, equippedItems) {
 		_ITEM_DATA * pItem = &m_sItemArray[equippedItems[i]];
 
-		if(pItem == nullptr)
-			continue; 
+		if (pItem == nullptr)
+			continue;
 
 		pkt << pItem->nNum << pItem->sDuration << pItem->bFlag;
 	}
-	
 
 
-		pkt << m_bZone << uint8(-1) << uint8(-1) << uint16(0) << uint16(0) << uint16(0) << m_bIsHidingCospre << uint8(0) << uint8(GetRebLevel()) << uint16(m_sAchieveCoverTitle) << uint16(0) << uint8(0) << uint8(0);
-	
-} 
+
+	pkt << m_bZone << uint8(-1) << uint8(-1) << uint16(0) << uint16(0) << uint16(0) << m_bIsHidingCospre << uint8(0) << uint8(GetRebLevel()) << uint16(m_sAchieveCoverTitle) << uint16(0) << uint8(0) << uint8(0);
+
+}

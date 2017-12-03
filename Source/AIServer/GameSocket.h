@@ -6,8 +6,7 @@
 class CUser;
 class MAP;
 
-class CGameSocket : public KOSocket
-{
+class CGameSocket : public KOSocket {
 public:
 	CParty		m_Party;
 

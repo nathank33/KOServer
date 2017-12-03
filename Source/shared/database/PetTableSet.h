@@ -1,19 +1,16 @@
 #pragma once
 
-class CPetTableSet : public OdbcRecordset
-{
+class CPetTableSet : public OdbcRecordset {
 public:
-	CPetTableSet(OdbcConnection * dbConnection, PetArray *pMap) 
+	CPetTableSet(OdbcConnection * dbConnection, PetArray *pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("PET_DATA"); }
-	virtual tstring GetColumns() 
-	{
+	virtual tstring GetColumns() {
 		return _T("PET_SERIAL, PET_NAME, PET_EXP, PET_LEVEL, PET_STOMACH, PET_SLOT, PET_ITEMID, PET_CLASS, PET_ID");
 	}
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		CPet * pData = new CPet();
 		int i = 1;
 		uint32 ItemId;
@@ -32,9 +29,9 @@ public:
 		_dbCommand->FetchByte(i++, pData->m_sClass);
 		_dbCommand->FetchUInt32(i++, pData->SpecialPetID);
 		if (pData->SpecialPetID > g_pMain->LastPetID)
-		g_pMain->LastPetID = pData->SpecialPetID;
+			g_pMain->LastPetID = pData->SpecialPetID;
 		pData->m_pNpc = nullptr;
-		
+
 		if (pData == nullptr)
 			delete pData;
 		else

@@ -14,14 +14,13 @@ class CNpc;
 class CUser;
 class CBot;
 
-class CRegion  
-{
+class CRegion {
 public:
 	std::recursive_mutex		m_lock;
 	ZoneUserArray	m_RegionUserArray;
 	ZoneBotArray	m_RegionBotArray;
 	ZoneNpcArray	m_RegionNpcArray;
-	
+
 	void Add(CBot * pBot);
 	void Remove(CBot * pBot);
 	void Add(CUser * pUser);

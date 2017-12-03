@@ -3,43 +3,37 @@
 #include <set>
 #include <map>
 
-struct _KING_ELECTION_LIST
-{
+struct _KING_ELECTION_LIST {
 	uint16 sKnights;
 	uint32 nVotes;
 };
 
-struct ci_compare
-{
+struct ci_compare {
 	bool operator() (const std::string & str1, const std::string & str2) const {
 		return STRCASECMP(str1.c_str(), str2.c_str()) < 0;
 	}
 };
 
 typedef std::set<uint16> ClanIDSet;
-typedef std::map<std::string, std::string, ci_compare> KingCandidacyNoticeBoardMap; 
-typedef std::map<std::string, _KING_ELECTION_LIST *, ci_compare> KingElectionList; 
+typedef std::map<std::string, std::string, ci_compare> KingCandidacyNoticeBoardMap;
+typedef std::map<std::string, _KING_ELECTION_LIST *, ci_compare> KingElectionList;
 typedef std::set<std::string, ci_compare> ResignedCandidateList;
 
-enum ElectionType
-{
-	ELECTION_TYPE_NO_TERM		= 0,
-	ELECTION_TYPE_NOMINATION	= 1,
-	ELECTION_TYPE_PRE_ELECTION	= 2, // not sure if this is accurately named
-	ELECTION_TYPE_ELECTION		= 3,
+enum ElectionType {
+	ELECTION_TYPE_NO_TERM = 0,
+	ELECTION_TYPE_NOMINATION = 1,
+	ELECTION_TYPE_PRE_ELECTION = 2, // not sure if this is accurately named
+	ELECTION_TYPE_ELECTION = 3,
 
-	ELECTION_TYPE_TERM_STARTED	= 6, // these two probably aren't accurately named at all
-	ELECTION_TYPE_TERM_ENDED	= 7,
+	ELECTION_TYPE_TERM_STARTED = 6, // these two probably aren't accurately named at all
+	ELECTION_TYPE_TERM_ENDED = 7,
 
 };
 
-enum ImpeachmentType
-{
-};
+enum ImpeachmentType {};
 
 class CUser;
-class CKingSystem
-{
+class CKingSystem {
 public:
 	CKingSystem();
 

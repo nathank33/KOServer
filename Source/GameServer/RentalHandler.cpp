@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
-void CUser::RentalSystem(Packet & pkt)
-{
+void CUser::RentalSystem(Packet & pkt) {
 	if (isDead())
 		return;
 

@@ -14,16 +14,14 @@ class CNpc;
 class CUser;
 class CBot;
 // temporary
-struct CSize
-{
+struct CSize {
 	CSize() : cx(0), cy(0) {}
 	CSize(int cx, int cy) : cx(cx), cy(cy) {}
 	int cx, cy;
 };
 
 class SMDFile;
-class MAP  
-{
+class MAP {
 public:
 	// Passthru methods
 	int GetMapSize();
@@ -53,12 +51,12 @@ public:
 	bool Initialize(_ZONE_INFO *pZone);
 
 	bool LoadRoomEvent();
-	float GetHeight( float x, float z );
+	float GetHeight(float x, float z);
 
-	bool RegionNpcRemove( int rx, int rz, int nid );
-	void RegionNpcAdd( int rx, int rz, int nid );
-	bool RegionUserRemove( int rx, int rz, int uid );
-	void RegionUserAdd( int rx, int rz, int uid );
+	bool RegionNpcRemove(int rx, int rz, int nid);
+	void RegionNpcAdd(int rx, int rz, int nid);
+	bool RegionUserRemove(int rx, int rz, int uid);
+	void RegionUserAdd(int rx, int rz, int uid);
 
 	CRegion * GetRegion(uint16 regionX, uint16 regionZ);
 
@@ -68,7 +66,7 @@ public:
 	bool IsMovable(int dest_x, int dest_y);
 	void InitializeRoom();
 
-	CRoomEvent* SetRoomEvent( int number );
+	CRoomEvent* SetRoomEvent(int number);
 	void RemoveMapData();
 
 	SMDFile * m_smdFile;
@@ -77,8 +75,8 @@ public:
 
 	INLINE bool canTradeWithOtherNation() { return (m_zoneFlags & ZF_TRADE_OTHER_NATION) != 0; }
 	INLINE bool canTalkToOtherNation() { return (m_zoneFlags & ZF_TALK_OTHER_NATION) != 0; }
-	INLINE bool canAttackOtherNation() { return (m_zoneFlags & ZF_ATTACK_OTHER_NATION) != 0; } 
-	INLINE bool canAttackSameNation() { return (m_zoneFlags & ZF_ATTACK_SAME_NATION) != 0; } 
+	INLINE bool canAttackOtherNation() { return (m_zoneFlags & ZF_ATTACK_OTHER_NATION) != 0; }
+	INLINE bool canAttackSameNation() { return (m_zoneFlags & ZF_ATTACK_SAME_NATION) != 0; }
 	INLINE bool isWarZone() { return (m_zoneFlags & ZF_WAR_ZONE) != 0; }
 	INLINE bool isNationPVPZone() { return canAttackOtherNation() && !canAttackSameNation(); }
 	INLINE bool areNPCsFriendly() { return (m_zoneFlags & ZF_FRIENDLY_NPCS) != 0; }

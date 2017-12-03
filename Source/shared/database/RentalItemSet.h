@@ -1,16 +1,14 @@
 #pragma once
 
-class CRentalItemSet : public OdbcRecordset
-{
+class CRentalItemSet : public OdbcRecordset {
 public:
-	CRentalItemSet(OdbcConnection * dbConnection, RentalItemArray * pMap) 
+	CRentalItemSet(OdbcConnection * dbConnection, RentalItemArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("RENTAL_ITEM"); }
 	virtual tstring GetColumns() { return _T("nRentalIndex, nItemIndex, sDurability, nSerialNumber, byRegType, byItemType, byClass, sRentalTime, nRentalMoney, strLenderCharID, strBorrowerCharID"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_RENTAL_ITEM *pData = new _RENTAL_ITEM;
 
 		_dbCommand->FetchUInt32(1, pData->nRentalIndex);

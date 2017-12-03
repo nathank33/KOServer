@@ -8,8 +8,7 @@ BOOL WINAPI _ConsoleHandler(DWORD dwCtrlType);
 
 bool g_bRunning = true;
 
-int main()
-{
+int main() {
 	SetConsoleTitle("AI Server for Knight Online v" STRINGIFY(__VERSION));
 
 	// Override the console handler
@@ -23,15 +22,12 @@ int main()
 	g_pMain = new CServerDlg();
 
 	// Startup server
-	if (g_pMain->Startup())
-	{
+	if (g_pMain->Startup()) {
 		printf("\nServer started up successfully!\n");
 
 		// Wait until console's signaled as closing
 		s_hEvent.Wait();
-	}
-	else
-	{
+	} else {
 		system("pause");
 	}
 
@@ -49,8 +45,7 @@ int main()
 	return 0;
 }
 
-BOOL WINAPI _ConsoleHandler(DWORD dwCtrlType)
-{
+BOOL WINAPI _ConsoleHandler(DWORD dwCtrlType) {
 	s_hEvent.BeginSynchronized();
 	s_hEvent.Signal();
 	s_hEvent.EndSynchronized();

@@ -4,24 +4,21 @@
 
 #define DELAY				250
 
-uint32 THREADCALL NpcThreadProc(void * pParam)
-{
-	try
-	{
-		CNpcThread*	pInfo	= (CNpcThread *)pParam;
+uint32 THREADCALL NpcThreadProc(void * pParam) {
+	try {
+		CNpcThread*	pInfo = (CNpcThread *) pParam;
 
-		if (!pInfo) 
+		if (!pInfo)
 			return 0;
 
-		CNpc *pNpc= nullptr;
+		CNpc *pNpc = nullptr;
 		CNpc *pNpcList[32768];
-		time_t	dwDiffTime	= 0, dwTickTime  = 0, fTime2 = 0;
+		time_t	dwDiffTime = 0, dwTickTime = 0, fTime2 = 0;
 		int nTempTotalNPC, NpcCount = 0;
 
-ThreadReloadNPC:
+	ThreadReloadNPC:
 		NpcCount = 0;
-		foreach (itr, pInfo->m_pNpcs)
-		{
+		foreach(itr, pInfo->m_pNpcs) {
 			pNpcList[NpcCount] = *itr;
 			if (pNpcList[NpcCount] == nullptr)
 				continue;
@@ -31,45 +28,40 @@ ThreadReloadNPC:
 
 		nTempTotalNPC = g_pMain->m_TotalNPC;
 
-		while (!g_bNpcExit)
-		{
+		while (!g_bNpcExit) {
 			fTime2 = getMSTime();
 
 			if (g_pMain->m_TotalNPC != nTempTotalNPC)
 				goto ThreadReloadNPC;
 
-			for (int x = 0; x < NpcCount; x++)
-			{
-				try
-				{
+			for (int x = 0; x < NpcCount; x++) {
+				try {
 					pNpc = nullptr;
 					pNpc = pNpcList[x];
 
 					if (pNpc == nullptr)
 						continue;
 
-					if(pNpc->GetID() < 0)
+					if (pNpc->GetID() < 0)
 						continue;
 
 
 
 					dwTickTime = fTime2 - pNpc->m_fDelayTime;
 
-					if (pNpc->m_Delay > (int)dwTickTime && !pNpc->m_bFirstLive && pNpc->m_Delay != 0) 
-					{
+					if (pNpc->m_Delay > (int) dwTickTime && !pNpc->m_bFirstLive && pNpc->m_Delay != 0) {
 						if (pNpc->m_Delay < 0)
 							pNpc->m_Delay = 0;
 
-						if (pNpc->m_NpcState == NPC_STANDING 
+						if (pNpc->m_NpcState == NPC_STANDING
 							&& pNpc->CheckFindEnemy()
-							&& pNpc->FindEnemy())
-						{
+							&& pNpc->FindEnemy()) {
 							pNpc->m_NpcState = NPC_ATTACKING;
 							pNpc->m_Delay = 0;
 						}
 						if (pNpc->GetName() != "Guard tower")
 							continue;
-					}	
+					}
 
 
 					dwTickTime = fTime2 - pNpc->m_fHPChangeTime;
@@ -78,13 +70,12 @@ ThreadReloadNPC:
 
 					uint8 bState = pNpc->m_NpcState;
 					time_t tDelay = -1;
-					switch (bState)
-					{
-					case NPC_LIVE:			
+					switch (bState) {
+					case NPC_LIVE:
 						tDelay = pNpc->NpcLive();
 						break;
 
-					case NPC_STANDING:		
+					case NPC_STANDING:
 						tDelay = pNpc->NpcStanding();
 						break;
 
@@ -140,8 +131,7 @@ ThreadReloadNPC:
 					if (tDelay >= 0)
 						pNpc->m_Delay = tDelay;
 
-					if (pNpc->m_bDelete)
-					{
+					if (pNpc->m_bDelete) {
 						uint16 myId = pNpc->GetID();
 						Guard lock(g_pMain->m_freeIdsLock);
 						g_pMain->freeIDs.push_back(myId);
@@ -151,9 +141,7 @@ ThreadReloadNPC:
 						goto ThreadReloadNPC;
 					}
 
-				}
-				catch (std::system_error & ex)
-				{
+				} catch (std::system_error & ex) {
 					printf("[ %s ] Warning 1 : %s\n", __FUNCTION__, ex.what());
 					continue;
 				}
@@ -161,28 +149,22 @@ ThreadReloadNPC:
 
 			sleep(250);
 		}
-	}
-	catch (std::system_error & ex)
-	{
+	} catch (std::system_error & ex) {
 		printf("[ %s ] Warning 2 : %s\n", __FUNCTION__, ex.what());
 	}
 	return 0;
 }
 
-uint32 THREADCALL ZoneEventThreadProc(void * pParam /* = nullptr */)
-{
-	while (!g_bNpcExit)
-	{
-		foreach_stlmap_nolock (itr, g_pMain->g_arZone)
-		{
+uint32 THREADCALL ZoneEventThreadProc(void * pParam /* = nullptr */) {
+	while (!g_bNpcExit) {
+		foreach_stlmap_nolock(itr, g_pMain->g_arZone) {
 			MAP *pMap = itr->second;
 			if (pMap == nullptr
 				|| pMap->m_byRoomEvent == 0
-				|| pMap->IsRoomStatusCheck()) 
+				|| pMap->IsRoomStatusCheck())
 				continue;
 
-			foreach_stlmap_nolock (itr, pMap->m_arRoomEventArray)
-			{
+			foreach_stlmap_nolock(itr, pMap->m_arRoomEventArray) {
 				CRoomEvent * pRoom = itr->second;
 				if (pRoom == nullptr
 					|| !pRoom->isInProgress())
@@ -198,24 +180,19 @@ uint32 THREADCALL ZoneEventThreadProc(void * pParam /* = nullptr */)
 	return 0;
 }
 
-void CNpcThread::AddNPC(CNpc * pNpc)
-{
+void CNpcThread::AddNPC(CNpc * pNpc) {
 	Guard lock(m_lock);
 	m_pNpcs.insert(pNpc);
 }
 
-void CNpcThread::RemoveNPC(CNpc * pNpc)
-{
+void CNpcThread::RemoveNPC(CNpc * pNpc) {
 	Guard lock(m_lock);
 	m_pNpcs.erase(pNpc);
 }
 
-CNpcThread::CNpcThread()
-{
-}
+CNpcThread::CNpcThread() {}
 
-CNpcThread::~CNpcThread()
-{
+CNpcThread::~CNpcThread() {
 	Guard lock(m_lock);
 	m_pNpcs.clear();
 }

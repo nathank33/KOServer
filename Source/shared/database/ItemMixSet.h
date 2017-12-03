@@ -1,14 +1,12 @@
 #pragma once
 
-class CItemMixSet : public OdbcRecordset
-{
+class CItemMixSet : public OdbcRecordset {
 public:
-	CItemMixSet(OdbcConnection * dbConnection, ItemMixArray *pMap) 
+	CItemMixSet(OdbcConnection * dbConnection, ItemMixArray *pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("ITEM_MIX"); }
-	virtual tstring GetColumns() 
-	{
+	virtual tstring GetColumns() {
 		return _T("nIndex, nNpcID,bType,strName,bStatus,"
 			"nOriginItemNum1, nOriginItemCount1, nOriginItemNum2, nOriginItemCount2, "
 			"nOriginItemNum3, nOriginItemCount3, nOriginItemNum4, nOriginItemCount4, "
@@ -20,8 +18,7 @@ public:
 			"nExchangeItemNum7, nExchangeItemCount7, nExchangeItemNum8, nExchangeItemCount8, nExchangeItemNum9, nExchangeItemCount9, nExchangeItemNum10, nExchangeItemCount10");
 	}
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_ITEM_MIX *pData = new _ITEM_MIX;
 
 		int i = 1;
@@ -31,8 +28,7 @@ public:
 		_dbCommand->FetchString(i++, pData->strName);
 		_dbCommand->FetchByte(i++, pData->bStatus);
 
-		for (int x = 0; x < ITEMS_IN_SPECIAL_ORIGIN_GROUP; x++)
-		{
+		for (int x = 0; x < ITEMS_IN_SPECIAL_ORIGIN_GROUP; x++) {
 			_dbCommand->FetchUInt32(i++, pData->nOriginItemNum[x]);
 			_dbCommand->FetchUInt16(i++, pData->sOriginItemCount[x]);
 		}
@@ -42,11 +38,10 @@ public:
 		_dbCommand->FetchUInt16(i++, pData->sFailEffect);
 		_dbCommand->FetchUInt16(i++, pData->bBonusRate);
 
-		for (int j = 0; j < ITEMS_IN_SPECIAL_EXCHANGE_GROUP; j++)
-		{
+		for (int j = 0; j < ITEMS_IN_SPECIAL_EXCHANGE_GROUP; j++) {
 			_dbCommand->FetchUInt32(i++, pData->nExchangeItemNum[j]);
 			_dbCommand->FetchUInt16(i++, pData->sExchangeItemCount[j]);
-			
+
 		}
 
 		if (!m_pMap->PutData(pData->nIndex, pData))

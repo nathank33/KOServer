@@ -1,10 +1,9 @@
 #include "stdafx.h"
 #include "Map.h"
 
-void CUser::Attack(Packet & pkt)
-{
-	int16 sid = -1, tid = -1, damage, delaytime, distance;	
-	uint8 bType, bResult = 0;	
+void CUser::Attack(Packet & pkt) {
+	int16 sid = -1, tid = -1, damage, delaytime, distance;
+	uint8 bType, bResult = 0;
 	Unit * pTarget = nullptr;
 
 	pkt >> bType >> bResult >> tid >> delaytime >> distance;
@@ -19,31 +18,28 @@ void CUser::Attack(Packet & pkt)
 
 	// If you're holding a weapon, do a client-based (ugh, do not trust!) delay check.
 	_ITEM_TABLE *pTable = GetItemPrototype(RIGHTHAND);
-	if (pTable != nullptr && !isMage()) 
-	{
+	if (pTable != nullptr && !isMage()) {
 		if (distance > pTable->m_sRange)
-			return;	
+			return;
 	}
 	// Empty handed.
 	else if (delaytime < 100)
-		return;			
+		return;
 
 	pTarget = g_pMain->GetUnitPtr(tid);
 	bResult = ATTACK_FAIL;
 
 
-	if (pTarget != nullptr 
+	if (pTarget != nullptr
 		&& isInAttackRange(pTarget)
-		&& CanAttack(pTarget))
-	{
-		if (isAttackable(pTarget) && CanCastRHit(GetSocketID()))
-		{
+		&& CanAttack(pTarget)) {
+		if (isAttackable(pTarget) && CanCastRHit(GetSocketID())) {
 			if (isInTempEventZone() &&
-				(!isSameEventRoom(pTarget) 
-				|| !g_pMain->pTempleEvent.isAttackable))
+				(!isSameEventRoom(pTarget)
+					|| !g_pMain->pTempleEvent.isAttackable))
 				return;
 
-			if(GetEventRoom() > 0 && pTarget->GetEventRoom() != GetEventRoom())
+			if (GetEventRoom() > 0 && pTarget->GetEventRoom() != GetEventRoom())
 				return;
 
 			CUser *pUser = g_pMain->GetUserPtr(GetSocketID());
@@ -53,17 +49,15 @@ void CUser::Attack(Packet & pkt)
 
 			damage = GetDamage(pTarget);
 
-			if(pTarget->GetID() > NPC_BAND)
-			{
+			if (pTarget->GetID() > NPC_BAND) {
 
-				switch(TO_NPC(pTarget)->GetType())
-				{
-					case NPC_FOSSIL:
-						damage = 1;
-						break;
-					case NPC_TREE:
-						damage = 20;
-						break;
+				switch (TO_NPC(pTarget)->GetType()) {
+				case NPC_FOSSIL:
+					damage = 1;
+					break;
+				case NPC_TREE:
+					damage = 20;
+					break;
 				}
 			}
 
@@ -72,8 +66,7 @@ void CUser::Attack(Packet & pkt)
 				damage = 0;
 			else if (GetZoneID() == ZONE_CHAOS_DUNGEON && g_pMain->pTempleEvent.isAttackable)
 				damage = 500 / 10;
-			else if (GetZoneID() == ZONE_PRISON)
-			{
+			else if (GetZoneID() == ZONE_PRISON) {
 				if (GetMana() < (m_iMaxMp / 5))
 					return;
 
@@ -81,8 +74,7 @@ void CUser::Attack(Packet & pkt)
 				MSpChange(-(m_iMaxMp / 5));
 			}
 
-			if (damage > 0)
-			{
+			if (damage > 0) {
 				pTarget->HpChange(-damage, this);
 				if (pTarget->isDead())
 					bResult = ATTACK_TARGET_DEAD;
@@ -104,8 +96,7 @@ void CUser::Attack(Packet & pkt)
 	SendToRegion(&result);
 }
 
-void CUser::Regene(uint8 regene_type, uint32 magicid /*= 0*/)
-{
+void CUser::Regene(uint8 regene_type, uint32 magicid /*= 0*/) {
 	ASSERT(GetMap() != nullptr);
 
 	_OBJECT_EVENT* pEvent = nullptr;
@@ -118,13 +109,12 @@ void CUser::Regene(uint8 regene_type, uint32 magicid /*= 0*/)
 	if (regene_type != 1 && regene_type != 2)
 		regene_type = 1;
 
-	if (regene_type == 2) 
-	{
+	if (regene_type == 2) {
 		// Is our level high enough to be able to resurrect using this skill?
 		if (GetLevel() <= 5
 			// Do we have enough resurrection stones?
-				|| !RobItem(379006000, 3 * GetLevel()))
-				return;
+			|| !RobItem(379006000, 3 * GetLevel()))
+			return;
 	}
 
 	// If we're in a home zone, we'll want the coordinates from there. Otherwise, assume our own home zone.
@@ -134,84 +124,64 @@ void CUser::Regene(uint8 regene_type, uint32 magicid /*= 0*/)
 
 	UserInOut(INOUT_OUT);
 
-	pEvent = GetMap()->GetObjectEvent(m_sBind);	
+	pEvent = GetMap()->GetObjectEvent(m_sBind);
 
 	// If we're not using a spell to resurrect.
-	if (magicid == 0) 
-	{
+	if (magicid == 0) {
 		// Resurrect at a bind/respawn point
-		if (pEvent && pEvent->byLife == 1 && GetZoneID() != ZONE_DELOS)
-		{
+		if (pEvent && pEvent->byLife == 1 && GetZoneID() != ZONE_DELOS) {
 			SetPosition(pEvent->fPosX + x, 0.0f, pEvent->fPosZ + z);
 			x = pEvent->fPosX;
 			z = pEvent->fPosZ;
 		}
 		// Are we trying to respawn in a home zone?
 		// If we're in a war zone (aside from snow wars, which apparently use different coords), use BattleZone coordinates.
-		else if ((GetZoneID() <= ZONE_ELMORAD) || (GetZoneID() != ZONE_SNOW_BATTLE && GetZoneID() == (ZONE_BATTLE_BASE + g_pMain->m_byBattleZone))) 
-		{
+		else if ((GetZoneID() <= ZONE_ELMORAD) || (GetZoneID() != ZONE_SNOW_BATTLE && GetZoneID() == (ZONE_BATTLE_BASE + g_pMain->m_byBattleZone))) {
 			// Use the proper respawn area for our nation, as the opposite nation can
 			// enter this zone at a war's invasion stage.
-			x = (float)((GetNation() == KARUS ? pStartPosition->sKarusX :  pStartPosition->sElmoradX) + myrand(0, pStartPosition->bRangeX));
-			z = (float)((GetNation() == KARUS ? pStartPosition->sKarusZ :  pStartPosition->sElmoradZ) + myrand(0, pStartPosition->bRangeZ));
-		}
-		else
-		{
+			x = (float) ((GetNation() == KARUS ? pStartPosition->sKarusX : pStartPosition->sElmoradX) + myrand(0, pStartPosition->bRangeX));
+			z = (float) ((GetNation() == KARUS ? pStartPosition->sKarusZ : pStartPosition->sElmoradZ) + myrand(0, pStartPosition->bRangeZ));
+		} else {
 			short sx, sz;
 			// If we're in a war zone (aside from snow wars, which apparently use different coords), use BattleZone coordinates.
-			if ((GetZoneID() == ZONE_MORADON || GetZoneID() == ZONE_MORADONM2) && (isInArena() || isInPartyArena()))
-			{
-				x = (float)(MINI_ARENA_RESPAWN_X + myrand(-MINI_ARENA_RESPAWN_RADIUS, MINI_ARENA_RESPAWN_RADIUS));
-				z = (float)(MINI_ARENA_RESPAWN_Z + myrand(-MINI_ARENA_RESPAWN_RADIUS, MINI_ARENA_RESPAWN_RADIUS));
-			}
-			else if (GetZoneID() == ZONE_CHAOS_DUNGEON)
-			{
+			if ((GetZoneID() == ZONE_MORADON || GetZoneID() == ZONE_MORADONM2) && (isInArena() || isInPartyArena())) {
+				x = (float) (MINI_ARENA_RESPAWN_X + myrand(-MINI_ARENA_RESPAWN_RADIUS, MINI_ARENA_RESPAWN_RADIUS));
+				z = (float) (MINI_ARENA_RESPAWN_Z + myrand(-MINI_ARENA_RESPAWN_RADIUS, MINI_ARENA_RESPAWN_RADIUS));
+			} else if (GetZoneID() == ZONE_CHAOS_DUNGEON) {
 				GetStartPositionRandom(sx, sz);
 				x = sx;
 				z = sz;
-			}	
-			else if (GetZoneID() == ZONE_JURAD_MOUNTAIN)
-			{
+			} else if (GetZoneID() == ZONE_JURAD_MOUNTAIN) {
 				uint16 KillCount1, KillCount2, KillCount3;
 				KillCount1 = GetNation() == KARUS ? g_pMain->pTempleEvent.KarusDeathRoom1[GetEventRoom()] : g_pMain->pTempleEvent.ElmoDeathRoom1[GetEventRoom()];
 				KillCount2 = GetNation() == KARUS ? g_pMain->pTempleEvent.KarusDeathRoom2[GetEventRoom()] : g_pMain->pTempleEvent.ElmoDeathRoom2[GetEventRoom()];
 				KillCount3 = GetNation() == KARUS ? g_pMain->pTempleEvent.KarusDeathRoom3[GetEventRoom()] : g_pMain->pTempleEvent.ElmoDeathRoom3[GetEventRoom()];
 
-				if (KillCount1 > 3 && KillCount2 < 4)
-				{
-					if (GetNation() == KARUS)
-					{
-						x = (float) (223 + (myrand(-1,1)));
-						z = (float) (672 + (myrand(-1,1)));
-					}else
-					{
-						x = (float) (800 + (myrand(-1,1)));
-						z = (float) (343 + (myrand(-1,1)));
+				if (KillCount1 > 3 && KillCount2 < 4) {
+					if (GetNation() == KARUS) {
+						x = (float) (223 + (myrand(-1, 1)));
+						z = (float) (672 + (myrand(-1, 1)));
+					} else {
+						x = (float) (800 + (myrand(-1, 1)));
+						z = (float) (343 + (myrand(-1, 1)));
 					}
-				}else if(KillCount2 > 3 && KillCount3 < 4)
-				{
-					if (GetNation() == KARUS)
-					{
-						x = (float) (340 + (myrand(-1,1)));
-						z = (float) (847 + (myrand(-1,1)));
-					}else
-					{
-						x = (float) (690 + (myrand(-1,1)));
-						z = (float) (172 + (myrand(-1,1)));
+				} else if (KillCount2 > 3 && KillCount3 < 4) {
+					if (GetNation() == KARUS) {
+						x = (float) (340 + (myrand(-1, 1)));
+						z = (float) (847 + (myrand(-1, 1)));
+					} else {
+						x = (float) (690 + (myrand(-1, 1)));
+						z = (float) (172 + (myrand(-1, 1)));
 					}
-				}else if(KillCount3 > 3)
-				{
-					if (GetNation() == KARUS)
-					{
-						x = (float) (512 + (myrand(-1,1)));
-						z = (float) (736 + (myrand(-1,1)));
-					}else
-					{
-						x = (float) (512 + (myrand(-1,1)));
-						z = (float) (282 + (myrand(-1,1)));
+				} else if (KillCount3 > 3) {
+					if (GetNation() == KARUS) {
+						x = (float) (512 + (myrand(-1, 1)));
+						z = (float) (736 + (myrand(-1, 1)));
+					} else {
+						x = (float) (512 + (myrand(-1, 1)));
+						z = (float) (282 + (myrand(-1, 1)));
 					}
-				}else
-				{
+				} else {
 					GetStartPosition(sx, sz);
 					x = sx;
 					z = sz;
@@ -220,8 +190,7 @@ void CUser::Regene(uint8 regene_type, uint32 magicid /*= 0*/)
 
 			}
 			// For all else, just grab the start position (/town coordinates) from the START_POSITION table.
-			else
-			{
+			else {
 				GetStartPosition(sx, sz);
 				x = sx;
 				z = sz;
@@ -233,18 +202,17 @@ void CUser::Regene(uint8 regene_type, uint32 magicid /*= 0*/)
 		m_LastX = x;
 		m_LastZ = z;
 
-		m_bResHpType = USER_STANDING;	
+		m_bResHpType = USER_STANDING;
 		m_bRegeneType = REGENE_NORMAL;
-	}
-	else // we're respawning using a resurrect skill.
+	} else // we're respawning using a resurrect skill.
 	{
-		_MAGIC_TYPE5 * pType = g_pMain->m_Magictype5Array.GetData(magicid);     
+		_MAGIC_TYPE5 * pType = g_pMain->m_Magictype5Array.GetData(magicid);
 		if (pType == nullptr)
 			return;
 
 		MSpChange(-m_iMaxMp); // reset us to 0 MP. 
 
-		if (m_sWhoKilledMe == -1) 
+		if (m_sWhoKilledMe == -1)
 			ExpChange((m_iLostExp * pType->bExpRecover) / 100); // Restore 
 
 		m_bResHpType = USER_STANDING;
@@ -259,8 +227,7 @@ void CUser::Regene(uint8 regene_type, uint32 magicid /*= 0*/)
 	m_sWhoKilledMe = -1;
 	m_iLostExp = 0;
 
-	if (!isBlinking())
-	{
+	if (!isBlinking()) {
 		result.Initialize(AG_USER_REGENE);
 		result << GetSocketID() << m_sHp;
 		Send_AIServer(&result);
@@ -268,7 +235,7 @@ void CUser::Regene(uint8 regene_type, uint32 magicid /*= 0*/)
 
 	SetRegion(GetNewRegionX(), GetNewRegionZ());
 
-	UserInOut(INOUT_RESPAWN);  
+	UserInOut(INOUT_RESPAWN);
 
 	g_pMain->RegionUserInOutForMe(this);
 	g_pMain->RegionNpcInfoForMe(this);
@@ -281,21 +248,20 @@ void CUser::Regene(uint8 regene_type, uint32 magicid /*= 0*/)
 		SendUserStatusUpdate(USER_STATUS_SPEED, USER_STATUS_CURE);
 
 	HpChange(GetMaxHealth());
-	
+
 	InitType4();
 	if (GetZoneID() != ZONE_CHAOS_DUNGEON)
-	RecastSavedMagic();
+		RecastSavedMagic();
 	HpChange(GetMaxHealth());
 
 	// If we actually respawned (i.e. we weren't resurrected by a skill)...
-	if (magicid == 0)
-	{
+	if (magicid == 0) {
 		BlinkStart();
 		// In PVP zones (not war zones), we must kick out players if they no longer
 		// have any national points.
-		if (GetLoyalty() == 0 
+		if (GetLoyalty() == 0
 			&& (GetMap()->isWarZone()
-			|| isInPKZone()))
+				|| isInPKZone()))
 			KickOutZoneUser();
 	}
 }

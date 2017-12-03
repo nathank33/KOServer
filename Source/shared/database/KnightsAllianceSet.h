@@ -1,16 +1,14 @@
 #pragma once
 
-class CKnightsAllianceSet : public OdbcRecordset
-{
+class CKnightsAllianceSet : public OdbcRecordset {
 public:
-	CKnightsAllianceSet(OdbcConnection * dbConnection, KnightsAllianceArray * pMap) 
+	CKnightsAllianceSet(OdbcConnection * dbConnection, KnightsAllianceArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("KNIGHTS_ALLIANCE"); }
 	virtual tstring GetColumns() { return _T("sMainAllianceKnights, sSubAllianceKnights, sMercenaryClan_1, sMercenaryClan_2"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_KNIGHTS_ALLIANCE *pData = new _KNIGHTS_ALLIANCE;
 
 		_dbCommand->FetchUInt16(1, pData->sMainAllianceKnights);

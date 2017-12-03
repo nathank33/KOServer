@@ -1,16 +1,14 @@
 #pragma once
 
-class CObjectPosSet : public OdbcRecordset
-{
+class CObjectPosSet : public OdbcRecordset {
 public:
-	CObjectPosSet(OdbcConnection * dbConnection, ObjectEventArray * pMap) 
+	CObjectPosSet(OdbcConnection * dbConnection, ObjectEventArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("K_OBJECTPOS"); }
 	virtual tstring GetColumns() { return _T("ZoneID, Belong, sIndex, Type, ControlNPCID, Status, PosX, PosY, PosZ, byLife"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_OBJECT_EVENT *pData = new _OBJECT_EVENT;
 
 		int i = 1;

@@ -3,12 +3,12 @@
 #include "User.h"
 #include "Npc.h"
 
-/* 
+/*
 Classes
 */
 
 /**
-* Defining a class is simple: just #define LUA_CLASS to your class name, 
+* Defining a class is simple: just #define LUA_CLASS to your class name,
 * then call DEFINE_LUA_CLASS(), specifying each method to expose.
 *
 * Remember to #undef LUA_CLASS when you're done.
@@ -20,7 +20,7 @@ Classes
 * to redefine the same methods for each class.
 *
 * This is because of the way we dynamically pull instance pointers;
-* these are typedef'd within the class, so that we can refer to them 
+* these are typedef'd within the class, so that we can refer to them
 * to grab the class name from within. As we type check these with Lua,
 * they'll fail, so we won't be able to use them.
 *
@@ -30,7 +30,7 @@ Classes
 
 #define LUA_CLASS CUser
 DEFINE_LUA_CLASS
-	(
+(
 	// Getters
 	MAKE_LUA_METHOD(GetName)
 	MAKE_LUA_METHOD(GetAccountName)
@@ -159,12 +159,12 @@ DEFINE_LUA_CLASS
 	MAKE_LUA_METHOD(SendNationChange)
 	MAKE_LUA_METHOD(GetRace)
 	MAKE_LUA_METHOD(JobChange)
-	);
+);
 #undef LUA_CLASS
 
 #define LUA_CLASS CNpc
 DEFINE_LUA_CLASS
-	(
+(
 	// Getters
 	MAKE_LUA_METHOD(GetID)
 	MAKE_LUA_METHOD(GetProtoID)
@@ -180,27 +180,24 @@ DEFINE_LUA_CLASS
 	// Useful methods
 	// MAKE_LUA_METHOD(CycleSpawn) // i.e. ChangePosition(), used to cycle a spawn through the various trap numbers (like 7 key quest NPCs)
 
-	);
+);
 #undef LUA_CLASS
 
 
-/* 
-Global functions 
+/*
+Global functions
 */
-LUA_FUNCTION(CheckPercent)
-{
+LUA_FUNCTION(CheckPercent) {
 	LUA_RETURN(CheckPercent(LUA_ARG(int, 1)));
 }
 
 #define Lua_GetUser() g_pMain->GetUserPtr(LUA_ARG(uint16, 1))
 
-LUA_FUNCTION(HowmuchItem) 
-{
+LUA_FUNCTION(HowmuchItem) {
 	CUser * pUser = Lua_GetUser();
 	uint32 result = 0;
 
-	if (pUser != nullptr) 
-	{
+	if (pUser != nullptr) {
 		uint32 nItemID = LUA_ARG(uint32, 2);
 		if (nItemID == ITEM_GOLD)
 			result = pUser->GetCoins();
@@ -211,8 +208,7 @@ LUA_FUNCTION(HowmuchItem)
 	LUA_RETURN(result);
 }
 
-LUA_FUNCTION(CheckNation)
-{
+LUA_FUNCTION(CheckNation) {
 	CUser * pUser = Lua_GetUser();
 	uint8 bNation = Nation::NONE;
 
@@ -222,8 +218,7 @@ LUA_FUNCTION(CheckNation)
 	LUA_RETURN(bNation);
 }
 
-LUA_FUNCTION(CheckClass)
-{
+LUA_FUNCTION(CheckClass) {
 	CUser * pUser = Lua_GetUser();
 	uint8 bClassType = 0;
 
@@ -233,23 +228,21 @@ LUA_FUNCTION(CheckClass)
 	LUA_RETURN(bClassType);
 }
 
-LUA_FUNCTION(CheckLevel)
-{
+LUA_FUNCTION(CheckLevel) {
 	CUser * pUser = Lua_GetUser();
 	uint8 bClassType = 0;
 
 	if (pUser != nullptr)
 		bClassType = pUser->GetLevel();
 
-	if(bClassType == g_pMain->MAXLVLINI && pUser->m_iExp == pUser->m_iMaxExp && pUser->GetRebLevel() < 10)
+	if (bClassType == g_pMain->MAXLVLINI && pUser->m_iExp == pUser->m_iMaxExp && pUser->GetRebLevel() < 10)
 		bClassType = 84;
 
 
 	LUA_RETURN(bClassType);
 }
 
-LUA_FUNCTION(CheckRebLevel)
-{
+LUA_FUNCTION(CheckRebLevel) {
 	CUser * pUser = Lua_GetUser();
 	uint8 bClassType = 0;
 
@@ -259,13 +252,12 @@ LUA_FUNCTION(CheckRebLevel)
 	LUA_RETURN(bClassType);
 }
 
-LUA_FUNCTION(CheckSkillPoint)
-{
+LUA_FUNCTION(CheckSkillPoint) {
 	CUser * pUser = Lua_GetUser();
 	uint8 bPoints = 0;
 
 	if (pUser != nullptr)
-		bPoints = pUser->GetSkillPoints((SkillPointCategory)LUA_ARG(uint32, 2));
+		bPoints = pUser->GetSkillPoints((SkillPointCategory) LUA_ARG(uint32, 2));
 
 	LUA_RETURN(bPoints);
 }
@@ -378,7 +370,7 @@ _LUA_WRAPPER_USER_FUNCTION(CheckClanGrade, GetClanGrade);
 _LUA_WRAPPER_USER_FUNCTION(CheckClanPoint, GetClanPoint);
 _LUA_WRAPPER_USER_FUNCTION(CheckLoyalty, GetLoyalty);
 _LUA_WRAPPER_USER_FUNCTION(CheckKnight, GetClanRank);
-_LUA_WRAPPER_USER_FUNCTION(CheckStatPoint, GetStat); 
+_LUA_WRAPPER_USER_FUNCTION(CheckStatPoint, GetStat);
 _LUA_WRAPPER_USER_FUNCTION(CheckWarVictory, GetWarVictory);
 _LUA_WRAPPER_USER_FUNCTION(CheckBeefRoastVictory, GetBeefRoastVictory);
 _LUA_WRAPPER_USER_FUNCTION(PartyCountMembers, GetPartyMemberAmount);
@@ -388,25 +380,23 @@ _LUA_WRAPPER_USER_FUNCTION(SendStatSkillDistribute, SendStatSkillDistribute);
 _LUA_WRAPPER_USER_FUNCTION(SendRepurchase, SendRepurchase);
 _LUA_WRAPPER_USER_FUNCTION(SendPetUpgrade, SendPetUpgrade);
 _LUA_WRAPPER_USER_FUNCTION(CheckMonsterChallengeTime, GetMonsterChallengeTime);
-_LUA_WRAPPER_USER_FUNCTION(CheckMonsterChallengeUserCount,GetMonsterChallengeUserCount);
+_LUA_WRAPPER_USER_FUNCTION(CheckMonsterChallengeUserCount, GetMonsterChallengeUserCount);
 _LUA_WRAPPER_USER_FUNCTION(CheckEventZoneTime, GetEventZoneTime);
-_LUA_WRAPPER_USER_FUNCTION(CheckEventZoneUserCount,GetEventZoneUserCount);
+_LUA_WRAPPER_USER_FUNCTION(CheckEventZoneUserCount, GetEventZoneUserCount);
 
-LUA_FUNCTION(SelectMsg)
-{
+LUA_FUNCTION(SelectMsg) {
 	CUser * pUser = Lua_GetUser();
-	if (pUser == nullptr) 
+	if (pUser == nullptr)
 		return LUA_NO_RESULTS;
 
 	uint32 arg = 2; // start from after the user instance.
-	int32 menuButtonText[MAX_MESSAGE_EVENT], 
+	int32 menuButtonText[MAX_MESSAGE_EVENT],
 		menuButtonEvents[MAX_MESSAGE_EVENT];
 	uint8 bFlag = LUA_ARG(uint8, arg++);
 	int32 nQuestID = LUA_ARG_OPTIONAL(int32, -1, arg++);
 	int32 menuHeaderText = LUA_ARG(int32, arg++);
 	arg++; // skip the NPC ID
-	foreach_array(i, menuButtonText)
-	{
+	foreach_array(i, menuButtonText) {
 		menuButtonText[i] = LUA_ARG_OPTIONAL(int32, -1, arg++);
 		menuButtonEvents[i] = LUA_ARG_OPTIONAL(int32, -1, arg++);
 	}
@@ -414,19 +404,16 @@ LUA_FUNCTION(SelectMsg)
 	LUA_NO_RETURN(pUser->SelectMsg(bFlag, nQuestID, menuHeaderText, menuButtonText, menuButtonEvents));
 }
 
-LUA_FUNCTION(CastSkill)
-{
+LUA_FUNCTION(CastSkill) {
 	CUser * pUser = Lua_GetUser();
 	bool bResult = false;
-	if (pUser != nullptr)
-	{
+	if (pUser != nullptr) {
 		CNpc * pNpc = g_pMain->GetNpcPtr(pUser->m_sEventNid);
-		if (pNpc != nullptr)
-		{
+		if (pNpc != nullptr) {
 			bResult = pNpc->CastSkill(
 				reinterpret_cast<Unit *>(pUser),
 				LUA_ARG(uint32, 2)
-				);
+			);
 		}
 	}
 	return bResult;

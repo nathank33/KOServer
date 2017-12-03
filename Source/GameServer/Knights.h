@@ -6,8 +6,7 @@
 #define MAX_CLAN_NOTICE_LENGTH	128
 
 class CUser;
-struct _KNIGHTS_USER
-{
+struct _KNIGHTS_USER {
 	uint8    byUsed;
 	std::string strUserName, strUserMemo;
 	uint32	nDonatedNP;
@@ -19,36 +18,33 @@ struct _KNIGHTS_USER
 	uint32  m_lastLogined;
 
 	INLINE _KNIGHTS_USER() { Initialise(); }
-	INLINE void Initialise()
-	{
+	INLINE void Initialise() {
 		byUsed = 0;
-		if(!strUserName.empty())
-		strUserName.clear();
+		if (!strUserName.empty())
+			strUserName.clear();
 		nDonatedNP = 0;
 		pSession = nullptr;
 		m_lastLogined = 0;
 	}
 };
 
-enum ClanTypeFlag
-{
-	ClanTypeNone		= 0,
-	ClanTypeTraining	= 1,
-	ClanTypePromoted	= 2,
-	ClanTypeAccredited5	= 3,
-	ClanTypeAccredited4	= 4,
-	ClanTypeAccredited2	= 5,
-	ClanTypeAccredited3	= 6,
-	ClanTypeAccredited1	= 7,
-	ClanTypeRoyal5		= 8,
-	ClanTypeRoyal4		= 9,
-	ClanTypeRoyal3		= 10,
-	ClanTypeRoyal2		= 11,
-	ClanTypeRoyal1		= 12
+enum ClanTypeFlag {
+	ClanTypeNone = 0,
+	ClanTypeTraining = 1,
+	ClanTypePromoted = 2,
+	ClanTypeAccredited5 = 3,
+	ClanTypeAccredited4 = 4,
+	ClanTypeAccredited2 = 5,
+	ClanTypeAccredited3 = 6,
+	ClanTypeAccredited1 = 7,
+	ClanTypeRoyal5 = 8,
+	ClanTypeRoyal4 = 9,
+	ClanTypeRoyal3 = 10,
+	ClanTypeRoyal2 = 11,
+	ClanTypeRoyal1 = 12
 };
 
-class CKnights  
-{
+class CKnights {
 public:
 	uint16	m_sIndex;
 	uint8	m_byFlag;			// 1 : Clan, 2 : Knights
@@ -72,14 +68,13 @@ public:
 	uint16	m_sAlliance;
 	uint8	m_sClanPointMethod;
 	uint8	bySiegeFlag;
-	uint16	nLose,nVictory;
+	uint16	nLose, nVictory;
 
 	_KNIGHTS_USER m_arKnightsUser[MAX_CLAN_USERS];
 
 	INLINE uint16 GetID() { return m_sIndex; }
 	INLINE uint16 GetAllianceID() { return m_sAlliance; }
-	INLINE uint16 GetCapeID(CKnights *pKnights) 
-	{
+	INLINE uint16 GetCapeID(CKnights *pKnights) {
 		if (isInAlliance() && pKnights != nullptr)
 			return pKnights->m_sCape;
 		else

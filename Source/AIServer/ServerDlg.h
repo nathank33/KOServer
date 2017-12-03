@@ -37,8 +37,7 @@ typedef CSTLMapOnlyLoad <_OBJECT_EVENT>				ObjectEventArray;
 
 typedef std::map<uint16, CUser *>			UserSessionMap;
 
-class CServerDlg
-{
+class CServerDlg {
 private:
 	void ResumeAI();
 	bool CreateNpcThread();
@@ -66,7 +65,7 @@ public:
 	void GameServerAcceptThread();
 	void GetServerResource(int nResourceID, std::string * result, ...);
 	bool AddObjectEventNpc(_OBJECT_EVENT* pEvent, MAP * pMap);
-	CNpc * SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 Radius = 0, uint16 sDuration = 0, uint8 nation = 0, int16 socketID = -1,uint16 nEventRoom = 0, bool nIsPet = false, std::string strPetName = "", std::string strUserName = "", uint64 nSerial = 1, uint16 UserId = -1);
+	CNpc * SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 Radius = 0, uint16 sDuration = 0, uint8 nation = 0, int16 socketID = -1, uint16 nEventRoom = 0, bool nIsPet = false, std::string strPetName = "", std::string strUserName = "", uint64 nSerial = 1, uint16 UserId = -1);
 	void NpcUpdate(uint16 sSid, bool bIsMonster, uint8 byGroup = 0, uint16 sPid = 0);
 
 	void AllNpcInfo();
@@ -80,14 +79,14 @@ public:
 
 	MAP * GetZoneByID(int zonenumber);
 
-	
+
 	static uint32 THREADCALL Timer_CheckAliveTest(void * lpParam);
 	static uint32 THREADCALL Timer_CheckLiveTimes(void * lpParam);
 	void CheckAliveTest();
 	void CheckLiveTimes();
 	void DeleteAllUserList(CGameSocket *pSock = nullptr);
 	void Send(Packet * pkt);
-	void SendSystemMsg(std::string & pMsg, int type=0);
+	void SendSystemMsg(std::string & pMsg, int type = 0);
 	void ResetBattleZone();
 
 	~CServerDlg();
@@ -126,7 +125,7 @@ public:
 	uint32 m_AIServerPort;
 
 	UserSessionMap m_pUser;
-	
+
 	Atomic<uint16>	MaxMonsterID;
 	Atomic<uint16>	m_TotalNPC;			// DB¿¡ÀÖ´Â ÃÑ ¼ö
 	Atomic<uint16>	m_CurrentNPC;

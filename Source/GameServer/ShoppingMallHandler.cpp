@@ -1,21 +1,19 @@
 #include "stdafx.h"
 #include "DBAgent.h"
 
-void CUser::ShoppingMall(Packet & pkt)
-{
-	if (isDead() 
-		|| isTrading() 
-		|| isMerchanting() 
-		|| isSellingMerchant() 
-		|| isBuyingMerchant() 
-		|| isMining() 
+void CUser::ShoppingMall(Packet & pkt) {
+	if (isDead()
+		|| isTrading()
+		|| isMerchanting()
+		|| isSellingMerchant()
+		|| isBuyingMerchant()
+		|| isMining()
 		|| m_bMerchantStatex)
 		return;
 
 	uint8 opcode = pkt.read<uint8>();
 
-	switch (opcode)
-	{
+	switch (opcode) {
 	case STORE_OPEN:
 		HandleStoreOpen(pkt);
 		break;
@@ -40,8 +38,7 @@ void CUser::ShoppingMall(Packet & pkt)
 }
 
 // We're opening the PUS...
-void CUser::HandleStoreOpen(Packet & pkt)
-{
+void CUser::HandleStoreOpen(Packet & pkt) {
 	Packet result(WIZ_SHOPPING_MALL, uint8(STORE_OPEN));
 	int16 sErrorCode = 1, sFreeSlot = -1;
 
@@ -59,17 +56,14 @@ void CUser::HandleStoreOpen(Packet & pkt)
 	if (sErrorCode != 1)
 		goto fail_return;
 
-	for (int i = SLOT_MAX; i < INVENTORY_TOTAL; i++)
-	{
-		if (GetItem(i)->nNum == 0)
-		{
+	for (int i = SLOT_MAX; i < INVENTORY_TOTAL; i++) {
+		if (GetItem(i)->nNum == 0) {
 			sFreeSlot = i;
 			break;
 		}
 	}
 
-	if (sFreeSlot < 0)
-	{
+	if (sFreeSlot < 0) {
 		sErrorCode = -8;
 		goto fail_return;
 	}
@@ -82,25 +76,23 @@ fail_return:
 }
 
 // We're closing the PUS so that we can call LOAD_WEB_ITEMMALL and load the extra items.
-void CUser::HandleStoreClose()
-{
-	if(!m_bStoreOpen)
+void CUser::HandleStoreClose() {
+	if (!m_bStoreOpen)
 		return;
 	Packet result(WIZ_SHOPPING_MALL, uint8(STORE_CLOSE));
 	m_bStoreOpen = false;
 	g_pMain->AddDatabaseRequest(result, this);
 }
 
-void CUser::ReqLoadWebItemMall()
-{
+void CUser::ReqLoadWebItemMall() {
 	Packet result(WIZ_SHOPPING_MALL, uint8(STORE_CLOSE));
 	std::vector<_ITEM_DATA> itemList;
 
 	if (!g_DBAgent.LoadWebItemMall(itemList, this))
 		return;
 
-	
-	if(int(itemList.size()) > GetEmptySlotCount())
+
+	if (int(itemList.size()) > GetEmptySlotCount())
 		return;
 	else
 		g_DBAgent.ClearWebItemMall(this);
@@ -110,13 +102,12 @@ void CUser::ReqLoadWebItemMall()
 	// reuse the GiveItem() method for giving them the item, just don't send the packet
 	// as it's handled by STORE_CLOSE.
 
-	foreach (itr, itemList)
-			GiveItem(itr->nNum, itr->sCount, true, itr->nExpirationTime);
+	foreach(itr, itemList)
+		GiveItem(itr->nNum, itr->sCount, true, itr->nExpirationTime);
 
-	for (int i = SLOT_MAX; i < INVENTORY_TOTAL; i++)
-	{
+	for (int i = SLOT_MAX; i < INVENTORY_TOTAL; i++) {
 		_ITEM_DATA *pItem = GetItem(i);
-		result	<< pItem->nNum
+		result << pItem->nNum
 			<< pItem->sDuration
 			<< pItem->sCount
 			<< pItem->bFlag	// item type flag (e.g. rented)

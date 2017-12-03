@@ -36,8 +36,7 @@ enum UnitType { UnitPlayer, UnitNPC, UnitPet };
 /**
 * This class is a bridge between the CNpc & CUser classes
 **/
-class Unit : public ReferenceObject
-{
+class Unit : public ReferenceObject {
 public:
 	Unit(UnitType unitType);
 
@@ -53,54 +52,48 @@ public:
 
 	virtual uint16 GetID() = 0;
 	INLINE uint8 GetZoneID() { return m_bZone; }
-	INLINE uint16 GetEventRoom() { return m_bEventRoom > (uint16)MAX_MONSTER_STONE_EVENT_ROOM ? 0 : m_bEventRoom; }
+	INLINE uint16 GetEventRoom() { return m_bEventRoom > (uint16) MAX_MONSTER_STONE_EVENT_ROOM ? 0 : m_bEventRoom; }
 	INLINE void SetUnitEventRoom(uint16 nEventRoom) { m_bEventRoom = nEventRoom; }
 
-	INLINE bool isInTempleEventZone(uint8 nZoneID = 0) 
-	{
+	INLINE bool isInTempleEventZone(uint8 nZoneID = 0) {
 		if (nZoneID == 0)
 			nZoneID = GetZoneID();
-		
-		return nZoneID == ZONE_BORDER_DEFENSE_WAR || nZoneID == ZONE_CHAOS_DUNGEON || nZoneID == ZONE_JURAD_MOUNTAIN; 
+
+		return nZoneID == ZONE_BORDER_DEFENSE_WAR || nZoneID == ZONE_CHAOS_DUNGEON || nZoneID == ZONE_JURAD_MOUNTAIN;
 	}
 
-	INLINE bool isInTempEventZone(uint8 nZoneID = 0) 
-	{
+	INLINE bool isInTempEventZone(uint8 nZoneID = 0) {
 		if (nZoneID == 0)
 			nZoneID = GetZoneID();
-		
-		return nZoneID == ZONE_BORDER_DEFENSE_WAR || nZoneID == ZONE_CHAOS_DUNGEON; 
+
+		return nZoneID == ZONE_BORDER_DEFENSE_WAR || nZoneID == ZONE_CHAOS_DUNGEON;
 	}
 
-	INLINE bool BorderTempleEventZone(uint8 nZoneID = 0) 
-	{
+	INLINE bool BorderTempleEventZone(uint8 nZoneID = 0) {
 		if (nZoneID == 0)
 			nZoneID = GetZoneID();
 
-		return nZoneID == ZONE_BORDER_DEFENSE_WAR; 
+		return nZoneID == ZONE_BORDER_DEFENSE_WAR;
 	}
 
-	INLINE bool ChaosTempleEventZone(uint8 nZoneID = 0) 
-	{
+	INLINE bool ChaosTempleEventZone(uint8 nZoneID = 0) {
 		if (nZoneID == 0)
 			nZoneID = GetZoneID();
 
-		return nZoneID == ZONE_CHAOS_DUNGEON; 
+		return nZoneID == ZONE_CHAOS_DUNGEON;
 	}
 
-	INLINE bool JuraidTempleEventZone(uint8 nZoneID = 0) 
-	{
+	INLINE bool JuraidTempleEventZone(uint8 nZoneID = 0) {
 		if (nZoneID == 0)
 			nZoneID = GetZoneID();
 
-		return nZoneID == ZONE_JURAD_MOUNTAIN; 
+		return nZoneID == ZONE_JURAD_MOUNTAIN;
 	}
 	INLINE float GetX() { return m_curx; }
 	INLINE float GetY() { return m_cury; }
 	INLINE float GetZ() { return m_curz; }
 
-	INLINE void SetPosition(float fx, float fy, float fz)
-	{
+	INLINE void SetPosition(float fx, float fy, float fz) {
 		m_curx = fx;
 		m_curz = fz;
 		m_cury = fy;
@@ -113,8 +106,8 @@ public:
 	INLINE uint16 GetRegionX() { return m_sRegionX; }
 	INLINE uint16 GetRegionZ() { return m_sRegionZ; }
 
-	INLINE uint16 GetNewRegionX() { return (uint16)(GetX()) / VIEW_DISTANCE; }
-	INLINE uint16 GetNewRegionZ() { return (uint16)(GetZ()) / VIEW_DISTANCE; }
+	INLINE uint16 GetNewRegionX() { return (uint16) (GetX()) / VIEW_DISTANCE; }
+	INLINE uint16 GetNewRegionZ() { return (uint16) (GetZ()) / VIEW_DISTANCE; }
 
 	INLINE CRegion * GetRegion() { return m_pRegion; }
 	void SetRegion(uint16 x = -1, uint16 z = -1);
@@ -133,43 +126,38 @@ public:
 
 	INLINE bool isIncapacitated() { return isDead() || isBlinded() || isBlinking() || isKaul(); }
 	INLINE bool isBlinded() { return m_bIsBlinded; }
-	INLINE bool canUseSkills() { return !(!isBlinded() && hasBuff(BUFF_TYPE_BLIND)) && m_bCanUseSkills && !isKaul(); } 
+	INLINE bool canUseSkills() { return !(!isBlinded() && hasBuff(BUFF_TYPE_BLIND)) && m_bCanUseSkills && !isKaul(); }
 	INLINE bool canUsePotions() { return m_bCanUsePotions; }
 	INLINE bool canTeleport() { return m_bCanTeleport; }
 	INLINE bool isKaul() { return m_bIsKaul; }
 	INLINE bool isDevil() { return m_bIsDevil; }
 	INLINE bool isReturnee() { return m_bisReturnee; }
 
-	INLINE bool isBuffed(bool bIsOnlyScroll = false)
-	{
+	INLINE bool isBuffed(bool bIsOnlyScroll = false) {
 		Guard lock(_unitlock);
 
 		// Check the buff counter.
 		// We cannot check the map itself, as the map contains both buffs and debuffs.
-		if (bIsOnlyScroll)
-		{
-			foreach (itr, m_buffMap)
+		if (bIsOnlyScroll) {
+			foreach(itr, m_buffMap)
 				if (itr->second.m_nSkillID > 500000)
 					return true;
 		}
 		return false;
 	}
 
-	INLINE bool isDebuffed()
-	{
+	INLINE bool isDebuffed() {
 		Guard lock(_unitlock);
 
 		// As the 'buff' map contains both buffs and debuffs, if the number of buffs/debuffs in the map doesn't 
 		// match the number of buffs we have, we can conclude we have some debuffs in there.
-		return (uint8) m_buffMap.size() != m_buffCount; 
+		return (uint8) m_buffMap.size() != m_buffCount;
 	}
 
-	INLINE bool hasBuff(uint8 buff, bool isOnlyBuff = false)
-	{
+	INLINE bool hasBuff(uint8 buff, bool isOnlyBuff = false) {
 		Guard lock(_unitlock);
 
-		if (isOnlyBuff)
-		{
+		if (isOnlyBuff) {
 			auto itr = m_buffMap.find(buff);
 			if (itr != m_buffMap.end() && itr->second.isBuff())
 				return true;
@@ -178,18 +166,17 @@ public:
 		return m_buffMap.find(buff) != m_buffMap.end();
 	}
 
-	INLINE bool hasDebuff(uint8 buff)
-	{
+	INLINE bool hasDebuff(uint8 buff) {
 		Guard lock(_unitlock);
 		auto itr = m_buffMap.find(buff);
 		if (itr != m_buffMap.end() && itr->second.isDebuff())
 			return true;
-		
+
 		return false;
 	}
 
 	INLINE bool canInstantCast() { return m_bInstantCast; }
-	INLINE bool canStealth()	{ return m_bCanStealth; }
+	INLINE bool canStealth() { return m_bCanStealth; }
 
 	virtual bool isBlinking() { return false; }
 
@@ -277,16 +264,16 @@ public:
 	short	m_sMaxHPAmount, m_sMaxMPAmount;
 	uint8	m_bHitRateAmount;
 	short	m_sAvoidRateAmount;
-	
+
 	float	m_bIceSpeedAmount;
 	int16	m_sAttackSpeedAmount;
 	uint8   m_bSpeedAmount;
 
-	
+
 	int16	AbsorbedAmmount;
 
 	// Item calculated elemental resistances.
-	uint16	m_sFireR, m_sColdR, m_sLightningR, 
+	uint16	m_sFireR, m_sColdR, m_sLightningR,
 		m_sMagicR, m_sDiseaseR, m_sPoisonR;
 
 	// Additional elemental resistance amounts from skills (note: NOT percentages)
@@ -320,17 +307,16 @@ public:
 	EquippedItemBonuses m_equippedItemBonuses;
 
 	// Weapon resistances
-	int16 m_sDaggerR; 
+	int16 m_sDaggerR;
 	uint8 m_byDaggerRAmount;
 	int16 m_sSwordR;
 	int16 m_sAxeR;
 	int16 m_sMaceR;
 	int16 m_sSpearR;
-	int16 m_sBowR; 
+	int16 m_sBowR;
 	uint8 m_byBowRAmount;
 
-	struct MagicType3
-	{
+	struct MagicType3 {
 		bool	m_byUsed;		// indicates whether this element is used
 		time_t	m_tHPLastTime;	// time when the durational skill last affected the unit
 		int16	m_sHPAmount;	// HP amount to affet the unit by (negative for damage, positive for HP recovery)
@@ -342,8 +328,7 @@ public:
 		bool	m_sTo;
 		MagicType3() { Reset(); }
 
-		INLINE void Reset()
-		{
+		INLINE void Reset() {
 			m_byUsed = false;
 			m_tHPLastTime = 0;
 			m_sHPAmount = 0;
@@ -370,10 +355,10 @@ public:
 	bool	m_bCanStealth;
 	bool	m_bInstantCast;
 	bool    m_bBlockCurses, m_bReflectCurses;
-	bool	m_bMirrorDamage; 
+	bool	m_bMirrorDamage;
 	uint8	m_byMirrorAmount;
 	uint8	m_bReflectArmorType;
-	bool	m_bIsUndead, m_bIsKaul,m_bIsDevil,m_bisReturnee;
+	bool	m_bIsUndead, m_bIsKaul, m_bIsDevil, m_bisReturnee;
 
 	bool m_bBlockPhysical;
 	bool m_bBlockMagic;

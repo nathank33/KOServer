@@ -63,13 +63,12 @@
 // Kurian/Portu Absorbed
 #define ABSORBED_TOTAL	-20000
 
-enum InOutType
-{
-	INOUT_IN		= 1,
-	INOUT_OUT		= 2,
-	INOUT_RESPAWN	= 3,
-	INOUT_WARP		= 4,
-	INOUT_SUMMON	= 5
+enum InOutType {
+	INOUT_IN = 1,
+	INOUT_OUT = 2,
+	INOUT_RESPAWN = 3,
+	INOUT_WARP = 4,
+	INOUT_SUMMON = 5
 };
 
 #define BLINK_TIME				(10) // in seconds
@@ -302,50 +301,45 @@ enum InOutType
 #define SAW_BLADE_SSID        32153
 #define CHAOS_CUBE_SSID        31527
 
-enum UserStatus
-{
-	USER_STATUS_DOT    = 1,
-	USER_STATUS_POISON  = 2,
-	USER_STATUS_SPEED  = 3,
-	USER_STATUS_BLIND  = 4,
-	USER_STATUS_BLACK  = 5
+enum UserStatus {
+	USER_STATUS_DOT = 1,
+	USER_STATUS_POISON = 2,
+	USER_STATUS_SPEED = 3,
+	USER_STATUS_BLIND = 4,
+	USER_STATUS_BLACK = 5
 };
 
-enum UserStatusBehaviour
-{
-	USER_STATUS_CURE	= 0,
-	USER_STATUS_INFLICT	= 1
+enum UserStatusBehaviour {
+	USER_STATUS_CURE = 0,
+	USER_STATUS_INFLICT = 1
 };
 
-enum NpcStatusBehaviour
-{
-	NPC_STATUS_CURE	= 0,
-	NPC_STATUS_INFLICT	= 1
+enum NpcStatusBehaviour {
+	NPC_STATUS_CURE = 0,
+	NPC_STATUS_INFLICT = 1
 };
 
-enum LoyaltyType
-{
+enum LoyaltyType {
 	LOYALTY_NATIONAL_POINTS = 1,
-	LOYALTY_MANNER_POINTS	= 2
+	LOYALTY_MANNER_POINTS = 2
 };
 
-enum AttributeType
-{
-	AttributeNone		= 0,
-	AttributeFire		= 1,
-	AttributeIce		= 2,
-	AttributeLightning  = 3,
-	AttributeLightMagic  = 4,
-	AttributeCurse    = 5,
-	AttributePosion    = 6
+enum AttributeType {
+	AttributeNone = 0,
+	AttributeFire = 1,
+	AttributeIce = 2,
+	AttributeLightning = 3,
+	AttributeLightMagic = 4,
+	AttributeCurse = 5,
+	AttributePosion = 6
 };
 
-typedef union{
+typedef union {
 	uint16		w;
 	uint8		b[2];
 } MYSHORT;
 
-typedef union{
+typedef union {
 	uint64		i;
 	uint8		b[8];
 } MYINT64;

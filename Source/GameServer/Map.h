@@ -10,13 +10,12 @@ typedef CSTLMap <CGameEvent>		EventArray;
 class CUser;
 class CGameServerDlg;
 class SMDFile;
-class C3DMap
-{
+class C3DMap {
 public:
 	ZoneItemArray	m_RegionItemArray;
 	// Passthru methods
 	int GetXRegionMax();
-	int GetZRegionMax(); 
+	int GetZRegionMax();
 	bool IsValidPosition(float x, float z, float y);
 	_OBJECT_EVENT * GetObjectEvent(int objectindex);
 	_REGENE_EVENT * GetRegeneEvent(int objectindex);
@@ -26,7 +25,7 @@ public:
 	C3DMap();
 	bool Initialize(_ZONE_INFO *pZone);
 	CRegion * GetRegion(uint16 regionX, uint16 regionZ);
-	bool CheckEvent( float x, float z, CUser* pUser = nullptr );
+	bool CheckEvent(float x, float z, CUser* pUser = nullptr);
 	void RegionItemRemove(_LOOT_BUNDLE * pBundle, _LOOT_ITEM * pItem);
 	bool RegionItemAdd(uint16 rx, uint16 rz, _LOOT_BUNDLE * pBundle);
 	virtual ~C3DMap();
@@ -50,13 +49,13 @@ public:
 
 	INLINE bool canTradeWithOtherNation() { return (m_zoneFlags & ZF_TRADE_OTHER_NATION) != 0; }
 	INLINE bool canTalkToOtherNation() { return (m_zoneFlags & ZF_TALK_OTHER_NATION) != 0; }
-	INLINE bool canAttackOtherNation() { return (m_zoneFlags & ZF_ATTACK_OTHER_NATION) != 0; } 
-	INLINE bool canAttackSameNation() { return (m_zoneFlags & ZF_ATTACK_SAME_NATION) != 0; } 
+	INLINE bool canAttackOtherNation() { return (m_zoneFlags & ZF_ATTACK_OTHER_NATION) != 0; }
+	INLINE bool canAttackSameNation() { return (m_zoneFlags & ZF_ATTACK_SAME_NATION) != 0; }
 	INLINE bool isWarZone() {
-		if (this==nullptr)
-			return false; 
+		if (this == nullptr)
+			return false;
 
-		return (m_zoneFlags & ZF_WAR_ZONE) != 0; 
+		return (m_zoneFlags & ZF_WAR_ZONE) != 0;
 	}
 	INLINE bool isNationPVPZone() { return canAttackOtherNation() && !canAttackSameNation(); }
 	INLINE bool areNPCsFriendly() { return (m_zoneFlags & ZF_FRIENDLY_NPCS) != 0; }

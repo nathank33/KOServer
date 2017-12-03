@@ -5,8 +5,7 @@ class CGameServerDlg;
 class CKnights;
 class Packet;
 
-class CKnightsManager  
-{
+class CKnightsManager {
 public:
 	static void CreateKnights(CUser* pUser, Packet & pkt);
 	static void JoinKnights(CUser* pUser, Packet & pkt);
@@ -73,8 +72,8 @@ public:
 	static void RecvModifyFame(CUser* pUser, Packet & pkt, uint8 command);
 	static void RecvKnightsAllList(Packet & pkt);
 
-	static int GetKnightsIndex( int nation );
-	static bool IsAvailableName( const char* strname);	
-	static void PacketProcess(CUser* pUser, Packet & pkt);	
+	static int GetKnightsIndex(int nation);
+	static bool IsAvailableName(const char* strname);
+	static void PacketProcess(CUser* pUser, Packet & pkt);
 
 };

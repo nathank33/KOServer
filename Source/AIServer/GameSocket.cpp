@@ -9,28 +9,23 @@
 
 CGameSocket::~CGameSocket() {}
 
-void CGameSocket::OnConnect()
-{
+void CGameSocket::OnConnect() {
 	KOSocket::OnConnect();
 	Initialize();
 }
 
-void CGameSocket::Initialize()
-{
+void CGameSocket::Initialize() {
 	m_Party.Initialize();
 }
 
-void CGameSocket::OnDisconnect()
-{
+void CGameSocket::OnDisconnect() {
 	TRACE("*** CloseProcess - socketID=%d ... server=%s *** \n", GetSocketID(), GetRemoteIP().c_str());
 	g_pMain->DeleteAllUserList(this);
 }
 
-bool CGameSocket::HandlePacket(Packet & pkt)
-{
-	switch (pkt.GetOpcode())
-	{
-	case AI_SERVER_CONNECT:		
+bool CGameSocket::HandlePacket(Packet & pkt) {
+	switch (pkt.GetOpcode()) {
+	case AI_SERVER_CONNECT:
 		RecvServerConnect(pkt);
 		break;
 	case AG_USER_INFO:
@@ -104,7 +99,7 @@ bool CGameSocket::HandlePacket(Packet & pkt)
 		uint16 uid;
 		pkt >> uid >> uRoomEvent;
 
-		g_pMain->UserEventRoomUpdate(uid,uRoomEvent);
+		g_pMain->UserEventRoomUpdate(uid, uRoomEvent);
 		break;
 	case AG_CSW_OP_CL:
 		bool Status;
@@ -120,14 +115,13 @@ bool CGameSocket::HandlePacket(Packet & pkt)
 		CNpc* pNpc = g_pMain->GetNpcPtr(nid);
 
 		if (pNpc != nullptr)
-		pNpc->ChaosCubeControl();
+			pNpc->ChaosCubeControl();
 		break;
 	}
 	return true;
 }
 
-void CGameSocket::RecvNpcMoveResult(Packet & pkt)
-{
+void CGameSocket::RecvNpcMoveResult(Packet & pkt) {
 	uint8 flag;			// 01(INFO_MODIFY), 02(INFO_DELETE)	
 	uint16 sNid;
 	float fX, fY, fZ, fSecForMetor;
@@ -139,12 +133,11 @@ void CGameSocket::RecvNpcMoveResult(Packet & pkt)
 
 	pNpc->RegisterRegion(fX, fZ);
 }
-void CGameSocket::RecvServerConnect(Packet & pkt)
-{
+void CGameSocket::RecvServerConnect(Packet & pkt) {
 	uint8 byReconnect = pkt.read<uint8>();
 	printf("Game Server connected - %s\n", GetRemoteIP().c_str());
 
-			
+
 	Packet result(AI_SERVER_CONNECT, byReconnect);
 	Send(&result);
 
@@ -157,16 +150,14 @@ void CGameSocket::RecvServerConnect(Packet & pkt)
 	g_pMain->AllNpcInfo();
 }
 
-void CGameSocket::RecvUserInfo(Packet & pkt)
-{
+void CGameSocket::RecvUserInfo(Packet & pkt) {
 	CUser *pUser = new CUser();
 	pUser->Initialize();
 
 	pkt >> pUser->m_iUserId;
 	ReadUserInfo(pkt, pUser);
 
-	if (pUser->GetName().empty() || pUser->GetName().length() > MAX_ID_SIZE)
-	{
+	if (pUser->GetName().empty() || pUser->GetName().length() > MAX_ID_SIZE) {
 		delete pUser;
 		return;
 	}
@@ -174,25 +165,24 @@ void CGameSocket::RecvUserInfo(Packet & pkt)
 	pUser->m_pMap = g_pMain->GetZoneByID(pUser->m_bZone);
 	pUser->m_bLive = AI_USER_LIVE;
 
-	TRACE("****  RecvUserInfo()---> uid = %d, name=%s ******\n", 
+	TRACE("****  RecvUserInfo()---> uid = %d, name=%s ******\n",
 		pUser->GetID(), pUser->GetName().c_str());
 
 	if (!g_pMain->SetUserPtr(pUser->GetID(), pUser))
 		delete pUser;
 }
 
-void CGameSocket::ReadUserInfo(Packet & pkt, CUser * pUser)
-{
+void CGameSocket::ReadUserInfo(Packet & pkt, CUser * pUser) {
 	uint32 equippedItems = 0;
 
 	pkt.SByte();
-	pkt >> pUser->m_strUserID >> pUser->m_bZone >> pUser->m_bNation 
-		>> pUser->m_bLevel >> pUser->m_sHP >> pUser->m_sMP 
+	pkt >> pUser->m_strUserID >> pUser->m_bZone >> pUser->m_bNation
+		>> pUser->m_bLevel >> pUser->m_sHP >> pUser->m_sMP
 		>> pUser->m_sTotalHit >> pUser->m_bAttackAmount
 		>> pUser->m_sTotalAc >> pUser->m_sACAmount
-		>> pUser->m_fTotalHitrate >> pUser->m_fTotalEvasionrate 
+		>> pUser->m_fTotalHitrate >> pUser->m_fTotalEvasionrate
 		>> pUser->m_sItemAc
-		>> pUser->m_sPartyNumber 
+		>> pUser->m_sPartyNumber
 		>> pUser->m_byIsOP >> pUser->m_bInvisibilityType
 		>> equippedItems;
 
@@ -202,14 +192,12 @@ void CGameSocket::ReadUserInfo(Packet & pkt, CUser * pUser)
 	Guard lock(pUser->_unitlock);
 	pUser->m_equippedItemBonuses.clear();
 
-	for (uint32 i = 0; i < equippedItems; i++)
-	{
+	for (uint32 i = 0; i < equippedItems; i++) {
 		uint8 bSlot; uint32 bonusCount;
 		Unit::ItemBonusMap bonusMap;
 
 		pkt >> bSlot >> bonusCount;
-		for (uint32 x = 0; x < bonusCount; x++)
-		{
+		for (uint32 x = 0; x < bonusCount; x++) {
 			uint8 bType; int16 sAmount;
 			pkt >> bType >> sAmount;
 			bonusMap.insert(std::make_pair(bType, sAmount));
@@ -219,25 +207,23 @@ void CGameSocket::ReadUserInfo(Packet & pkt, CUser * pUser)
 	}
 }
 
-void CGameSocket::RecvUserInOut(Packet & pkt)
-{
+void CGameSocket::RecvUserInOut(Packet & pkt) {
 	std::string strUserID;
 	uint8 bType;
 	uint16 uid;
 	float fX, fZ;
 	pkt.SByte();
 	pkt >> bType >> uid >> strUserID >> fX >> fZ;
-	if (fX < 0 || fZ < 0)
-	{
+	if (fX < 0 || fZ < 0) {
 		TRACE("Error:: RecvUserInOut(),, uid = %d, fX=%.2f, fZ=%.2f\n", uid, fX, fZ);
 		return;
 	}
 
-	int region_x = 0, region_z=0;
-	int x1 = (int)fX / TILE_SIZE;
-	int z1 = (int)fZ / TILE_SIZE;
-	region_x = (int)fX / VIEW_DIST; 
-	region_z = (int)fZ / VIEW_DIST;
+	int region_x = 0, region_z = 0;
+	int x1 = (int) fX / TILE_SIZE;
+	int z1 = (int) fZ / TILE_SIZE;
+	region_x = (int) fX / VIEW_DIST;
+	region_z = (int) fZ / VIEW_DIST;
 
 	MAP* pMap = nullptr;
 	CUser* pUser = g_pMain->GetUserPtr(uid);
@@ -245,21 +231,18 @@ void CGameSocket::RecvUserInOut(Packet & pkt)
 		return;
 
 	pMap = pUser->GetMap();
-	if (pMap == nullptr)
-	{
+	if (pMap == nullptr) {
 		TRACE("#### Fail : pMap == nullptr ####\n");
 		return;
 	}
 
-	if (x1 < 0 || z1 < 0 || x1 >= pMap->GetMapSize() || z1 >= pMap->GetMapSize())
-	{
+	if (x1 < 0 || z1 < 0 || x1 >= pMap->GetMapSize() || z1 >= pMap->GetMapSize()) {
 		TRACE("#### RecvUserInOut Fail : [name=%s], x1=%d, z1=%d #####\n", pUser->GetName().c_str(), region_x, region_z);
 		return;
 	}
 
 	//if (pMap->m_pMap[x1][z1].m_sEvent == 0) return;
-	if (region_x > pMap->GetXRegionMax() || region_z > pMap->GetZRegionMax())
-	{
+	if (region_x > pMap->GetXRegionMax() || region_z > pMap->GetZRegionMax()) {
 		TRACE("#### GameSocket-RecvUserInOut() Fail : [name=%s], nRX=%d, nRZ=%d #####\n", pUser->GetName().c_str(), region_x, region_z);
 		return;
 	}
@@ -268,83 +251,72 @@ void CGameSocket::RecvUserInOut(Packet & pkt)
 	pUser->m_curz = pUser->m_fWill_z = fZ;
 
 	// leaving a region
-	if (bType == 2)	
-	{
+	if (bType == 2) {
 		pMap->RegionUserRemove(region_x, region_z, uid);
 	}
 	// entering a region
-	else if (pUser->m_sRegionX != region_x || pUser->m_sRegionZ != region_z)	
-	{
-		pUser->m_sRegionX = region_x;		
+	else if (pUser->m_sRegionX != region_x || pUser->m_sRegionZ != region_z) {
+		pUser->m_sRegionX = region_x;
 		pUser->m_sRegionZ = region_z;
 
 		pMap->RegionUserAdd(region_x, region_z, uid);
 	}
 }
 
-void CGameSocket::RecvUserMove(Packet & pkt)
-{
+void CGameSocket::RecvUserMove(Packet & pkt) {
 	uint16 uid, speed;
 	float fX, fZ, fY;
 	pkt >> uid >> fX >> fZ >> fY >> speed;
 	SetUid(fX, fZ, uid, speed);
 }
 
-bool CGameSocket::SetUid(float x, float z, int id, int speed)
-{
-	int x1 = (int)x / TILE_SIZE;
-	int z1 = (int)z / TILE_SIZE;
-	int nRX = (int)x / VIEW_DIST;
-	int nRZ = (int)z / VIEW_DIST;
+bool CGameSocket::SetUid(float x, float z, int id, int speed) {
+	int x1 = (int) x / TILE_SIZE;
+	int z1 = (int) z / TILE_SIZE;
+	int nRX = (int) x / VIEW_DIST;
+	int nRZ = (int) z / VIEW_DIST;
 
 	CUser* pUser = g_pMain->GetUserPtr(id);
-	if(pUser == nullptr) 
-	{
+	if (pUser == nullptr) {
 		TRACE("#### User등록 실패 sid = %d ####\n", id);
 		return false;
 	}
 
 	MAP* pMap = pUser->GetMap();
-	if (pMap == nullptr)
-	{
+	if (pMap == nullptr) {
 		TRACE("#### User not in valid zone, sid = %d ####\n", id);
 		return false;
 	}
 
-	if(x1 < 0 || z1 < 0 || x1 >= pMap->GetMapSize() || z1 >= pMap->GetMapSize())
-	{
+	if (x1 < 0 || z1 < 0 || x1 >= pMap->GetMapSize() || z1 >= pMap->GetMapSize()) {
 		TRACE("#### GameSocket ,, SetUid Fail : [nid=%d, name=%s], x1=%d, z1=%d #####\n", id, pUser->GetName().c_str(), x1, z1);
 		return false;
 	}
 
-	if(nRX > pMap->GetXRegionMax() || nRZ > pMap->GetZRegionMax())
-	{
+	if (nRX > pMap->GetXRegionMax() || nRZ > pMap->GetZRegionMax()) {
 		TRACE("#### GameSocket , SetUid Fail : [nid=%d, name=%s], nRX=%d, nRZ=%d #####\n", id, pUser->GetName().c_str(), nRX, nRZ);
 		return false;
 	}
 
 	// if(pMap->m_pMap[x1][z1].m_sEvent == 0) return false;
 
-	if (pUser != nullptr)
-	{
+	if (pUser != nullptr) {
 		if (pUser->isDead())
 			return false;
 
 		///// attack ~ 
-		if( speed != 0 )	{
+		if (speed != 0) {
 			pUser->m_curx = pUser->m_fWill_x;
 			pUser->m_curz = pUser->m_fWill_z;
 			pUser->m_fWill_x = x;
 			pUser->m_fWill_z = z;
-		}
-		else	{
+		} else {
 			pUser->m_curx = pUser->m_fWill_x = x;
 			pUser->m_curz = pUser->m_fWill_z = z;
 		}
 		/////~ attack 
 
-		if(pUser->m_sRegionX != nRX || pUser->m_sRegionZ != nRZ)
-		{
+		if (pUser->m_sRegionX != nRX || pUser->m_sRegionZ != nRZ) {
 			pMap->RegionUserRemove(pUser->m_sRegionX, pUser->m_sRegionZ, id);
 			pUser->m_sRegionX = nRX;		pUser->m_sRegionZ = nRZ;
 			pMap->RegionUserAdd(pUser->m_sRegionX, pUser->m_sRegionZ, id);
@@ -352,13 +324,12 @@ bool CGameSocket::SetUid(float x, float z, int id, int speed)
 	}
 
 	// dungeon work
-	int room = pMap->IsRoomCheck( x, z );
+	int room = pMap->IsRoomCheck(x, z);
 
 	return true;
 }
 
-void CGameSocket::RecvUserLogOut(Packet & pkt)
-{
+void CGameSocket::RecvUserLogOut(Packet & pkt) {
 	uint16 sessionId;
 	std::string strUserID;
 	pkt >> sessionId >> strUserID; // double byte string for once
@@ -367,13 +338,12 @@ void CGameSocket::RecvUserLogOut(Packet & pkt)
 	//TRACE("**** User LogOut -- uid = %d, name = %s\n", sessionId, strUserID.c_str());
 }
 
-void CGameSocket::RecvUserRegene(Packet & pkt)
-{
+void CGameSocket::RecvUserRegene(Packet & pkt) {
 	uint16 uid, sHP;
 	pkt >> uid >> sHP;
 
 	CUser* pUser = g_pMain->GetUserPtr(uid);
-	if(pUser == nullptr)	
+	if (pUser == nullptr)
 		return;
 
 	pUser->m_bLive = AI_USER_LIVE;
@@ -382,8 +352,7 @@ void CGameSocket::RecvUserRegene(Packet & pkt)
 	TRACE("**** RecvUserRegene -- uid = (%s,%d), HP = %d\n", pUser->GetName().c_str(), pUser->GetID(), pUser->m_sHP);
 }
 
-void CGameSocket::RecvUserSetHP(Packet & pkt)
-{
+void CGameSocket::RecvUserSetHP(Packet & pkt) {
 	uint16 sid, sHP, tid;
 	pkt >> sid >> sHP >> tid;
 
@@ -399,8 +368,7 @@ void CGameSocket::RecvUserSetHP(Packet & pkt)
 		pUser->OnDeath(pAttacker);
 }
 
-void CGameSocket::RecvNpcHpChange(Packet & pkt)
-{
+void CGameSocket::RecvNpcHpChange(Packet & pkt) {
 	int16 nid, sAttackerID;
 	int32 nHP, nAmount;
 	uint8 attributeType = AttributeNone;
@@ -410,21 +378,17 @@ void CGameSocket::RecvNpcHpChange(Packet & pkt)
 	if (pNpc == nullptr)
 		return;
 
-	if (nAmount < 0)
-	{
+	if (nAmount < 0) {
 		pNpc->RecvAttackReq(-nAmount, sAttackerID, (AttributeType) attributeType);
 		return;
-	}
-	else
-	{		
+	} else {
 		pNpc->m_iHP += nAmount;
 		if (pNpc->m_iHP > pNpc->m_iMaxHP)
 			pNpc->m_iHP = pNpc->m_iMaxHP;
 	}
 }
 
-void CGameSocket::RecvUserUpdate(Packet & pkt)
-{
+void CGameSocket::RecvUserUpdate(Packet & pkt) {
 	CUser* pUser = g_pMain->GetUserPtr(pkt.read<uint16>());
 	if (pUser == nullptr)
 		return;
@@ -432,13 +396,12 @@ void CGameSocket::RecvUserUpdate(Packet & pkt)
 	ReadUserInfo(pkt, pUser);
 }
 
-void CGameSocket::RecvZoneChange(Packet & pkt)
-{
+void CGameSocket::RecvZoneChange(Packet & pkt) {
 	uint16 uid = pkt.read<uint16>();
 	uint8 byZoneNumber = pkt.read<uint8>();
 
 	CUser* pUser = g_pMain->GetUserPtr(uid);
-	if (pUser == nullptr)	
+	if (pUser == nullptr)
 		return;
 
 	pUser->m_pMap = g_pMain->GetZoneByID(byZoneNumber);
@@ -447,31 +410,27 @@ void CGameSocket::RecvZoneChange(Packet & pkt)
 	TRACE("**** RecvZoneChange -- user(%s, %d), cur_zone = %d\n", pUser->GetName().c_str(), pUser->GetID(), byZoneNumber);
 }
 
-void CGameSocket::RecvUserInfoAllData(Packet & pkt)
-{
+void CGameSocket::RecvUserInfoAllData(Packet & pkt) {
 	uint8 byCount = pkt.read<uint8>();
 	for (int i = 0; i < byCount; i++)
 		RecvUserInfo(pkt);
 }
 
-void CGameSocket::RecvGateOpen(Packet & pkt)
-{
+void CGameSocket::RecvGateOpen(Packet & pkt) {
 	uint16 nid;
 	bool byGateOpen;
 
 	pkt >> nid >> byGateOpen;
-	if (nid < NPC_BAND)	
-	{
+	if (nid < NPC_BAND) {
 		TRACE("####   RecvGateOpen()  nid Fail --> nid = %d  ####\n", nid);
 		return;
 	}
 
 	CNpc* pNpc = g_pMain->GetNpcPtr(nid);
-	if (pNpc == nullptr)		
+	if (pNpc == nullptr)
 		return;
 
-	if (!pNpc->isGate()) 
-	{
+	if (!pNpc->isGate()) {
 		TRACE("####   RecvGateOpen()  NpcType Fail --> type = %d  ####\n", pNpc->GetType());
 		return;
 	}
@@ -480,8 +439,7 @@ void CGameSocket::RecvGateOpen(Packet & pkt)
 	TRACE("****  RecvGateOpen()---> nid = %d, byGateOpen = %d  ******\n", nid, byGateOpen);
 }
 
-void CGameSocket::RecvUserVisibility(Packet & pkt)
-{
+void CGameSocket::RecvUserVisibility(Packet & pkt) {
 	uint16 sid;
 	uint8 bIsInvisible;
 	pkt >> sid >> bIsInvisible;
@@ -493,8 +451,7 @@ void CGameSocket::RecvUserVisibility(Packet & pkt)
 	pUser->m_bInvisibilityType = bIsInvisible;
 }
 
-void CGameSocket::RecvUserTransform(Packet & pkt)
-{
+void CGameSocket::RecvUserTransform(Packet & pkt) {
 	uint16 sid;
 	uint8 type;
 	pkt >> sid >> type;
@@ -506,11 +463,9 @@ void CGameSocket::RecvUserTransform(Packet & pkt)
 	pUser->m_transformationType = TransformationType(type);
 }
 
-void CGameSocket::RecvPartyInfoAllData(Packet & pkt)
-{
+void CGameSocket::RecvPartyInfoAllData(Packet & pkt) {
 	uint16 sPartyIndex = pkt.read<uint16>();
-	if (sPartyIndex >= SHRT_MAX)
-	{
+	if (sPartyIndex >= SHRT_MAX) {
 		TRACE("#### RecvPartyInfoAllData Index Fail -  index = %d ####\n", sPartyIndex);
 		return;
 	}
@@ -525,8 +480,7 @@ void CGameSocket::RecvPartyInfoAllData(Packet & pkt)
 		TRACE("****  RecvPartyInfoAllData()---> PartyIndex = %d  ******\n", sPartyIndex);
 }
 
-void CGameSocket::RecvHealMagic(Packet & pkt)
-{
+void CGameSocket::RecvHealMagic(Packet & pkt) {
 	uint16 sid = pkt.read<uint16>();
 	CUser* pUser = g_pMain->GetUserPtr(sid);
 
@@ -537,22 +491,19 @@ void CGameSocket::RecvHealMagic(Packet & pkt)
 	pUser->HealMagic();
 }
 
-void CGameSocket::RecvTimeAndWeather(Packet & pkt)
-{
-	pkt >> g_pMain->m_iYear >> g_pMain->m_iMonth >> g_pMain->m_iDate 
-		>> g_pMain->m_iHour >> g_pMain->m_iMin 
+void CGameSocket::RecvTimeAndWeather(Packet & pkt) {
+	pkt >> g_pMain->m_iYear >> g_pMain->m_iMonth >> g_pMain->m_iDate
+		>> g_pMain->m_iHour >> g_pMain->m_iMin
 		>> g_pMain->m_iWeather >> g_pMain->m_iAmount;
 
 	// We'll class day time as 6am to 9pm.
 	g_pMain->m_bIsNight = (g_pMain->m_iHour <= 5 || g_pMain->m_iHour >= 21);
 }
 
-void CGameSocket::RecvBattleEvent(Packet & pkt)
-{
+void CGameSocket::RecvBattleEvent(Packet & pkt) {
 	uint8 bType = pkt.read<uint8>(), bEvent = pkt.read<uint8>();
 
-	if (bEvent == BATTLEZONE_OPEN || bEvent == BATTLEZONE_CLOSE)
-	{
+	if (bEvent == BATTLEZONE_OPEN || bEvent == BATTLEZONE_CLOSE) {
 		g_pMain->m_sKillKarusNpc = 0;
 		g_pMain->m_sKillElmoNpc = 0;
 		g_pMain->m_byBattleEvent = bEvent;
@@ -560,22 +511,19 @@ void CGameSocket::RecvBattleEvent(Packet & pkt)
 			g_pMain->ResetBattleZone();
 	}
 
-	foreach_stlmap (itr, g_pMain->m_arNpc)
-	{
+	foreach_stlmap(itr, g_pMain->m_arNpc) {
 		CNpc *pNpc = itr->second;
 		if (pNpc == nullptr)
 			continue;
 
-		if (pNpc->GetType() > 10 && (pNpc->GetNation() == KARUS || pNpc->GetNation() == ELMORAD))
-		{
+		if (pNpc->GetType() > 10 && (pNpc->GetNation() == KARUS || pNpc->GetNation() == ELMORAD)) {
 			if (bEvent == BATTLEZONE_OPEN || bEvent == BATTLEZONE_CLOSE)
 				pNpc->ChangeAbility(bEvent);
 		}
 	}
 }
 
-void CGameSocket::RecvNpcSpawnRequest(Packet & pkt)
-{
+void CGameSocket::RecvNpcSpawnRequest(Packet & pkt) {
 	uint16 sSid, sX, sY, sZ, sCount, sRadius, sDuration;
 	int16 socketID;
 	uint16 nEventRoom;
@@ -597,19 +545,17 @@ void CGameSocket::RecvNpcSpawnRequest(Packet & pkt)
 
 
 	for (uint16 i = 0; i < sCount; i++)
-		g_pMain->SpawnEventNpc(sSid, bIsMonster, 
-			byZone, fX,	fY, fZ, sRadius, sDuration, nation, socketID, nEventRoom, nIsPet, strPetName, strUserName, nSerial, UserId);
+		g_pMain->SpawnEventNpc(sSid, bIsMonster,
+			byZone, fX, fY, fZ, sRadius, sDuration, nation, socketID, nEventRoom, nIsPet, strPetName, strUserName, nSerial, UserId);
 }
 
-void CGameSocket::RecvNpcKillRequest(Packet & pkt)
-{
+void CGameSocket::RecvNpcKillRequest(Packet & pkt) {
 	uint16 nid;
 	pkt >> nid;
 
 	if (nid < NPC_BAND)	// is player
 	{
-		foreach_stlmap (itr, g_pMain->m_arNpc)
-		{
+		foreach_stlmap(itr, g_pMain->m_arNpc) {
 			CNpc *pNpc = itr->second;
 			if (pNpc == nullptr)
 				continue;
@@ -620,9 +566,7 @@ void CGameSocket::RecvNpcKillRequest(Packet & pkt)
 			pNpc->m_oSocketID = -1;
 			pNpc->Dead();
 		}
-	}
-	else
-	{
+	} else {
 		CNpc* pNpc = g_pMain->GetNpcPtr(nid);
 
 		if (pNpc != nullptr)
@@ -630,12 +574,11 @@ void CGameSocket::RecvNpcKillRequest(Packet & pkt)
 	}
 }
 
-void CGameSocket::RecvNpcUpdate(Packet & pkt)
-{
+void CGameSocket::RecvNpcUpdate(Packet & pkt) {
 	uint16 sSid;
 	bool bIsMonster;
 	uint8 byGroup = 0;
-	uint16 sPid = 0;	
+	uint16 sPid = 0;
 
 	pkt >> sSid >> bIsMonster >> byGroup >> sPid;
 

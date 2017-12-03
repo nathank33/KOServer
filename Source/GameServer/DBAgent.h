@@ -2,22 +2,19 @@
 
 #include "../shared/database/OdbcConnection.h"
 
-enum UserUpdateType
-{
+enum UserUpdateType {
 	UPDATE_LOGOUT,
 	UPDATE_ALL_SAVE,
 	UPDATE_PACKET_SAVE,
 };
 
-enum RentalType
-{
-	RENTAL_TYPE_IN_LIST		= 1,
-	RENTAL_TYPE_LENDER		= 2,
-	RENTAL_TYPE_BORROWER	= 3
+enum RentalType {
+	RENTAL_TYPE_IN_LIST = 1,
+	RENTAL_TYPE_LENDER = 2,
+	RENTAL_TYPE_BORROWER = 3
 };
 
-struct _USER_RENTAL_ITEM
-{
+struct _USER_RENTAL_ITEM {
 	std::string strUserID;
 	uint64 nSerialNum;
 	uint32 nRentalIndex, nItemID, nRentalMoney;
@@ -26,8 +23,7 @@ struct _USER_RENTAL_ITEM
 	uint8 byRentalType, byRegType;
 	char szTimeRental[30];
 
-	_USER_RENTAL_ITEM()
-	{
+	_USER_RENTAL_ITEM() {
 		memset(&szTimeRental, 0, sizeof(szTimeRental));
 	}
 };
@@ -37,8 +33,7 @@ typedef std::map<uint64, _USER_RENTAL_ITEM *> UserRentalMap;
 class Packet;
 class CUser;
 struct _ITEM_DATA;
-class CDBAgent  
-{
+class CDBAgent {
 public:
 	CDBAgent();
 
@@ -53,7 +48,7 @@ public:
 
 	void ReportSQLError(OdbcError *pError);
 
-	
+
 	int8 AccountLogin(std::string & strAccountID, std::string & strPasswd);
 	uint8 NationSelect(std::string & strAccountID, uint8 bNation);
 	bool GetAllCharID(std::string & strAccountID, std::string & strCharID1, std::string & strCharID2, std::string & strCharID3, std::string & strCharID4);
@@ -106,10 +101,10 @@ public:
 	void UpdateVIPStoragePassword(std::string strUserID, std::string VIPPassword);
 	void UpdateVIPStorageMinute(std::string strUserID, uint32 VIPMinute);
 	uint16 LoadKnightsAllMembers(uint16 sClanID, Packet & result);
-	int8 CreateAlliance(uint8 byType, uint16 shAlliancIndex, uint16 shKnightsIndex, uint8  byEmptyIndex, uint8 bySiegeFlag); 
-	int8 InsertAlliance(uint8 byType, uint16 shAlliancIndex, uint16 shKnightsIndex, uint8  byEmptyIndex, uint8 bySiegeFlag); 
-	int8 RemoveAlliance(uint8 byType, uint16 shAlliancIndex, uint16 shKnightsIndex, uint8  byEmptyIndex, uint8 bySiegeFlag); 
-	int8 DestoryAlliance(uint8 byType, uint16 shAlliancIndex, uint16 shKnightsIndex, uint8  byEmptyIndex, uint8 bySiegeFlag); 
+	int8 CreateAlliance(uint8 byType, uint16 shAlliancIndex, uint16 shKnightsIndex, uint8  byEmptyIndex, uint8 bySiegeFlag);
+	int8 InsertAlliance(uint8 byType, uint16 shAlliancIndex, uint16 shKnightsIndex, uint8  byEmptyIndex, uint8 bySiegeFlag);
+	int8 RemoveAlliance(uint8 byType, uint16 shAlliancIndex, uint16 shKnightsIndex, uint8  byEmptyIndex, uint8 bySiegeFlag);
+	int8 DestoryAlliance(uint8 byType, uint16 shAlliancIndex, uint16 shKnightsIndex, uint8  byEmptyIndex, uint8 bySiegeFlag);
 	bool LoadKnightsInfo(uint16 sClanID, uint8 & bNation, std::string & strKnightsName, uint16 & sMembers, uint32 & nPoints, uint8 & bRank);
 	void LoadKnightsAllList();
 	bool UpdateClanSymbol(uint16 sClanID, uint16 sSymbolSize, char *clanSymbol);
@@ -126,7 +121,7 @@ public:
 	void UpdateAccountKnightCash(std::string & strAccountID, uint32 KnightCash = 0);
 	void UpdateBattleEvent(std::string & strCharID, uint8 bNation);
 	void AccountLogout(std::string & strAccountID);
-	
+
 	void InsertRepurchase(uint32 nItemID, time_t RepTime, uint64 nSerial, CUser *pUser);
 	void DeleteRepurchase(uint32 nItemID, time_t RepTime, CUser *pUser);
 	void LoadRepurchase(CUser *pUser);
@@ -142,7 +137,7 @@ public:
 	void DeleteLetter(std::string & strCharID, uint32 nLetterID);
 	void ResendLetter(std::string & strCharID, uint32 nLetterID);
 	void SendUDP_ElectionStatus(uint8 m_byType);
-	bool GetElectionResult(uint8 byNation,CKingSystem *KingSystem);
+	bool GetElectionResult(uint8 byNation, CKingSystem *KingSystem);
 	void UpdateElectionStatus(uint8 byType, uint8 byNation);
 	void UpdateElectionList(uint8 byDBType, uint8 byType, uint8 byNation, uint16 sKnights, uint32 nAmount, std::string & strNominee, CUser * pUser);
 	int16 UpdateElectionProc(CUser * pUser);

@@ -7,8 +7,7 @@ bool g_bRunning = true;
 
 BOOL WINAPI _ConsoleHandler(DWORD dwCtrlType);
 
-int main()
-{
+int main() {
 	SetConsoleTitle("Login Server Knight v" STRINGIFY(__VERSION));
 	// Override the console handler
 	SetConsoleCtrlHandler(_ConsoleHandler, TRUE);
@@ -18,29 +17,25 @@ int main()
 	g_pMain = new LoginServer();
 
 	// Startup server
-	if (g_pMain->Startup())
-	{
+	if (g_pMain->Startup()) {
 		printf("\nServer started up successfully!\n\n");
 
 		// Wait until console's signaled as closing
 		s_hEvent.Wait();
-	}
-	else
-	{
+	} else {
 		system("pause");
 	}
 
 	printf("Server shutting down, please wait...\n");
 
-	g_bRunning = false; 
+	g_bRunning = false;
 	delete g_pMain;
 	UnhookSignals();
 
 	return 0;
 }
 
-BOOL WINAPI _ConsoleHandler(DWORD dwCtrlType)
-{
+BOOL WINAPI _ConsoleHandler(DWORD dwCtrlType) {
 	s_hEvent.BeginSynchronized();
 	s_hEvent.Signal();
 	s_hEvent.EndSynchronized();

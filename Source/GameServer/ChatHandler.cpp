@@ -8,9 +8,8 @@ using std::string;
 ServerCommandTable CGameServerDlg::s_commandTable;
 ChatCommandTable CUser::s_commandTable;
 
-void CGameServerDlg::InitServerCommands()
-{
-	static Command<CGameServerDlg> commandTable[] = 
+void CGameServerDlg::InitServerCommands() {
+	static Command<CGameServerDlg> commandTable[] =
 	{
 		// Command				Handler												Help message
 		{ "notice",				&CGameServerDlg::HandleNoticeCommand,				"Sends a server-wide chat notice." },
@@ -48,8 +47,8 @@ void CGameServerDlg::InitServerCommands()
 		{ "reload_bots",		&CGameServerDlg::HandleReloadBotsCommand,			"Reloads the in-game bot tables." },
 		{ "reload_quests",		&CGameServerDlg::HandleReloadQuestCommand,			"Reloads the in-game quest tables." },
 		{ "reload_ranks",		&CGameServerDlg::HandleReloadRanksCommand,			"Reloads the in-game rank tables." },
-		{ "reload_dupe",		&CGameServerDlg::HandleReloadDupeCommand,			"Reloads a tabela ITEMS_DUPE"}, 
-		{ "reload_ilegal",		&CGameServerDlg::HandleReloadIlegalItemsCommand,	"Reloads a tabela ILEGAL_ITEMS"}, 
+		{ "reload_dupe",		&CGameServerDlg::HandleReloadDupeCommand,			"Reloads a tabela ITEMS_DUPE"},
+		{ "reload_ilegal",		&CGameServerDlg::HandleReloadIlegalItemsCommand,	"Reloads a tabela ILEGAL_ITEMS"},
 		{ "count",				&CGameServerDlg::HandleCountCommand,				"Get online user count." },
 		{ "permitconnect",		&CGameServerDlg::HandlePermitConnectCommand,        "Player unban" },
 		{ "give_item",			&CGameServerDlg::HandleGiveItemCommand,				"Gives a player an item. Arguments: character name | item ID | [optional stack size]" },
@@ -66,9 +65,8 @@ void CGameServerDlg::InitServerCommands()
 
 void CGameServerDlg::CleanupServerCommands() { free_command_table(s_commandTable); }
 
-void CUser::InitChatCommands()
-{
-	static Command<CUser> commandTable[] = 
+void CUser::InitChatCommands() {
+	static Command<CUser> commandTable[] =
 	{
 		// Command				Handler											Help message
 		{ "test",				&CUser::HandleTestCommand,						"Test command" },
@@ -106,7 +104,7 @@ void CUser::InitChatCommands()
 		{ "resetranking",		&CUser::HandleResetPlayerRankingCommand,		"Reset player ranking. Arguments : Zone ID"},
 		{ "nptokc",				&CUser::HandleNPtoKCCommand,				    "NP ile KC alabileceginiz sistem kullanim: +nptokc npmiktari"},
 		{ "goldtokc",			&CUser::HandleGoldtoKCCommand,				    "Gold ile KC alabileceginiz sistem kullanim: +nptokc npmiktari"},
-	
+
 	};
 
 	init_command_table(CUser, commandTable, s_commandTable);
@@ -114,35 +112,34 @@ void CUser::InitChatCommands()
 
 void CUser::CleanupChatCommands() { free_command_table(s_commandTable); }
 
-void CUser::Chat(Packet & pkt)
-{
+void CUser::Chat(Packet & pkt) {
 	Packet result;
 	uint16 sessID;
 	uint8 type = pkt.read<uint8>(), bOutType = type, seekingPartyOptions, bNation;
-	string chatstr, finalstr, strSender, * strMessage, chattype;
+	string chatstr, finalstr, strSender, *strMessage, chattype;
 	CUser *pUser;
 	CKnights * pKnights;
 	DateTime time;
 	DWORD checknow = GetTickCount();
 
-	
-	if (!isGM()){
-	if (m_mutetime > checknow) return;//süren dolmamış
 
-	if (checknow-m_lastflood <= 1000) //birsaniyeden az // kontrol ediyim tekrar hata çıkmasın
-	{
-		floodcounter++;
-		if (floodcounter >= 5){
-			floodcounter =0;
-			std::string buffer = string_format("[ PBACS ] Oyunda flood yapmak yasaktır! 20 saniyeliğine mutelendiniz");
-			//adama mute yazısı gönderiyoz
-			m_mutetime = (checknow+20000);
-			ChatPacket::Construct(&result,PUBLIC_CHAT,&buffer);
-			Send(&result);
-			return;
-		}
-	}else floodcounter = 0;
-	m_lastflood = checknow;// tamam abi
+	if (!isGM()) {
+		if (m_mutetime > checknow) return;//süren dolmamış
+
+		if (checknow - m_lastflood <= 1000) //birsaniyeden az // kontrol ediyim tekrar hata çıkmasın
+		{
+			floodcounter++;
+			if (floodcounter >= 5) {
+				floodcounter = 0;
+				std::string buffer = string_format("[ PBACS ] Oyunda flood yapmak yasaktır! 20 saniyeliğine mutelendiniz");
+				//adama mute yazısı gönderiyoz
+				m_mutetime = (checknow + 20000);
+				ChatPacket::Construct(&result, PUBLIC_CHAT, &buffer);
+				Send(&result);
+				return;
+			}
+		} else floodcounter = 0;
+		m_lastflood = checknow;// tamam abi
 	}
 	//reyiz biz 1 saniyenin altında 5 
 	bool isAnnouncement = false;
@@ -153,16 +150,15 @@ void CUser::Chat(Packet & pkt)
 	pkt >> chatstr;
 	if (chatstr.empty() || chatstr.size() > 128)
 		return;
-	
-	// Process GM & User chat commands
-	if (ProcessChatCommand(chatstr))
-	{
-		if(isGM())
-		chattype = "GAME MASTER";
-		else
-		chattype = "CHAT COMMAND";
 
-		g_pMain->WriteGMLogFile(string_format("[ %s - %d:%d:%d ] %s : %s ( Zone=%d, X=%d, Z=%d )\n",chattype.c_str(),time.GetHour(),time.GetMinute(),time.GetSecond(),GetName().c_str(),chatstr.c_str(),GetZoneID(),uint16(GetX()),uint16(GetZ())));
+	// Process GM & User chat commands
+	if (ProcessChatCommand(chatstr)) {
+		if (isGM())
+			chattype = "GAME MASTER";
+		else
+			chattype = "CHAT COMMAND";
+
+		g_pMain->WriteGMLogFile(string_format("[ %s - %d:%d:%d ] %s : %s ( Zone=%d, X=%d, Z=%d )\n", chattype.c_str(), time.GetHour(), time.GetMinute(), time.GetSecond(), GetName().c_str(), chatstr.c_str(), GetZoneID(), uint16(GetX()), uint16(GetZ())));
 		return;
 	}
 
@@ -170,8 +166,7 @@ void CUser::Chat(Packet & pkt)
 		pkt >> seekingPartyOptions;
 
 	// Handle GM notice & announcement commands
-	if (type == PUBLIC_CHAT || type == ANNOUNCEMENT_CHAT)
-	{
+	if (type == PUBLIC_CHAT || type == ANNOUNCEMENT_CHAT) {
 		// Trying to use a GM command without authorisation? Bad player!
 		if (!isGM())
 			return;
@@ -189,16 +184,13 @@ void CUser::Chat(Packet & pkt)
 	}
 
 
-	if (isAnnouncement)
-	{
+	if (isAnnouncement) {
 		// GM notice/announcements show no name, so don't bother setting it.
 		strMessage = &finalstr; // use the formatted message from the user
 		strSender = GetName();
 		bNation = KARUS; // arbitrary nation
 		sessID = -1;
-	}
-	else
-	{
+	} else {
 		strMessage = &chatstr; // use the raw message from the user
 		strSender = GetName(); // everything else uses a name, so set it
 		bNation = GetNation();
@@ -211,34 +203,32 @@ void CUser::Chat(Packet & pkt)
 
 	ChatPacket::Construct(&result, bOutType, strMessage, &strSender, bNation, sessID);
 
-	switch (type) 
-	{
+	switch (type) {
 	case GENERAL_CHAT:
-		g_pMain->Send_NearRegion(&result, GetMap(), GetRegionX(), GetRegionZ(), GetX(), GetZ(),nullptr,GetEventRoom());
+		g_pMain->Send_NearRegion(&result, GetMap(), GetRegionX(), GetRegionZ(), GetX(), GetZ(), nullptr, GetEventRoom());
 		chattype = "GENERAL_CHAT";
 		break;
 
 	case PRIVATE_CHAT:
-		{
-			pUser = g_pMain->GetUserPtr(m_sPrivateChatUser);
-			if (pUser == nullptr || !pUser->isInGame()) 
-				return;
+	{
+		pUser = g_pMain->GetUserPtr(m_sPrivateChatUser);
+		if (pUser == nullptr || !pUser->isInGame())
+			return;
 
-			chattype = "PRIVATE_CHAT";
-		}
+		chattype = "PRIVATE_CHAT";
+	}
 	case COMMAND_PM_CHAT:
-		{
-			if (type == COMMAND_PM_CHAT && GetFame() != COMMAND_CAPTAIN)
-				return;
+	{
+		if (type == COMMAND_PM_CHAT && GetFame() != COMMAND_CAPTAIN)
+			return;
 
-			pUser = g_pMain->GetUserPtr(m_sPrivateChatUser);
-			if (pUser != nullptr) 
-				pUser->Send(&result);
-		}
-		break;
+		pUser = g_pMain->GetUserPtr(m_sPrivateChatUser);
+		if (pUser != nullptr)
+			pUser->Send(&result);
+	}
+	break;
 	case PARTY_CHAT:
-		if (isInParty())
-		{
+		if (isInParty()) {
 			g_pMain->Send_PartyMember(GetPartyID(), &result);
 			chattype = "PARTY_CHAT";
 		}
@@ -254,21 +244,19 @@ void CUser::Chat(Packet & pkt)
 			break;
 
 		MSpChange(-(m_iMaxMp / 5));
-		SendToRegion(&result,nullptr,GetEventRoom());
+		SendToRegion(&result, nullptr, GetEventRoom());
 		chattype = "SHOUT_CHAT";
 		break;
 	case KNIGHTS_CHAT:
-		if (isInClan())
-		{
+		if (isInClan()) {
 			pKnights = g_pMain->GetClanPtr(GetClanID());
 			g_pMain->Send_KnightsMember(GetClanID(), &result);
 			chattype = "KNIGHTS_CHAT";
 		}
 		break;
 	case CLAN_NOTICE:
-		if (isInClan() 
-			&& isClanLeader())
-		{
+		if (isInClan()
+			&& isClanLeader()) {
 			pKnights = g_pMain->GetClanPtr(GetClanID());
 			if (pKnights == nullptr)
 				return;
@@ -282,19 +270,17 @@ void CUser::Chat(Packet & pkt)
 			g_pMain->Send_All(&result);
 		break;
 	case COMMAND_CHAT:
-		if (GetFame() == COMMAND_CAPTAIN)
-		{
+		if (GetFame() == COMMAND_CAPTAIN) {
 			g_pMain->Send_CommandChat(&result, m_bNation, this);
 			chattype = "COMMAND_CHAT";
 		}
 		break;
 	case MERCHANT_CHAT:
 		if (isMerchanting() && m_bMerchantStatex)
-			SendToRegion(&result,nullptr,GetEventRoom());
+			SendToRegion(&result, nullptr, GetEventRoom());
 		break;
 	case ALLIANCE_CHAT:
-		if (isInClan())
-		{
+		if (isInClan()) {
 			pKnights = g_pMain->GetClanPtr(GetClanID());
 			if (pKnights != nullptr && pKnights->isInAlliance())
 				g_pMain->Send_KnightsAlliance(pKnights->GetAllianceID(), &result);
@@ -306,46 +292,42 @@ void CUser::Chat(Packet & pkt)
 			g_pMain->Send_All(&result);
 		break;
 	case SEEKING_PARTY_CHAT:
-		if (m_bNeedParty == 2)
-		{
+		if (m_bNeedParty == 2) {
 			Send(&result);
-			g_pMain->Send_Zone_Matched_Class(&result, GetZoneID(), this, GetNation(), seekingPartyOptions,GetEventRoom());
+			g_pMain->Send_Zone_Matched_Class(&result, GetZoneID(), this, GetNation(), seekingPartyOptions, GetEventRoom());
 		}
 		break;
 	case NOAH_KNIGHTS_CHAT:
-		if(GetLevel() > 50 )
+		if (GetLevel() > 50)
 			break;
 		g_pMain->Send_Noah_Knights(&result);
 		chattype = "NOAH_KNIGHTS_CHAT";
 		break;
 	case CHATROM_CHAT:
-		ChatRoomChat(strMessage,strSender);	
+		ChatRoomChat(strMessage, strSender);
 		chattype = "CHATROM_CHAT";
-		break;	
+		break;
 	default:
-		printf("Unknow Chat : %d",type);
+		printf("Unknow Chat : %d", type);
 		break;
 	}
 
-	if (!chattype.empty())
-	{
+	if (!chattype.empty()) {
 		if (pUser && type == 2)
-			g_pMain->WriteChatLogFile(string_format("[ %s - %d:%d:%d ] %s > %s : %s ( Zone=%d, X=%d, Z=%d )\n",chattype.c_str(),time.GetHour(),time.GetMinute(),time.GetSecond(),strSender.c_str(),pUser->GetName().c_str(),chatstr.c_str(),GetZoneID(),uint16(GetX()),uint16(GetZ())));
+			g_pMain->WriteChatLogFile(string_format("[ %s - %d:%d:%d ] %s > %s : %s ( Zone=%d, X=%d, Z=%d )\n", chattype.c_str(), time.GetHour(), time.GetMinute(), time.GetSecond(), strSender.c_str(), pUser->GetName().c_str(), chatstr.c_str(), GetZoneID(), uint16(GetX()), uint16(GetZ())));
 		else if (pKnights && (type == 6 || type == 15))
-			g_pMain->WriteChatLogFile(string_format("[ %s - %d:%d:%d ] %s > %s : %s ( Zone=%d, X=%d, Z=%d )\n",chattype.c_str(),time.GetHour(),time.GetMinute(),time.GetSecond(),strSender.c_str(),pKnights->GetName().c_str(),chatstr.c_str(),GetZoneID(),uint16(GetX()),uint16(GetZ())));
+			g_pMain->WriteChatLogFile(string_format("[ %s - %d:%d:%d ] %s > %s : %s ( Zone=%d, X=%d, Z=%d )\n", chattype.c_str(), time.GetHour(), time.GetMinute(), time.GetSecond(), strSender.c_str(), pKnights->GetName().c_str(), chatstr.c_str(), GetZoneID(), uint16(GetX()), uint16(GetZ())));
 		else
-			g_pMain->WriteChatLogFile(string_format("[ %s - %d:%d:%d ] %s : %s ( Zone=%d, X=%d, Z=%d )\n",chattype.c_str(),time.GetHour(),time.GetMinute(),time.GetSecond(),strSender.c_str(),chatstr.c_str(),GetZoneID(),uint16(GetX()),uint16(GetZ())));
+			g_pMain->WriteChatLogFile(string_format("[ %s - %d:%d:%d ] %s : %s ( Zone=%d, X=%d, Z=%d )\n", chattype.c_str(), time.GetHour(), time.GetMinute(), time.GetSecond(), strSender.c_str(), chatstr.c_str(), GetZoneID(), uint16(GetX()), uint16(GetZ())));
 	}
 }
 
-void CUser::ChatTargetSelect(Packet & pkt)
-{
+void CUser::ChatTargetSelect(Packet & pkt) {
 	uint8 type = pkt.read<uint8>();
 
 	// TO-DO: Replace this with an enum
 	// Attempt to find target player in-game
-	if (type == 1)
-	{
+	if (type == 1) {
 		Packet result(WIZ_CHAT_TARGET, type);
 		std::string strUserID;
 		pkt >> strUserID;
@@ -354,32 +336,27 @@ void CUser::ChatTargetSelect(Packet & pkt)
 
 
 		CUser *pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER);
-		if(pUser == this)
-			result << int16(0); 
-		else if (pUser == nullptr)
-		{
+		if (pUser == this)
+			result << int16(0);
+		else if (pUser == nullptr) {
 			CBot * pBot = g_pMain->GetBotPtr(strUserID, TYPE_CHARACTER);
 
 			if (pBot == nullptr)
-			result << int16(0); 
-			else if(pBot->isInGame())
-			result << int16(1) << pBot->GetName();
+				result << int16(0);
+			else if (pBot->isInGame())
+				result << int16(1) << pBot->GetName();
 			else
-			result << int16(0); 
+				result << int16(0);
 
 
-		}
-		else if (pUser->isBlockingPrivateChat())
+		} else if (pUser->isBlockingPrivateChat())
 			result << int16(-1) << pUser->GetName();
-		else
-		{
+		else {
 			m_sPrivateChatUser = pUser->GetSocketID();
 			result << int16(1) << pUser->GetName();
 		}
 		Send(&result);
-	}
-	else if (type == 3)
-	{
+	} else if (type == 3) {
 		//Questions
 		uint8 sSubType;
 		uint8 sMessageLen;
@@ -387,9 +364,8 @@ void CUser::ChatTargetSelect(Packet & pkt)
 		pkt >> sSubType >> sMessageLen >> sMessage;
 	}
 	// Allow/block PMs
-	else
-	{
-		m_bBlockPrivateChat = pkt.read<bool>(); 
+	else {
+		m_bBlockPrivateChat = pkt.read<bool>();
 	}
 }
 
@@ -399,15 +375,14 @@ void CUser::ChatTargetSelect(Packet & pkt)
 *
 * @param	pKiller	The killer.
 */
-void CUser::SendDeathNotice(Unit * pKiller, DeathNoticeType noticeType) 
-{
+void CUser::SendDeathNotice(Unit * pKiller, DeathNoticeType noticeType) {
 	if (pKiller == nullptr)
 		return;
 
 	Packet result(WIZ_CHAT, uint8(DEATH_NOTICE));
 
 	result.SByte();
-	result	<< GetNation()
+	result << GetNation()
 		<< uint8(noticeType)
 		<< pKiller->GetID() // session ID?
 		<< pKiller->GetName()
@@ -415,22 +390,21 @@ void CUser::SendDeathNotice(Unit * pKiller, DeathNoticeType noticeType)
 		<< GetName()
 		<< uint16(GetX()) << uint16(GetZ());
 
-	if(GetZoneID() == 21 || GetZoneID() == 22)
-		g_pMain->Send_NearRegion(&result,GetMap(),GetRegionX(),GetRegionZ(),GetX(),GetZ(),nullptr,GetEventRoom());
+	if (GetZoneID() == 21 || GetZoneID() == 22)
+		g_pMain->Send_NearRegion(&result, GetMap(), GetRegionX(), GetRegionZ(), GetX(), GetZ(), nullptr, GetEventRoom());
 	else
-	SendToZone(&result,this,pKiller->GetEventRoom(),((isInArena() || isInPartyArena()) ? RANGE_20M : 0.0f));
+		SendToZone(&result, this, pKiller->GetEventRoom(), ((isInArena() || isInPartyArena()) ? RANGE_20M : 0.0f));
 }
 
-bool CUser::ProcessChatCommand(std::string & message)
-{
+bool CUser::ProcessChatCommand(std::string & message) {
 	// Commands require at least 2 characters
 	if (message.size() <= 1
 		// If the prefix isn't correct
-			|| message[0] != CHAT_COMMAND_PREFIX
-			// or if we're saying, say, ++++ (faster than looking for the command in the map)
-			|| message[1] == CHAT_COMMAND_PREFIX)
-			// we're not a command.
-			return false;
+		|| message[0] != CHAT_COMMAND_PREFIX
+		// or if we're saying, say, ++++ (faster than looking for the command in the map)
+		|| message[1] == CHAT_COMMAND_PREFIX)
+		// we're not a command.
+		return false;
 
 	// Split up the command by spaces
 	CommandArgs vargs = StrSplit(message, " ");
@@ -449,24 +423,21 @@ bool CUser::ProcessChatCommand(std::string & message)
 	return (this->*(itr->second->Handler))(vargs, message.c_str() + command.size() + 1, itr->second->Help);
 }
 
-long getFileSize(FILE *file)
-{
-	 long lCurPos, lEndPos;
-	 lCurPos = ftell(file);
-	 fseek(file, 0, 2);
-	 lEndPos = ftell(file);
-	 fseek(file, lCurPos, 0);
-	 return lEndPos;
+long getFileSize(FILE *file) {
+	long lCurPos, lEndPos;
+	lCurPos = ftell(file);
+	fseek(file, 0, 2);
+	lEndPos = ftell(file);
+	fseek(file, lCurPos, 0);
+	return lEndPos;
 }
 
-COMMAND_HANDLER(CUser::HandleTestCommand)
-{
+COMMAND_HANDLER(CUser::HandleTestCommand) {
 	if (!isGM())
 		return false;
 
 	// OpCode | Send Type
-	if (vargs.size() < 1)
-	{
+	if (vargs.size() < 1) {
 		g_pMain->SendHelpDescription(this, "Using Sample : +send OpCode | SendType");
 		return true;
 	}
@@ -477,15 +448,14 @@ COMMAND_HANDLER(CUser::HandleTestCommand)
 	WizCode = atoi(vargs.front().c_str());
 	vargs.pop_front();
 
-	if (!vargs.empty())
-	{
+	if (!vargs.empty()) {
 		Type = atoi(vargs.front().c_str());
 		vargs.pop_front();
 	}
 
-	auto filePath = "Packet.bin"; 
-	BYTE * fileBuf;   
-	FILE * file = nullptr;  
+	auto filePath = "Packet.bin";
+	BYTE * fileBuf;
+	FILE * file = nullptr;
 
 	if ((file = fopen(filePath, "rb")) == nullptr)
 		return true;
@@ -500,7 +470,7 @@ COMMAND_HANDLER(CUser::HandleTestCommand)
 
 	if (Type == 1)
 		Send(&result);
-	else if(Type == 2)
+	else if (Type == 2)
 		g_pMain->Send_All(&result);
 
 	delete[]fileBuf;
@@ -512,18 +482,15 @@ COMMAND_HANDLER(CUser::HandleTestCommand)
 COMMAND_HANDLER(HandleNPtoKCCommand);
 COMMAND_HANDLER(HandleGoldtoKCCommand);
 COMMAND_HANDLER(CUser::HandleWarResultCommand) { return !isGM() ? false : g_pMain->HandleWarResultCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleWarResultCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleWarResultCommand) {
 	// Nation number
-	if (vargs.size() < 1)
-	{
+	if (vargs.size() < 1) {
 		// send description
 		printf("Using Sample : +warresult 1/2 (KARUS/HUMAN)\n");
 		return true;
 	}
-	
-	if (!isWarOpen())
-	{
+
+	if (!isWarOpen()) {
 		// send description
 		printf("Warning : Battle is not open.\n");
 		return true;
@@ -531,17 +498,15 @@ COMMAND_HANDLER(CGameServerDlg::HandleWarResultCommand)
 
 	uint8 winner_nation;
 	winner_nation = atoi(vargs.front().c_str());
-	
+
 	if (winner_nation > 0 && winner_nation < 3)
 		BattleZoneResult(winner_nation);
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleGiveItemCommand)
-	{
+COMMAND_HANDLER(CGameServerDlg::HandleGiveItemCommand) {
 	// Char name | item ID | [stack size]
-	if (vargs.size() < 2)
-	{
+	if (vargs.size() < 2) {
 		// send description
 		printf("Using Sample : /give_item CharacterName ItemID StackSize.\n");
 		return true;
@@ -551,8 +516,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleGiveItemCommand)
 	vargs.pop_front();
 
 	CUser *pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER);
-	if (pUser == nullptr)
-	{
+	if (pUser == nullptr) {
 		printf("Error : User is not online");
 		return true;
 	}
@@ -560,15 +524,13 @@ COMMAND_HANDLER(CGameServerDlg::HandleGiveItemCommand)
 	uint32 nItemID = atoi(vargs.front().c_str());
 	vargs.pop_front();
 	_ITEM_TABLE *pItem = g_pMain->GetItemPtr(nItemID);
-	if (pItem == nullptr)
-	{
+	if (pItem == nullptr) {
 		// send error message saying the item does not exist
 		return true;
 	}
 
 	uint16 sCount = 1;
-	if (!vargs.empty())
-	{
+	if (!vargs.empty()) {
 		sCount = atoi(vargs.front().c_str());
 		vargs.pop_front();
 	}
@@ -578,22 +540,19 @@ COMMAND_HANDLER(CGameServerDlg::HandleGiveItemCommand)
 		Time = atoi(vargs.front().c_str());
 
 
-	if (!pUser->GiveItem(nItemID, sCount, true, Time))
-	{
+	if (!pUser->GiveItem(nItemID, sCount, true, Time)) {
 		// send error message saying the item couldn't be added
 	}
 
 	return true;
 }
 
-COMMAND_HANDLER(CUser::HandleGiveItemCommand)
-{
+COMMAND_HANDLER(CUser::HandleGiveItemCommand) {
 	if (!isGM())
 		return false;
 
 	// Char name | item ID | [stack size]
-	if (vargs.size() < 2)
-	{
+	if (vargs.size() < 2) {
 		// send description
 		g_pMain->SendHelpDescription(this, "Using Sample : +mind_start CharacterName ItemID StackSize");
 		return true;
@@ -603,8 +562,7 @@ COMMAND_HANDLER(CUser::HandleGiveItemCommand)
 	vargs.pop_front();
 
 	CUser *pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER);
-	if (pUser == nullptr)
-	{
+	if (pUser == nullptr) {
 		g_pMain->SendHelpDescription(this, "Error : User is not online");
 		return true;
 	}
@@ -612,15 +570,13 @@ COMMAND_HANDLER(CUser::HandleGiveItemCommand)
 	uint32 nItemID = atoi(vargs.front().c_str());
 	vargs.pop_front();
 	_ITEM_TABLE *pItem = g_pMain->GetItemPtr(nItemID);
-	if (pItem == nullptr)
-	{
+	if (pItem == nullptr) {
 		// send error message saying the item does not exist
 		return true;
 	}
 
 	uint16 sCount = 1;
-	if (!vargs.empty())
-	{
+	if (!vargs.empty()) {
 		sCount = atoi(vargs.front().c_str());
 		vargs.pop_front();
 	}
@@ -636,13 +592,11 @@ COMMAND_HANDLER(CUser::HandleGiveItemCommand)
 	return true;
 }
 
-COMMAND_HANDLER(CUser::HandleZoneChangeCommand)
-{
+COMMAND_HANDLER(CUser::HandleZoneChangeCommand) {
 	if (!isGM())
 		return false;
 
-	if (vargs.empty())
-	{
+	if (vargs.empty()) {
 		// send description
 		g_pMain->SendHelpDescription(this, "Using Sample : +zonechange ZoneNumber EventRoom");
 		return true;
@@ -651,34 +605,31 @@ COMMAND_HANDLER(CUser::HandleZoneChangeCommand)
 	// Behave as in official (we'll fix this later)
 	int nZoneID = atoi(vargs.front().c_str());
 	int nEventRoom;
-	if (vargs.size() == 2)
-	{
+	if (vargs.size() == 2) {
 		vargs.pop_front();
 		nEventRoom = atoi(vargs.front().c_str());
 	}
 
 	_START_POSITION * pStartPosition = g_pMain->GetStartPosition(nZoneID);
-	if (pStartPosition == nullptr) 
+	if (pStartPosition == nullptr)
 		return false;
-	
-	if ( nEventRoom > MAX_MONSTER_STONE_EVENT_ROOM )
-	nEventRoom=0;
 
-	ZoneChange(nZoneID, 
-		(float)(GetNation() == KARUS ? pStartPosition->sKarusX : pStartPosition->sElmoradX + myrand(0, pStartPosition->bRangeX)), 
-		(float)(GetNation() == KARUS ? pStartPosition->sKarusZ : pStartPosition->sElmoradZ + myrand(0, pStartPosition->bRangeZ)),nEventRoom);
-	
-	g_pMain->SendHelpDescription(this, string_format("Your new event room is: %d",nEventRoom));
+	if (nEventRoom > MAX_MONSTER_STONE_EVENT_ROOM)
+		nEventRoom = 0;
+
+	ZoneChange(nZoneID,
+		(float) (GetNation() == KARUS ? pStartPosition->sKarusX : pStartPosition->sElmoradX + myrand(0, pStartPosition->bRangeX)),
+		(float) (GetNation() == KARUS ? pStartPosition->sKarusZ : pStartPosition->sElmoradZ + myrand(0, pStartPosition->bRangeZ)), nEventRoom);
+
+	g_pMain->SendHelpDescription(this, string_format("Your new event room is: %d", nEventRoom));
 	return true;
 }
 
-COMMAND_HANDLER(CUser::HandleMonsterSummonCommand)
-{
+COMMAND_HANDLER(CUser::HandleMonsterSummonCommand) {
 	if (!isGM())
 		return false;
 
-	if (vargs.empty())
-	{
+	if (vargs.empty()) {
 		// send description
 		g_pMain->SendHelpDescription(this, "Using Sample : +monsummon MonsterSID Count");
 		return true;
@@ -690,26 +641,23 @@ COMMAND_HANDLER(CUser::HandleMonsterSummonCommand)
 	if (vargs.size() == 1)
 		sSid = atoi(vargs.front().c_str());
 
-	if (vargs.size() == 2)
-	{
+	if (vargs.size() == 2) {
 		sSid = atoi(vargs.front().c_str());
 		vargs.pop_front();
 		sCount = atoi(vargs.front().c_str());
 	}
-	
-	
-	g_pMain->SpawnEventNpc(sSid, true, GetZoneID(), GetX(), GetY(), GetZ(),sCount,2);
+
+
+	g_pMain->SpawnEventNpc(sSid, true, GetZoneID(), GetX(), GetY(), GetZ(), sCount, 2);
 
 	return true;
 }
 
-COMMAND_HANDLER(CUser::HandleBotSummonCommand)
-{
+COMMAND_HANDLER(CUser::HandleBotSummonCommand) {
 	if (!isGM())
 		return false;
 
-	if (vargs.size() < 3)
-	{
+	if (vargs.size() < 3) {
 		// send description
 		g_pMain->SendHelpDescription(this, "Using Sample : +bot Time(AS MINUTE) ResType(1 Mining 2 Fishing 3 Standing 4 Sitting) minlevel");
 		return true;
@@ -717,36 +665,33 @@ COMMAND_HANDLER(CUser::HandleBotSummonCommand)
 
 	int Minute = 0, Restie = 0, minlevel = 0;
 
-		Minute = atoi(vargs.front().c_str());
+	Minute = atoi(vargs.front().c_str());
 
-		vargs.pop_front();
-	
-		Restie = atoi(vargs.front().c_str());
+	vargs.pop_front();
 
-		vargs.pop_front();
+	Restie = atoi(vargs.front().c_str());
 
-		minlevel = atoi(vargs.front().c_str());
+	vargs.pop_front();
 
-	
-	if (!g_pMain->SpawnBot(Minute, GetZoneID(), GetX(), GetY(), GetZ(),Restie,minlevel))
-	{
+	minlevel = atoi(vargs.front().c_str());
+
+
+	if (!g_pMain->SpawnBot(Minute, GetZoneID(), GetX(), GetY(), GetZ(), Restie, minlevel)) {
 		// send description
 		g_pMain->SendHelpDescription(this, "There isn't any available bot.");
 		return true;
 	}
-		g_pMain->SendHelpDescription(this, "Bot yollandi..");
+	g_pMain->SendHelpDescription(this, "Bot yollandi..");
 	return true;
 }
 
 
 
-COMMAND_HANDLER(CUser::HandleNPCSummonCommand)
-{
+COMMAND_HANDLER(CUser::HandleNPCSummonCommand) {
 	if (!isGM())
 		return false;
 
-	if (vargs.empty())
-	{
+	if (vargs.empty()) {
 		// send description
 		g_pMain->SendHelpDescription(this, "Using Sample : +npcsummon NPCSID");
 		return true;
@@ -758,34 +703,31 @@ COMMAND_HANDLER(CUser::HandleNPCSummonCommand)
 	return true;
 }
 
-COMMAND_HANDLER(CUser::HandleMonKillCommand)
-{
+COMMAND_HANDLER(CUser::HandleMonKillCommand) {
 	if (!isGM())
 		return false;
-	
-	if (GetTargetID() == 0 && GetTargetID() < NPC_BAND)
-	{
+
+	if (GetTargetID() == 0 && GetTargetID() < NPC_BAND) {
 		// send description
 		g_pMain->SendHelpDescription(this, "Using Sample : Select a NPC or Monster than use +monkills");
 		return false;
 	}
-	
+
 	CNpc *pNpc = g_pMain->GetNpcPtr(GetTargetID());
-	
+
 	if (pNpc)
 		g_pMain->KillNpc(GetTargetID());
-	
+
 	return true;
 }
 
-bool CGameServerDlg::ProcessServerCommand(std::string & message)
-{
+bool CGameServerDlg::ProcessServerCommand(std::string & message) {
 	// Commands require at least 2 characters
 	if (message.size() <= 1
 		// If the prefix isn't correct
-			|| message[0] != SERVER_COMMAND_PREFIX)
-			// we're not a command.
-			return false;
+		|| message[0] != SERVER_COMMAND_PREFIX)
+		// we're not a command.
+		return false;
 
 	// Split up the command by spaces
 	CommandArgs vargs = StrSplit(message, " ");
@@ -804,8 +746,7 @@ bool CGameServerDlg::ProcessServerCommand(std::string & message)
 	return (this->*(itr->second->Handler))(vargs, message.c_str() + command.size() + 1, itr->second->Help);
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleNoticeCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleNoticeCommand) {
 	if (vargs.empty())
 		return true;
 
@@ -813,8 +754,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleNoticeCommand)
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleNoticeallCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleNoticeallCommand) {
 	if (vargs.empty())
 		return true;
 
@@ -822,10 +762,8 @@ COMMAND_HANDLER(CGameServerDlg::HandleNoticeallCommand)
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleKillUserCommand)
-{
-	if (vargs.empty())
-	{
+COMMAND_HANDLER(CGameServerDlg::HandleKillUserCommand) {
+	if (vargs.empty()) {
 		// send description
 		printf("Using Sample : +kill CharacterName\n");
 		return true;
@@ -833,8 +771,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleKillUserCommand)
 
 	std::string strUserID = vargs.front();
 	CUser *pUser = GetUserPtr(strUserID, TYPE_CHARACTER);
-	if (pUser == nullptr)
-	{
+	if (pUser == nullptr) {
 		printf("Error : User is not online\n");
 		return true;
 	}
@@ -848,130 +785,112 @@ COMMAND_HANDLER(CGameServerDlg::HandleKillUserCommand)
 
 
 COMMAND_HANDLER(CUser::HandleWar1OpenCommand) { return !isGM() ? false : g_pMain->HandleWar1OpenCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleWar1OpenCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleWar1OpenCommand) {
 	BattleZoneOpen(BATTLEZONE_OPEN, 1);
 	return true;
 }
 
 COMMAND_HANDLER(CUser::HandleWar2OpenCommand) { return !isGM() ? false : g_pMain->HandleWar2OpenCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleWar2OpenCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleWar2OpenCommand) {
 	BattleZoneOpen(BATTLEZONE_OPEN, 2);
 	return true;
 }
 
 COMMAND_HANDLER(CUser::HandleWar3OpenCommand) { return !isGM() ? false : g_pMain->HandleWar3OpenCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleWar3OpenCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleWar3OpenCommand) {
 	g_pMain->m_byBattleZoneType = ZONE_ARDREAM;
 	BattleZoneOpen(BATTLEZONE_OPEN, 3);
 	return true;
 }
 
 COMMAND_HANDLER(CUser::HandleWar4OpenCommand) { return !isGM() ? false : g_pMain->HandleWar4OpenCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleWar4OpenCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleWar4OpenCommand) {
 	BattleZoneOpen(BATTLEZONE_OPEN, 4);
 	return true;
 }
 COMMAND_HANDLER(CUser::HandleSnowWarCloseCommand) { return !isGM() ? false : g_pMain->HandleSnowWarCloseCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleSnowWarCloseCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleSnowWarCloseCommand) {
 	SnowBattleZoneClose();
 	return true;
 }
 COMMAND_HANDLER(CUser::HandleWar5OpenCommand) { return !isGM() ? false : g_pMain->HandleWar5OpenCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleWar5OpenCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleWar5OpenCommand) {
 	BattleZoneOpen(BATTLEZONE_OPEN, 5);
 	return true;
 }
 
 COMMAND_HANDLER(CUser::HandleWar6OpenCommand) { return !isGM() ? false : g_pMain->HandleWar6OpenCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleWar6OpenCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleWar6OpenCommand) {
 	BattleZoneOpen(BATTLEZONE_OPEN, 6);
 	return true;
 }
 
 COMMAND_HANDLER(CUser::HandleOpenArdreamCommand) { return !isGM() ? false : g_pMain->HandleOpenArdreamCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleOpenArdreamCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleOpenArdreamCommand) {
 	ArdreamEventOpen();
-	g_pMain->m_byEventOpenedTime = int32(UNIXTIME);	
+	g_pMain->m_byEventOpenedTime = int32(UNIXTIME);
 	g_pMain->m_byEventRemainingTime = g_pMain->m_byEventTime;
 	g_pMain->m_sEventTimeDelay = 0;
 	return true;
 }
 
 COMMAND_HANDLER(CUser::HandleOpenCZCommand) { return !isGM() ? false : g_pMain->HandleOpenCZCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleOpenCZCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleOpenCZCommand) {
 	CZEventOpen();
-	g_pMain->m_byEventOpenedTime = int32(UNIXTIME);	
+	g_pMain->m_byEventOpenedTime = int32(UNIXTIME);
 	g_pMain->m_byEventRemainingTime = g_pMain->m_byEventTime;
 	g_pMain->m_sEventTimeDelay = 0;
 	return true;
 }
 
 COMMAND_HANDLER(CUser::HandleCloseArdreamEventCommand) { return !isGM() ? false : g_pMain->HandleCloseArdreamEventCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleCloseArdreamEventCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleCloseArdreamEventCommand) {
 	ArdreamEventZoneClose();
 	return true;
 }
 COMMAND_HANDLER(CUser::HandleCloseCZEventCommand) { return !isGM() ? false : g_pMain->HandleCloseCZEventCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleCloseCZEventCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleCloseCZEventCommand) {
 	CZEventZoneClose();
 	return true;
 }
 
 
 COMMAND_HANDLER(CUser::HandleSnowWarOpenCommand) { return !isGM() ? false : g_pMain->HandleSnowWarOpenCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleSnowWarOpenCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleSnowWarOpenCommand) {
 	BattleZoneOpen(SNOW_BATTLEZONE_OPEN);
 	return true;
 }
 
-COMMAND_HANDLER(CUser::HandleSiegeWarOpenCommand)
-{ 
-	if (vargs.size() < 1)
-	{
+COMMAND_HANDLER(CUser::HandleSiegeWarOpenCommand) {
+	if (vargs.size() < 1) {
 		// send description
 		g_pMain->SendHelpDescription(this, "Using Sample : +siegewarfare Time(Minute)");
 		return true;
 	}
 
-	return !isGM() ? false : g_pMain->HandleSiegeWarOpenCommand(vargs, args, description); 
+	return !isGM() ? false : g_pMain->HandleSiegeWarOpenCommand(vargs, args, description);
 }
-COMMAND_HANDLER(CGameServerDlg::HandleSiegeWarOpenCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleSiegeWarOpenCommand) {
 
-	
+
 
 	uint8 Time = atoi(vargs.front().c_str());
-	CastleSiegeWarZoneOpen(CLAN_BATTLE,Time);
+	CastleSiegeWarZoneOpen(CLAN_BATTLE, Time);
 	return true;
 }
 
 COMMAND_HANDLER(CUser::HandleWarCloseCommand) { return !isGM() ? false : g_pMain->HandleWarCloseCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleWarCloseCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleWarCloseCommand) {
 	BattleZoneClose();
 	return true;
 }
 
-COMMAND_HANDLER(CUser::HandleLoyaltyChangeCommand)
-{
+COMMAND_HANDLER(CUser::HandleLoyaltyChangeCommand) {
 	if (!isGM())
 		return false;
 
 	// Char name | loyalty
-	if (vargs.size() < 2)
-	{
+	if (vargs.size() < 2) {
 		// send description
 		g_pMain->SendHelpDescription(this, "Using Sample : +np_change CharacterName Loyalty(+/-)");
 		return true;
@@ -981,8 +900,7 @@ COMMAND_HANDLER(CUser::HandleLoyaltyChangeCommand)
 	vargs.pop_front();
 
 	CUser *pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER);
-	if (pUser == nullptr)
-	{
+	if (pUser == nullptr) {
 		g_pMain->SendHelpDescription(this, "Error : User is not online");
 		return true;
 	}
@@ -995,14 +913,12 @@ COMMAND_HANDLER(CUser::HandleLoyaltyChangeCommand)
 	return true;
 }
 
-COMMAND_HANDLER(CUser::HandleExpChangeCommand)
-{
+COMMAND_HANDLER(CUser::HandleExpChangeCommand) {
 	if (!isGM())
 		return false;
 
 	// Char name | exp
-	if (vargs.size() < 2)
-	{
+	if (vargs.size() < 2) {
 		// send description
 		g_pMain->SendHelpDescription(this, "Using Sample : +exp_change CharacterName Exp(+/-)");
 		return true;
@@ -1012,8 +928,7 @@ COMMAND_HANDLER(CUser::HandleExpChangeCommand)
 	vargs.pop_front();
 
 	CUser *pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER);
-	if (pUser == nullptr)
-	{
+	if (pUser == nullptr) {
 		g_pMain->SendHelpDescription(this, "Error : User is not online");
 		return true;
 	}
@@ -1026,14 +941,12 @@ COMMAND_HANDLER(CUser::HandleExpChangeCommand)
 	return true;
 }
 
-COMMAND_HANDLER(CUser::HandleGoldChangeCommand)
-{
+COMMAND_HANDLER(CUser::HandleGoldChangeCommand) {
 	if (!isGM())
 		return false;
 
 	// Char name | coins
-	if (vargs.size() < 2)
-	{
+	if (vargs.size() < 2) {
 		// send description
 		g_pMain->SendHelpDescription(this, "Using Sample : +gold_change CharacterName Gold(+/-)");
 		return true;
@@ -1043,16 +956,14 @@ COMMAND_HANDLER(CUser::HandleGoldChangeCommand)
 	vargs.pop_front();
 
 	CUser *pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER);
-	if (pUser == nullptr)
-	{
+	if (pUser == nullptr) {
 		g_pMain->SendHelpDescription(this, "Error : User is not online");
 		return true;
 	}
 
 	uint32 nGold = atoi(vargs.front().c_str());
 
-	if (nGold != 0)
-	{
+	if (nGold != 0) {
 		if (nGold > 0)
 			pUser->GoldGain(nGold);
 		else
@@ -1064,12 +975,11 @@ COMMAND_HANDLER(CUser::HandleGoldChangeCommand)
 
 // Starts/stops the server XP event & sets its server-wide bonus.
 COMMAND_HANDLER(CUser::HandleExpAddCommand) { return !isGM() ? false : g_pMain->HandleExpAddCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleExpAddCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleExpAddCommand) {
 	// Expects the bonus XP percent, e.g. '+exp_add' for a +15 XP boost.
 	if (vargs.empty())
 		return true;
-	
+
 
 	g_pMain->m_byExpEventAmount = (uint8) atoi(vargs.front().c_str());
 
@@ -1083,8 +993,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleExpAddCommand)
 
 // Starts/stops the server NP event & sets its server-wide bonus.
 COMMAND_HANDLER(CUser::HandleNPAddCommand) { return !isGM() ? false : g_pMain->HandleNPAddCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleNPAddCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleNPAddCommand) {
 	// Expects the bonus np percent, e.g. '+np_add' for a +15 np boost.
 	if (vargs.empty())
 		return true;
@@ -1101,8 +1010,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleNPAddCommand)
 
 // Starts/stops the server coin event & sets its server-wide bonus.
 COMMAND_HANDLER(CUser::HandleMoneyAddCommand) { return !isGM() ? false : g_pMain->HandleMoneyAddCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleMoneyAddCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleMoneyAddCommand) {
 	// Expects the bonus coin percent, e.g. '+money_add' for a +15 dropped coin boost.
 	if (vargs.empty())
 		return true;
@@ -1117,10 +1025,8 @@ COMMAND_HANDLER(CGameServerDlg::HandleMoneyAddCommand)
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleMonSummonCommand)
-{
-	if (vargs.size() < 1)
-	{
+COMMAND_HANDLER(CGameServerDlg::HandleMonSummonCommand) {
+	if (vargs.size() < 1) {
 		// send description
 		printf("Using Sample : /monsummon MonsterID Zoneid X Y R");
 		return true;
@@ -1135,15 +1041,13 @@ COMMAND_HANDLER(CGameServerDlg::HandleMonSummonCommand)
 	if (vargs.size() == 1)
 		sSid = atoi(vargs.front().c_str());
 
-	if (vargs.size() == 2)
-	{
+	if (vargs.size() == 2) {
 		sSid = atoi(vargs.front().c_str());
 		vargs.pop_front();
 		nZoneID = atoi(vargs.front().c_str());
 	}
 
-	if (vargs.size() == 3)
-	{
+	if (vargs.size() == 3) {
 		sSid = atoi(vargs.front().c_str());
 		vargs.pop_front();
 		nZoneID = atoi(vargs.front().c_str());
@@ -1151,8 +1055,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleMonSummonCommand)
 		nX = atoi(vargs.front().c_str());
 	}
 
-	if (vargs.size() == 4)
-	{
+	if (vargs.size() == 4) {
 		sSid = atoi(vargs.front().c_str());
 		vargs.pop_front();
 		nZoneID = atoi(vargs.front().c_str());
@@ -1162,8 +1065,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleMonSummonCommand)
 		nZ = atoi(vargs.front().c_str());
 	}
 
-	if (vargs.size() == 5)
-	{
+	if (vargs.size() == 5) {
 		sSid = atoi(vargs.front().c_str());
 		vargs.pop_front();
 		nZoneID = atoi(vargs.front().c_str());
@@ -1174,19 +1076,17 @@ COMMAND_HANDLER(CGameServerDlg::HandleMonSummonCommand)
 		vargs.pop_front();
 		nR = atoi(vargs.front().c_str());
 	}
-	
+
 	if (nZoneID > 0)
-		g_pMain->SpawnEventNpc(sSid, true, nZoneID, (float)nX, 0, (float)nZ, nR);
+		g_pMain->SpawnEventNpc(sSid, true, nZoneID, (float) nX, 0, (float) nZ, nR);
 
 	return true;
 }
 
 COMMAND_HANDLER(CUser::HandlePermitConnectCommand) { return !isGM() ? false : g_pMain->HandlePermitConnectCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandlePermitConnectCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandlePermitConnectCommand) {
 	// Char name
-	if (vargs.size() < 1)
-	{
+	if (vargs.size() < 1) {
 		// send description
 		printf("Using Sample : +permitconnect CharacterName\n");
 		return true;
@@ -1195,23 +1095,21 @@ COMMAND_HANDLER(CGameServerDlg::HandlePermitConnectCommand)
 	std::string strUserID = vargs.front();
 	vargs.pop_front();
 
-	g_DBAgent.UpdateUserAuthority(strUserID,AUTHORITY_PLAYER);
+	g_DBAgent.UpdateUserAuthority(strUserID, AUTHORITY_PLAYER);
 
 	std::string sNoticeMessage = string_format("%s has been unbanned..!", strUserID.c_str());
 
 	if (!sNoticeMessage.empty())
-		g_pMain->SendNotice(sNoticeMessage.c_str(),Nation::ALL);
+		g_pMain->SendNotice(sNoticeMessage.c_str(), Nation::ALL);
 
 	return true;
 }
-COMMAND_HANDLER(CUser::HandleTeleportAllCommand)
-{
+COMMAND_HANDLER(CUser::HandleTeleportAllCommand) {
 	if (!isGM())
 		return false;
 
 	// Zone number
-	if (vargs.size() < 1)
-	{
+	if (vargs.size() < 1) {
 		// send description
 		g_pMain->SendHelpDescription(this, "Using Sample : +tp_all ZoneNumber | +tp_all ZoneNumber TargetZoneNumber");
 		return true;
@@ -1223,23 +1121,20 @@ COMMAND_HANDLER(CUser::HandleTeleportAllCommand)
 	if (vargs.size() == 1)
 		nZoneID = atoi(vargs.front().c_str());
 
-	if (vargs.size() == 2)
-	{
+	if (vargs.size() == 2) {
 		nZoneID = atoi(vargs.front().c_str());
 		vargs.pop_front();
 		nTargetZoneID = atoi(vargs.front().c_str());
 	}
 
 	if (nZoneID > 0 || nTargetZoneID > 0)
-		g_pMain->KickOutZoneUsers(nZoneID,nTargetZoneID);
+		g_pMain->KickOutZoneUsers(nZoneID, nTargetZoneID);
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleTeleportAllCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleTeleportAllCommand) {
 	// Zone number
-	if (vargs.size() < 1)
-	{
+	if (vargs.size() < 1) {
 		// send description
 		printf("Using Sample : /tp_all ZoneNumber | /tp_all ZoneNumber TargetZoneNumber.\n");
 		return true;
@@ -1251,52 +1146,46 @@ COMMAND_HANDLER(CGameServerDlg::HandleTeleportAllCommand)
 	if (vargs.size() == 1)
 		nZoneID = atoi(vargs.front().c_str());
 
-	if (vargs.size() == 2)
-	{
+	if (vargs.size() == 2) {
 		nZoneID = atoi(vargs.front().c_str());
 		vargs.pop_front();
 		nTargetZoneID = atoi(vargs.front().c_str());
 	}
 
 	if (nZoneID > 0 || nTargetZoneID > 0)
-		g_pMain->KickOutZoneUsers(nZoneID,nTargetZoneID);
+		g_pMain->KickOutZoneUsers(nZoneID, nTargetZoneID);
 	return true;
 }
 
-COMMAND_HANDLER(CUser::HandleKnightsSummonCommand)
-{
+COMMAND_HANDLER(CUser::HandleKnightsSummonCommand) {
 	if (!isGM())
 		return false;
 
 	// Clan name
-	if(vargs.empty())
-	{
+	if (vargs.empty()) {
 		// Send description
 		g_pMain->SendHelpDescription(this, "Using Sample : +summonknights ClanName");
 		return true;
 	}
 
 	CKnights * pKnights;
-	foreach_stlmap (itr,g_pMain->m_KnightsArray)
-	{
-		if(itr->second->GetName() == vargs.front().c_str())
-		{
+	foreach_stlmap(itr, g_pMain->m_KnightsArray) {
+		if (itr->second->GetName() == vargs.front().c_str()) {
 			pKnights = g_pMain->GetClanPtr(itr->first);
 			break;
 		}
 	}
 
-	if(pKnights == nullptr)
+	if (pKnights == nullptr)
 		return true;
 
-	foreach_array(i,pKnights->m_arKnightsUser)
-	{
+	foreach_array(i, pKnights->m_arKnightsUser) {
 		_KNIGHTS_USER *p = &pKnights->m_arKnightsUser[i];
 		if (!p->byUsed || p->pSession == nullptr)
 			continue;
 
 		CUser* pUser = p->pSession;
-		if(!pUser->isInGame() || pUser->GetName() == GetName())
+		if (!pUser->isInGame() || pUser->GetName() == GetName())
 			continue;
 
 		pUser->ZoneChange(GetZoneID(), m_curx, m_curz);
@@ -1305,68 +1194,60 @@ COMMAND_HANDLER(CUser::HandleKnightsSummonCommand)
 	return true;
 }
 
-COMMAND_HANDLER(CUser::HandleNPtoKCCommand)
-{
-	if(!g_pMain->KCaktifmi 
+COMMAND_HANDLER(CUser::HandleNPtoKCCommand) {
+	if (!g_pMain->KCaktifmi
 		|| isMerchanting()
-		|| isStoreOpen() 
+		|| isStoreOpen()
 		|| isTrading()
 		|| m_bMerchantStatex
 		|| isDead())
 		return true;
 
-	if (vargs.size() < 1)
-	{
-		g_pMain->SendHelpDescription(this,"Example: +nptokc 1000");
+	if (vargs.size() < 1) {
+		g_pMain->SendHelpDescription(this, "Example: +nptokc 1000");
 		return true;
-	}else if (vargs.size() > 1)
-	{
-		g_pMain->SendHelpDescription(this,"Example: +nptokc 1000");
+	} else if (vargs.size() > 1) {
+		g_pMain->SendHelpDescription(this, "Example: +nptokc 1000");
 		return true;
 
 	}
-		
+
 
 	uint32 nLoyalty = atoi(vargs.front().c_str());
 
-	if (nLoyalty > 1000000)
-	{
-		g_pMain->SendHelpDescription(this,"You can't exchange more than 1 million NP.");
+	if (nLoyalty > 1000000) {
+		g_pMain->SendHelpDescription(this, "You can't exchange more than 1 million NP.");
 		return true;
 	}
 
 	int32 CLoyalty;
 
-	if (nLoyalty < 1)
-	{
-		g_pMain->SendHelpDescription(this,"You can't exchange this much NP.");
+	if (nLoyalty < 1) {
+		g_pMain->SendHelpDescription(this, "You can't exchange this much NP.");
 		return true;
 	}
 
-	if(GetLoyalty() < nLoyalty){
-		g_pMain->SendHelpDescription(this,"You haven't got this much NP.");
+	if (GetLoyalty() < nLoyalty) {
+		g_pMain->SendHelpDescription(this, "You haven't got this much NP.");
 		return true;
 	}
 	CLoyalty = nLoyalty;
-	if (CLoyalty%1000!=0){
-		g_pMain->SendHelpDescription(this,"You can only exchange 1000,2000 or x000 NP.");
+	if (CLoyalty % 1000 != 0) {
+		g_pMain->SendHelpDescription(this, "You can only exchange 1000,2000 or x000 NP.");
 		return true;
 	}
 
 
 	int32 ExchangeKC = (CLoyalty / 1000) * (g_pMain->KCmiktari);
 
-	if (NpExchangeAsk && NpExchangeValue == CLoyalty)
-	{
-		g_pMain->SendHelpDescription(this,string_format("You earned [%d] Knight Cash!",ExchangeKC));
-		SendLoyaltyChange(-CLoyalty,false,false,false);
-		g_DBAgent.UpdateAccountKnightCash(GetAccountName(),ExchangeKC);
-		g_DBAgent.UpdateUser(GetName(),UPDATE_LOGOUT,this);
-	}
-	else
-	{
-		g_pMain->SendHelpDescription(this,string_format("Do you really want to give [%d] loyalty for earn [%d] Knight Cash?",CLoyalty,ExchangeKC));
-		g_pMain->SendHelpDescription(this,string_format("Rechat <+nptokc %d> to earn [%d] Knight Cash.",CLoyalty,ExchangeKC));
+	if (NpExchangeAsk && NpExchangeValue == CLoyalty) {
+		g_pMain->SendHelpDescription(this, string_format("You earned [%d] Knight Cash!", ExchangeKC));
+		SendLoyaltyChange(-CLoyalty, false, false, false);
+		g_DBAgent.UpdateAccountKnightCash(GetAccountName(), ExchangeKC);
+		g_DBAgent.UpdateUser(GetName(), UPDATE_LOGOUT, this);
+	} else {
+		g_pMain->SendHelpDescription(this, string_format("Do you really want to give [%d] loyalty for earn [%d] Knight Cash?", CLoyalty, ExchangeKC));
+		g_pMain->SendHelpDescription(this, string_format("Rechat <+nptokc %d> to earn [%d] Knight Cash.", CLoyalty, ExchangeKC));
 		NpExchangeAsk = 1;
 		NpExchangeValue = CLoyalty;
 		return true;
@@ -1375,69 +1256,60 @@ COMMAND_HANDLER(CUser::HandleNPtoKCCommand)
 	return true;
 }
 
-COMMAND_HANDLER(CUser::HandleGoldtoKCCommand)
-{
-	if(!g_pMain->KCaktifmi2
+COMMAND_HANDLER(CUser::HandleGoldtoKCCommand) {
+	if (!g_pMain->KCaktifmi2
 		|| isMerchanting()
-		|| isStoreOpen() 
+		|| isStoreOpen()
 		|| isTrading()
 		|| m_bMerchantStatex
 		|| isDead())
 		return true;
 
-	if (vargs.size() < 1)
-	{
-		g_pMain->SendHelpDescription(this,"Example: +goldtokc 1000");
+	if (vargs.size() < 1) {
+		g_pMain->SendHelpDescription(this, "Example: +goldtokc 1000");
 		return true;
-	}else if (vargs.size() > 1)
-	{
-		g_pMain->SendHelpDescription(this,"Example: +goldtokc 1000");
+	} else if (vargs.size() > 1) {
+		g_pMain->SendHelpDescription(this, "Example: +goldtokc 1000");
 		return true;
 
 	}
-		
+
 
 	uint32 nGold = atoi(vargs.front().c_str());
 
-	if (nGold > 2100000000)
-	{
-		g_pMain->SendHelpDescription(this,"You can't exchange more than 2.1 Gold.");
+	if (nGold > 2100000000) {
+		g_pMain->SendHelpDescription(this, "You can't exchange more than 2.1 Gold.");
 		return true;
 	}
 
 	int32 CGold;
 
-	if (nGold < 1)
-	{
-		g_pMain->SendHelpDescription(this,"You can't exchange this much Gold.");
+	if (nGold < 1) {
+		g_pMain->SendHelpDescription(this, "You can't exchange this much Gold.");
 		return true;
 	}
 
-	if(GetCoins() < nGold){
-		g_pMain->SendHelpDescription(this,"You haven't got this much Gold.");
+	if (GetCoins() < nGold) {
+		g_pMain->SendHelpDescription(this, "You haven't got this much Gold.");
 		return true;
 	}
 	CGold = nGold;
-	if (CGold%100000000!=0)
-	{
-		g_pMain->SendHelpDescription(this,"You can only exchange 10000000,20000000 or xGB Gold.");
+	if (CGold % 100000000 != 0) {
+		g_pMain->SendHelpDescription(this, "You can only exchange 10000000,20000000 or xGB Gold.");
 		return true;
 	}
 
 
 	int32 ExchangeKC = (CGold / 100000000) * (g_pMain->KCmiktari2);
 
-	if (GoldExchangeAsk && GoldExchangeValue == CGold)
-	{
-		g_pMain->SendHelpDescription(this,string_format("You earned [%d] Knight Cash!",ExchangeKC));
-		GoldLose(CGold,true);
-		g_DBAgent.UpdateAccountKnightCash(GetAccountName(),ExchangeKC);
-		g_DBAgent.UpdateUser(GetName(),UPDATE_LOGOUT,this);
-	}
-	else
-	{
-		g_pMain->SendHelpDescription(this,string_format("Do you really want to give [%d] Gold for earn [%d] Knight Cash?",CGold,ExchangeKC));
-		g_pMain->SendHelpDescription(this,string_format("Rechat <+goldtokc %d> to earn [%d] Knight Cash.",CGold,ExchangeKC));
+	if (GoldExchangeAsk && GoldExchangeValue == CGold) {
+		g_pMain->SendHelpDescription(this, string_format("You earned [%d] Knight Cash!", ExchangeKC));
+		GoldLose(CGold, true);
+		g_DBAgent.UpdateAccountKnightCash(GetAccountName(), ExchangeKC);
+		g_DBAgent.UpdateUser(GetName(), UPDATE_LOGOUT, this);
+	} else {
+		g_pMain->SendHelpDescription(this, string_format("Do you really want to give [%d] Gold for earn [%d] Knight Cash?", CGold, ExchangeKC));
+		g_pMain->SendHelpDescription(this, string_format("Rechat <+goldtokc %d> to earn [%d] Knight Cash.", CGold, ExchangeKC));
 		GoldExchangeAsk = 1;
 		GoldExchangeValue = CGold;
 		return true;
@@ -1447,86 +1319,74 @@ COMMAND_HANDLER(CUser::HandleGoldtoKCCommand)
 }
 
 
-COMMAND_HANDLER(CUser::HandleResetPlayerRankingCommand)
-{
+COMMAND_HANDLER(CUser::HandleResetPlayerRankingCommand) {
 	if (!isGM())
 		return false;
-	
+
 	// Zone ID
-	if(vargs.empty())
-	{
+	if (vargs.empty()) {
 		// Send description
 		g_pMain->SendHelpDescription(this, "Using Sample : +resetranking ZoneID");
 		return true;
 	}
-	
+
 	uint8 nZoneID;
 	nZoneID = atoi(vargs.front().c_str());
-	
+
 	if (nZoneID > 0)
 		g_pMain->ResetPlayerRankings(nZoneID);
-	
+
 	return true;
 }
 
 
 
-COMMAND_HANDLER(CGameServerDlg::HandleShutdownCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleShutdownCommand) {
 	printf("Server shutdown, %d users kicked out.\n", KickOutAllUsers());
 	m_socketMgr.Shutdown();
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleDiscountCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleDiscountCommand) {
 	m_sDiscount = 1;
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleGlobalDiscountCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleGlobalDiscountCommand) {
 	m_sDiscount = 2;
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleDiscountOffCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleDiscountOffCommand) {
 	m_sDiscount = 0;
 	return true;
 }
 
 COMMAND_HANDLER(CUser::HandleCaptainCommand) { return !isGM() ? false : g_pMain->HandleCaptainCommand(vargs, args, description); }
-COMMAND_HANDLER(CGameServerDlg::HandleCaptainCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleCaptainCommand) {
 	m_KnightsRatingArray[KARUS_ARRAY].DeleteAllData();
 	m_KnightsRatingArray[ELMORAD_ARRAY].DeleteAllData();
 	LoadKnightsRankTable(true, true);
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleSantaCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleSantaCommand) {
 	m_bSantaOrAngel = FLYING_SANTA;
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleSantaOffCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleSantaOffCommand) {
 	m_bSantaOrAngel = FLYING_NONE;
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleAngelCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleAngelCommand) {
 	m_bSantaOrAngel = FLYING_ANGEL;
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandlePermanentChatCommand)
-{
-	if (vargs.empty())
-	{
+COMMAND_HANDLER(CGameServerDlg::HandlePermanentChatCommand) {
+	if (vargs.empty()) {
 		// send error saying we need args (unlike the previous implementation of this command)
 		return true;
 	}
@@ -1535,18 +1395,16 @@ COMMAND_HANDLER(CGameServerDlg::HandlePermanentChatCommand)
 	return true;
 }
 
-void CGameServerDlg::SendHelpDescription(CUser *pUser, std::string sHelpMessage)
-{
+void CGameServerDlg::SendHelpDescription(CUser *pUser, std::string sHelpMessage) {
 	if (pUser == nullptr || sHelpMessage == "")
 		return;
 
-	Packet result(WIZ_CHAT, (uint8)PUBLIC_CHAT);
+	Packet result(WIZ_CHAT, (uint8) PUBLIC_CHAT);
 	result << pUser->GetNation() << pUser->GetSocketID() << uint8(0) << sHelpMessage;
 	pUser->Send(&result);
 }
 
-void CGameServerDlg::SetPermanentMessage(const char * format, ...)
-{
+void CGameServerDlg::SetPermanentMessage(const char * format, ...) {
 	char buffer[128];
 	va_list ap;
 	va_start(ap, format);
@@ -1561,8 +1419,7 @@ void CGameServerDlg::SetPermanentMessage(const char * format, ...)
 	Send_All(&result);
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandlePermanentChatOffCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandlePermanentChatOffCommand) {
 	Packet result;
 	ChatPacket::Construct(&result, END_PERMANENT_CHAT);
 	m_bPermanentChatMode = false;
@@ -1570,8 +1427,7 @@ COMMAND_HANDLER(CGameServerDlg::HandlePermanentChatOffCommand)
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleReloadNoticeCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleReloadNoticeCommand) {
 	// Reload the notice data
 	LoadNoticeData();
 	LoadNoticeUpData();
@@ -1579,24 +1435,21 @@ COMMAND_HANDLER(CGameServerDlg::HandleReloadNoticeCommand)
 	// and update all logged in players
 	// if we're using the new notice format that's always shown
 	SessionMap sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
-	BOOST_FOREACH (auto itr, sessMap)
-	{
+	BOOST_FOREACH(auto itr, sessMap) {
 		CUser * pUser = TO_USER(itr.second);
 		if (pUser->isInGame())
 			pUser->SendNotice();
-			pUser->TopSendNotice();
+		pUser->TopSendNotice();
 	}
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleItemTablesCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleItemTablesCommand) {
 	m_ItemtableArray.DeleteAllData();
 	LoadItemTable();
 	return true;
 }
-COMMAND_HANDLER(CGameServerDlg::HandleReloadTablesCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleReloadTablesCommand) {
 	m_StartPositionArray.DeleteAllData();
 	LoadStartPositionTable();
 
@@ -1611,7 +1464,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleReloadTablesCommand)
 
 	ACHIEVE_TITLE.DeleteAllData();
 	LoadAchieveTitleTable();
-	
+
 	ACHIEVE_COM.DeleteAllData();
 	LoadAchieveComTable();
 
@@ -1661,8 +1514,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleReloadTablesCommand)
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleReloadMagicsCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleReloadMagicsCommand) {
 	m_IsMagicTableInUpdateProcess = true;
 	m_MagictableArray.DeleteAllData();
 	m_Magictype1Array.DeleteAllData();
@@ -1688,15 +1540,13 @@ COMMAND_HANDLER(CGameServerDlg::HandleReloadMagicsCommand)
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleReloadBotsCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleReloadBotsCommand) {
 	m_arBotArray.DeleteAllData();
 	LoadBotTable();
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleReloadQuestCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleReloadQuestCommand) {
 	m_QuestHelperArray.DeleteAllData();
 	LoadQuestHelperTable();
 	m_QuestMonsterArray.DeleteAllData();
@@ -1705,30 +1555,26 @@ COMMAND_HANDLER(CGameServerDlg::HandleReloadQuestCommand)
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleReloadRanksCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleReloadRanksCommand) {
 	ReloadKnightAndUserRanks();
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleCountCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleCountCommand) {
 	uint16 count = 0, count2 = 0;
 	SessionMap sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
-	BOOST_FOREACH (auto itr, sessMap)
-	{
-     if (TO_USER(itr.second)->isInGame())
-       count++;
+	BOOST_FOREACH(auto itr, sessMap) {
+		if (TO_USER(itr.second)->isInGame())
+			count++;
 
-	 count2++;
+		count2++;
 	}
 
-	printf("Online User Count : %d,%d\n",count,int16(MAX_USER - count2));
+	printf("Online User Count : %d,%d\n", count, int16(MAX_USER - count2));
 	return true;
- }
+}
 
-void CGameServerDlg::SendFormattedResource(uint32 nResourceID, uint8 byNation, bool bIsNotice, ...)
-{
+void CGameServerDlg::SendFormattedResource(uint32 nResourceID, uint8 byNation, bool bIsNotice, ...) {
 	_SERVER_RESOURCE *pResource = m_ServerResourceArray.GetData(nResourceID);
 	if (pResource == nullptr)
 		return;
@@ -1745,8 +1591,7 @@ void CGameServerDlg::SendFormattedResource(uint32 nResourceID, uint8 byNation, b
 		SendAnnouncement(buffer.c_str(), byNation);
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleReloadDupeCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleReloadDupeCommand) {
 	m_IsDupeUpdateProcess = true;
 	m_ItemDupersArray.DeleteAllData();
 	LoadItemDuper();
@@ -1755,8 +1600,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleReloadDupeCommand)
 	return true;
 }
 
-COMMAND_HANDLER(CGameServerDlg::HandleReloadIlegalItemsCommand)
-{
+COMMAND_HANDLER(CGameServerDlg::HandleReloadIlegalItemsCommand) {
 	m_IlegalItemsUpdateProcess = true;
 	m_IlegalItemsArray.DeleteAllData();
 	LoadIlegalItems();

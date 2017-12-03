@@ -4,54 +4,48 @@
 #pragma region Nation Transfer
 
 
-void CUser::SendNationChange()
-{
-	if (isDead() 
-		|| isTrading() 
-		|| isMerchanting() 
-		|| isStoreOpen() 
-		|| isSellingMerchant() 
-		|| isBuyingMerchant() 
-		|| isMining() 
+void CUser::SendNationChange() {
+	if (isDead()
+		|| isTrading()
+		|| isMerchanting()
+		|| isStoreOpen()
+		|| isSellingMerchant()
+		|| isBuyingMerchant()
+		|| isMining()
 		|| m_bMerchantStatex)
 		return;
 
 	Packet result(WIZ_NATION_CHANGE);
 
-	if(!CheckExistItem(ITEM_NATION_TRANSFER))
-	{
+	if (!CheckExistItem(ITEM_NATION_TRANSFER)) {
 		result << uint8(3) << uint8(7);
 		Send(&result);
 		return;
 	}
 
-	if (isInClan())
-	{
+	if (isInClan()) {
 		result << uint8(2) << uint8(2);
 		Send(&result);
 		return;
 	}
 
-	if (isKing())
-	{
+	if (isKing()) {
 		result << uint8(3) << uint8(3);
 		Send(&result);
 		return;
 	}
-	
+
 	result.DByte();
 	uint8 YanChar = g_DBAgent.YanChar(GetAccountName());
 	uint8 YanCharClan = g_DBAgent.YanCharClan(GetAccountName());
 
-	if (YanChar == 0)
-	{
+	if (YanChar == 0) {
 		result << uint8(3) << uint8(6);
 		Send(&result);
 		return;
 	}
 
-	if (YanCharClan == 1)
-	{
+	if (YanCharClan == 1) {
 		result << uint8(2) << uint8(2);
 		Send(&result);
 		return;
@@ -64,35 +58,33 @@ void CUser::SendNationChange()
 
 	result << uint8(2) << uint8(1) << YanChar;
 
-	if(!strCharID1.empty())
-	Class1 = g_DBAgent.LoadAccountNTS(strCharID1);
-	if(!strCharID2.empty())
-	Class2 = g_DBAgent.LoadAccountNTS(strCharID2);
-	if(!strCharID3.empty())
-	Class3 = g_DBAgent.LoadAccountNTS(strCharID3);
-	if(!strCharID4.empty())
-	Class4 = g_DBAgent.LoadAccountNTS(strCharID4);
+	if (!strCharID1.empty())
+		Class1 = g_DBAgent.LoadAccountNTS(strCharID1);
+	if (!strCharID2.empty())
+		Class2 = g_DBAgent.LoadAccountNTS(strCharID2);
+	if (!strCharID3.empty())
+		Class3 = g_DBAgent.LoadAccountNTS(strCharID3);
+	if (!strCharID4.empty())
+		Class4 = g_DBAgent.LoadAccountNTS(strCharID4);
 
-	if(Class1 > 0)
+	if (Class1 > 0)
 		result << uint16(0) << strCharID1 << uint8(0) << uint8(0) << uint16(GetNation() == 1 ? (Class1 + 100) : (Class1 - 100)) << uint8(0) << uint32(0);
-	if(Class2 > 0)
+	if (Class2 > 0)
 		result << uint16(1) << strCharID2 << uint8(0) << uint8(0) << uint16(GetNation() == 1 ? (Class2 + 100) : (Class2 - 100)) << uint8(0) << uint32(0);
-	if(Class3 > 0)
+	if (Class3 > 0)
 		result << uint16(2) << strCharID3 << uint8(0) << uint8(0) << uint16(GetNation() == 1 ? (Class3 + 100) : (Class3 - 100)) << uint8(0) << uint32(0);
-	if(Class4 > 0)
+	if (Class4 > 0)
 		result << uint16(3) << strCharID4 << uint8(0) << uint8(0) << uint16(GetNation() == 1 ? (Class4 + 100) : (Class4 - 100)) << uint8(0) << uint32(0);
 
 	Send(&result);
 
 }
 
-void CUser::NationChangeHandle(Packet & pkt)
-{
+void CUser::NationChangeHandle(Packet & pkt) {
 
 	uint8 opcode = pkt.read<uint8>();
 
-	switch(opcode)
-	{
+	switch (opcode) {
 	case 3:
 		NationChange(pkt);
 		break;
@@ -102,60 +94,54 @@ void CUser::NationChangeHandle(Packet & pkt)
 
 }
 
-void CUser::NationChange(Packet & pkt)
-{
-	if (isDead() 
-		|| isTrading() 
-		|| isMerchanting() 
-		|| isStoreOpen() 
-		|| isSellingMerchant() 
-		|| isBuyingMerchant() 
-		|| isMining() 
+void CUser::NationChange(Packet & pkt) {
+	if (isDead()
+		|| isTrading()
+		|| isMerchanting()
+		|| isStoreOpen()
+		|| isSellingMerchant()
+		|| isBuyingMerchant()
+		|| isMining()
 		|| m_bMerchantStatex)
 		return;
-	
+
 	uint8 opcode;
 	pkt >> opcode;
 
-	if(opcode == 0)
+	if (opcode == 0)
 		return;
-	
+
 
 	Packet result(WIZ_NATION_CHANGE);
 
-	if(!CheckExistItem(ITEM_NATION_TRANSFER))
-	{
+	if (!CheckExistItem(ITEM_NATION_TRANSFER)) {
 		result << uint8(3) << uint8(7);
 		Send(&result);
 		return;
 	}
 
-	if (isInClan())
-	{
+	if (isInClan()) {
 		result << uint8(2) << uint8(2);
 		Send(&result);
 		return;
 	}
 
-	if (isKing())
-	{
+	if (isKing()) {
 		result << uint8(3) << uint8(3);
 		Send(&result);
 		return;
 	}
-	
+
 	uint8 YanChar = g_DBAgent.YanChar(GetAccountName());
 	uint8 YanCharClan = g_DBAgent.YanCharClan(GetAccountName());
 
-	if (YanChar == 0)
-	{
+	if (YanChar == 0) {
 		result << uint8(3) << uint8(6);
 		Send(&result);
 		return;
 	}
 
-	if (YanCharClan == 1)
-	{
+	if (YanCharClan == 1) {
 		result << uint8(2) << uint8(2);
 		Send(&result);
 		return;
@@ -179,44 +165,39 @@ void CUser::NationChange(Packet & pkt)
 
 	pkt >> Count;
 
-	if (Count == 0)
-	{
+	if (Count == 0) {
 		result << uint8(3) << uint8(6);
 		Send(&result);
 		return;
 	}
 
-	for(int i = 0; i < Count; i++)
-	{
+	for (int i = 0; i < Count; i++) {
 		pkt >> CharNum[i] >> Nick[i] >> hisRace >> unkNown1[i] >> unkNown2[i];
 		nRace[CharNum[i]] = hisRace;
 
-		if(hisRace == 0 
+		if (hisRace == 0
 			|| (hisRace < 10 && GetNation() == 1)
 			|| (hisRace > 14)
-			|| (hisRace > 6 && GetNation() == 2))
-		{
-		result << uint8(3) << uint8(6);
-		Send(&result);
-		return;
+			|| (hisRace > 6 && GetNation() == 2)) {
+			result << uint8(3) << uint8(6);
+			Send(&result);
+			return;
 		}
 
 	}
-	
 
-	uint8 nRet = g_DBAgent.NationTransfer(GetAccountName(),nRace[0],nRace[1],nRace[2],nRace[3]);
+
+	uint8 nRet = g_DBAgent.NationTransfer(GetAccountName(), nRace[0], nRace[1], nRace[2], nRace[3]);
 
 	myRace = g_DBAgent.LoadCharRace(GetName());
 
-	if (myRace == 0)
-	{
+	if (myRace == 0) {
 		result << uint8(2) << uint8(0);
 		Send(&result);
 		return;
 	}
 
-	if (nRet != 1)
-	{
+	if (nRet != 1) {
 		result << uint8(3) << uint8(6);
 		Send(&result);
 		return;
@@ -224,12 +205,12 @@ void CUser::NationChange(Packet & pkt)
 
 	RobItem(ITEM_NATION_TRANSFER);
 
-	
+
 
 	m_bRank = 0;
 	m_bTitle = 0;
 	m_bRace = myRace;
-	m_sClass = GetNation() == KARUS ? GetClass() + 100 : GetClass() - 100;	
+	m_sClass = GetNation() == KARUS ? GetClass() + 100 : GetClass() - 100;
 	m_bNation = GetNation() == KARUS ? ELMORAD : KARUS;
 
 	if (GetHealth() < (GetMaxHealth() / 2))
@@ -256,13 +237,11 @@ void CUser::NationChange(Packet & pkt)
 	Disconnect();
 }
 
-uint8 CUser::GetNewRace()
-{
+uint8 CUser::GetNewRace() {
 
 	uint8 nNewRace = 0;
 
-	if (GetNation() == KARUS)
-	{
+	if (GetNation() == KARUS) {
 		if (m_bRace == KARUS_BIG)
 			nNewRace = BABARIAN;
 		else if (m_bRace == KARUS_MIDDLE)
@@ -271,11 +250,9 @@ uint8 CUser::GetNewRace()
 			nNewRace = ELMORAD_MAN;
 		else if (m_bRace == KARUS_WOMAN)
 			nNewRace = ELMORAD_WOMAN;
-		else if(m_bRace == KARUS_MONSTER)
+		else if (m_bRace == KARUS_MONSTER)
 			nNewRace = ELMORAD_MONSTER;
-	}
-	else
-	{
+	} else {
 		if (m_bRace == BABARIAN)
 			nNewRace = KARUS_BIG;
 		// El Morad Male and El Morad Warriors
@@ -302,7 +279,7 @@ uint8 CUser::GetNewRace()
 		// El Morad Female and El Morad Priests
 		else if (m_bRace == ELMORAD_WOMAN && isPriest())
 			nNewRace = KARUS_WOMAN;
-		else if(m_bRace == ELMORAD_MONSTER)
+		else if (m_bRace == ELMORAD_MONSTER)
 			nNewRace = KARUS_MONSTER;
 	}
 
@@ -313,21 +290,20 @@ uint8 CUser::GetNewRace()
 
 #pragma region Gender Change
 
-void CUser::GenderChange(Packet & pkt)
-{
+void CUser::GenderChange(Packet & pkt) {
 	Packet result(WIZ_GENDER_CHANGE);
-	
-	if (isDead() 
-		|| isTrading() 
-		|| isMerchanting() 
-		|| isStoreOpen() 
-		|| isSellingMerchant() 
-		|| isBuyingMerchant() 
-		|| isMining() 
+
+	if (isDead()
+		|| isTrading()
+		|| isMerchanting()
+		|| isStoreOpen()
+		|| isSellingMerchant()
+		|| isBuyingMerchant()
+		|| isMining()
 		|| m_bMerchantStatex)
 		return;
 
-	if (GetRace() == 0 
+	if (GetRace() == 0
 		|| GetRace() == KARUS_BIG
 		|| (GetRace() == KARUS_MIDDLE && GetClass() % 100 < 10)
 		|| GetRace() == KARUS_MONSTER
@@ -339,22 +315,22 @@ void CUser::GenderChange(Packet & pkt)
 
 	pkt >> opCode >> newRace >> newFace >> newHair;
 
-	if(!CheckExistItem(ITEM_GENDER_CHANGE))
+	if (!CheckExistItem(ITEM_GENDER_CHANGE))
 		goto fail_return;
 
-	if(newRace == 0 || newFace == 0 || newHair == 0)
+	if (newRace == 0 || newFace == 0 || newHair == 0)
 		goto fail_return;
 
-	if(newRace < 10 && GetNation() != 1)
+	if (newRace < 10 && GetNation() != 1)
 		goto fail_return;
 
-	if(newRace > 10 && GetNation() != 2)
+	if (newRace > 10 && GetNation() != 2)
 		goto fail_return;
 
-	if(newRace > 13 || newRace == GetRace())
+	if (newRace > 13 || newRace == GetRace())
 		goto fail_return;
 
-	if(newRace > 5 && GetNation() == 1)
+	if (newRace > 5 && GetNation() == 1)
 		goto fail_return;
 
 
@@ -364,11 +340,11 @@ void CUser::GenderChange(Packet & pkt)
 
 	resultCode = g_DBAgent.UpdateUser(GetName(), UPDATE_PACKET_SAVE, this);
 
-	if(resultCode < 1)
+	if (resultCode < 1)
 		goto fail_return;
-		
+
 	result << uint8(1) << uint16(GetID()) << newRace << newFace << newHair;
-	SendToRegion(&result,nullptr,GetEventRoom());
+	SendToRegion(&result, nullptr, GetEventRoom());
 
 	RobItem(ITEM_GENDER_CHANGE);
 
@@ -385,16 +361,15 @@ fail_return:
 
 #pragma region Job Change
 
-uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
-{
-	
-	if (isDead() 
-		|| isTrading() 
-		|| isMerchanting() 
-		|| isStoreOpen() 
-		|| isSellingMerchant() 
-		|| isBuyingMerchant() 
-		|| isMining() 
+uint8 CUser::JobChange(uint8 NewJob /*= 0*/) {
+
+	if (isDead()
+		|| isTrading()
+		|| isMerchanting()
+		|| isStoreOpen()
+		|| isSellingMerchant()
+		|| isBuyingMerchant()
+		|| isMining()
 		|| m_bMerchantStatex)
 		return 5;
 
@@ -404,20 +379,17 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 	if (NewJob < 1 || NewJob > 5)
 		return 5; // Unknown job is selected...
 
-	if(!CheckExistItem(ITEM_JOB_CHANGE))
+	if (!CheckExistItem(ITEM_JOB_CHANGE))
 		return 6; // Job Change scroll is not found...
 
-	for (int i = 0; i < SLOT_MAX; i++)
-	{
-		if (m_sItemArray[i].nNum) 
-		{
+	for (int i = 0; i < SLOT_MAX; i++) {
+		if (m_sItemArray[i].nNum) {
 			bResult = 7;
 			break;
 		}
 	}
 
-	if (bResult == 7)
-	{
+	if (bResult == 7) {
 		Packet result(WIZ_CLASS_CHANGE, uint8(ALL_POINT_CHANGE));
 		result << uint8(4) << int(0);
 		Send(&result);
@@ -427,94 +399,76 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 	// If bResult between 1 and 5 character already selected job...
 
 	// If selected a new job Warrior
-	if (NewJob == 1)
-	{
-		if (GetNation() == KARUS)
-		{
+	if (NewJob == 1) {
+		if (GetNation() == KARUS) {
 			// Beginner Karus Rogue, Magician, Priest
-			if (isBeginnerRogue() || isBeginnerMage() || isBeginnerPriest() || isBeginnerPorutu())
-			{
+			if (isBeginnerRogue() || isBeginnerMage() || isBeginnerPriest() || isBeginnerPorutu()) {
 				bNewClass = KARUWARRIOR;
 				bNewRace = KARUS_BIG;
 			}
 			// Skilled Karus Rogue, Magician, Priest
-			else if (isNoviceRogue() || isNoviceMage() || isNovicePriest() || isNovicePorutu())
-			{
+			else if (isNoviceRogue() || isNoviceMage() || isNovicePriest() || isNovicePorutu()) {
 				bNewClass = BERSERKER;
 				bNewRace = KARUS_BIG;
 			}
 			// Mastered Karus Rogue, Magician, Priest
-			else if (isMasteredRogue() || isMasteredMage() || isMasteredPriest() || isMasteredPorutu())
-			{
+			else if (isMasteredRogue() || isMasteredMage() || isMasteredPriest() || isMasteredPorutu()) {
 				bNewClass = GUARDIAN;
 				bNewRace = KARUS_BIG;
 			}
-		}
-		else
-		{
+		} else {
 			// Beginner El Morad Rogue, Magician, Priest
-			if (isBeginnerRogue() || isBeginnerMage() || isBeginnerPriest() || isBeginnerPorutu())
-			{
+			if (isBeginnerRogue() || isBeginnerMage() || isBeginnerPriest() || isBeginnerPorutu()) {
 				bNewClass = ELMORWARRRIOR;
-				if(GetRace() == ELMORAD_MONSTER)
-				bNewRace = ELMORAD_MAN;
+				if (GetRace() == ELMORAD_MONSTER)
+					bNewRace = ELMORAD_MAN;
 				else
-				bNewRace = GetRace();
+					bNewRace = GetRace();
 			}
 			// Skilled El Morad Rogue, Magician, Priest
-			else if (isNoviceRogue() || isNoviceMage() || isNovicePriest() || isNovicePorutu())
-			{
+			else if (isNoviceRogue() || isNoviceMage() || isNovicePriest() || isNovicePorutu()) {
 				bNewClass = BLADE;
-				if(GetRace() == ELMORAD_MONSTER)
-				bNewRace = ELMORAD_MAN;
+				if (GetRace() == ELMORAD_MONSTER)
+					bNewRace = ELMORAD_MAN;
 				else
-				bNewRace = GetRace();
+					bNewRace = GetRace();
 			}
 			// Mastered El Morad Rogue, Magician, Priest
-			else if (isMasteredRogue() || isMasteredMage() || isMasteredPriest() || isMasteredPorutu())
-			{
+			else if (isMasteredRogue() || isMasteredMage() || isMasteredPriest() || isMasteredPorutu()) {
 				bNewClass = PROTECTOR;
-				if(GetRace() == ELMORAD_MONSTER)
-				bNewRace = ELMORAD_MAN;
+				if (GetRace() == ELMORAD_MONSTER)
+					bNewRace = ELMORAD_MAN;
 				else
-				bNewRace = GetRace();
+					bNewRace = GetRace();
 			}
 		}
 
 		// Character already Warrior.
-		if (bNewClass == 0 || bNewRace == 0)		
+		if (bNewClass == 0 || bNewRace == 0)
 			bResult = NewJob;
 	}
 
 	// If selected a new job Rogue
-	if (NewJob == 2)
-	{
-		if (GetNation() == KARUS)
-		{
+	if (NewJob == 2) {
+		if (GetNation() == KARUS) {
 			// Beginner Karus Warrior, Magician, Priest
-			if (isBeginnerWarrior() || isBeginnerMage() || isBeginnerPriest() || isBeginnerPorutu())
-			{
+			if (isBeginnerWarrior() || isBeginnerMage() || isBeginnerPriest() || isBeginnerPorutu()) {
 				bNewClass = KARUROGUE;
 				bNewRace = KARUS_MIDDLE;
 			}
 			// Skilled Karus Warrior, Magician, Priest
-			else if (isNoviceWarrior() || isNoviceMage() || isNovicePriest() || isNovicePorutu())
-			{
+			else if (isNoviceWarrior() || isNoviceMage() || isNovicePriest() || isNovicePorutu()) {
 				bNewClass = HUNTER;
 				bNewRace = KARUS_MIDDLE;
 			}
 			// Mastered Karus Warrior, Magician, Priest
-			else if (isMasteredWarrior() || isMasteredMage() || isMasteredPriest() || isMasteredPorutu())
-			{
+			else if (isMasteredWarrior() || isMasteredMage() || isMasteredPriest() || isMasteredPorutu()) {
 				bNewClass = PENETRATOR;
 				bNewRace = KARUS_MIDDLE;
 			}
-		}
-		else
-		{
+		} else {
 			// Beginner El Morad Warrior, Magician, Priest
-			if (isBeginnerWarrior() || isBeginnerMage() || isBeginnerPriest() || isBeginnerPorutu())
-			{
+			if (isBeginnerWarrior() || isBeginnerMage() || isBeginnerPriest() || isBeginnerPorutu()) {
 				bNewClass = ELMOROGUE;
 
 				if (GetRace() == BABARIAN || GetRace() == ELMORAD_MONSTER)
@@ -523,8 +477,7 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 					bNewRace = GetRace();
 			}
 			// Skilled El Morad Warrior, Magician, Priest
-			else if (isNoviceWarrior() || isNoviceMage() || isNovicePriest() || isNovicePorutu())
-			{
+			else if (isNoviceWarrior() || isNoviceMage() || isNovicePriest() || isNovicePorutu()) {
 				bNewClass = RANGER;
 
 				if (GetRace() == BABARIAN || GetRace() == ELMORAD_MONSTER)
@@ -533,8 +486,7 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 					bNewRace = GetRace();
 			}
 			// Mastered El Morad Warrior, Magician, Priest
-			else if (isMasteredWarrior() || isMasteredMage() || isMasteredPriest() || isMasteredPorutu())
-			{
+			else if (isMasteredWarrior() || isMasteredMage() || isMasteredPriest() || isMasteredPorutu()) {
 				bNewClass = ASSASSIN;
 
 				if (GetRace() == BABARIAN || GetRace() == ELMORAD_MONSTER)
@@ -550,13 +502,10 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 	}
 
 	// If selected a new job Magician
-	if (NewJob == 3)
-	{
-		if (GetNation() == KARUS)
-		{
+	if (NewJob == 3) {
+		if (GetNation() == KARUS) {
 			// Beginner Karus Warrior, Rogue, Priest
-			if (isBeginnerWarrior() || isBeginnerRogue() || isBeginnerPriest() || isBeginnerPorutu())
-			{
+			if (isBeginnerWarrior() || isBeginnerRogue() || isBeginnerPriest() || isBeginnerPorutu()) {
 				bNewClass = KARUWIZARD;
 
 				if (GetRace() == KARUS_BIG || GetRace() == KARUS_MIDDLE || GetRace() == KARUS_MONSTER)
@@ -565,8 +514,7 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 					bNewRace = GetRace();
 			}
 			// Skilled Karus Warrior, Rogue, Priest
-			else if (isNoviceWarrior() || isNoviceRogue() || isNovicePriest() || isNovicePorutu())
-			{
+			else if (isNoviceWarrior() || isNoviceRogue() || isNovicePriest() || isNovicePorutu()) {
 				bNewClass = SORSERER;
 
 				if (GetRace() == KARUS_BIG || GetRace() == KARUS_MIDDLE || GetRace() == KARUS_MONSTER)
@@ -575,8 +523,7 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 					bNewRace = GetRace();
 			}
 			// Mastered Karus Warrior, Rogue, Priest
-			else if (isMasteredWarrior() || isMasteredRogue() || isMasteredPriest() || isMasteredPorutu())
-			{
+			else if (isMasteredWarrior() || isMasteredRogue() || isMasteredPriest() || isMasteredPorutu()) {
 				bNewClass = NECROMANCER;
 
 				if (GetRace() == KARUS_BIG || GetRace() == KARUS_MIDDLE || GetRace() == KARUS_MONSTER)
@@ -584,12 +531,9 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 				else
 					bNewRace = GetRace();
 			}
-		}
-		else
-		{
+		} else {
 			// Beginner El Morad Warrior, Rogue, Priest
-			if (isBeginnerWarrior() || isBeginnerRogue() || isBeginnerPriest() || isBeginnerPorutu())
-			{
+			if (isBeginnerWarrior() || isBeginnerRogue() || isBeginnerPriest() || isBeginnerPorutu()) {
 				bNewClass = ELMOWIZARD;
 
 				if (GetRace() == BABARIAN || GetRace() == ELMORAD_MONSTER)
@@ -598,8 +542,7 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 					bNewRace = GetRace();
 			}
 			// Skilled El Morad Warrior, Rogue, Priest
-			else if (isNoviceWarrior() || isNoviceRogue() || isNovicePriest() || isNovicePorutu())
-			{
+			else if (isNoviceWarrior() || isNoviceRogue() || isNovicePriest() || isNovicePorutu()) {
 				bNewClass = MAGE;
 
 				if (GetRace() == BABARIAN || GetRace() == ELMORAD_MONSTER)
@@ -608,8 +551,7 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 					bNewRace = GetRace();
 			}
 			// Mastered El Morad Warrior, Rogue, Priest
-			else if (isMasteredWarrior() || isMasteredRogue() || isMasteredPriest() || isMasteredPorutu())
-			{
+			else if (isMasteredWarrior() || isMasteredRogue() || isMasteredPriest() || isMasteredPorutu()) {
 				bNewClass = ENCHANTER;
 
 				if (GetRace() == BABARIAN || GetRace() == ELMORAD_MONSTER)
@@ -625,13 +567,10 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 	}
 
 	// If selected a new job Priest
-	if (NewJob == 4)
-	{
-		if (GetNation() == KARUS)
-		{
+	if (NewJob == 4) {
+		if (GetNation() == KARUS) {
 			// Beginner Karus Warrior, Rogue, Magician
-			if (isBeginnerWarrior() || isBeginnerRogue() || isBeginnerMage() || isBeginnerPorutu())
-			{
+			if (isBeginnerWarrior() || isBeginnerRogue() || isBeginnerMage() || isBeginnerPorutu()) {
 				bNewClass = KARUPRIEST;
 
 				if (GetRace() == KARUS_BIG || GetRace() == KARUS_SMALL || GetRace() == KARUS_MONSTER)
@@ -640,8 +579,7 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 					bNewRace = GetRace();
 			}
 			// Skilled Karus Warrior, Rogue, Magician
-			else if (isNoviceWarrior() || isNoviceRogue() || isNoviceMage() || isNovicePorutu())
-			{
+			else if (isNoviceWarrior() || isNoviceRogue() || isNoviceMage() || isNovicePorutu()) {
 				bNewClass = SHAMAN;
 
 				if (GetRace() == KARUS_BIG || GetRace() == KARUS_SMALL || GetRace() == KARUS_MONSTER)
@@ -650,8 +588,7 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 					bNewRace = GetRace();
 			}
 			// Mastered Karus Warrior, Rogue, Magician
-			else if (isMasteredWarrior() || isMasteredRogue() || isMasteredMage() || isMasteredPorutu())
-			{
+			else if (isMasteredWarrior() || isMasteredRogue() || isMasteredMage() || isMasteredPorutu()) {
 				bNewClass = DARKPRIEST;
 
 				if (GetRace() == KARUS_BIG || GetRace() == KARUS_SMALL || GetRace() == KARUS_MONSTER)
@@ -659,12 +596,9 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 				else
 					bNewRace = GetRace();
 			}
-		}
-		else
-		{
+		} else {
 			// Beginner El Morad Warrior, Rogue, Magician
-			if (isBeginnerWarrior() || isBeginnerRogue() || isBeginnerMage() || isBeginnerPorutu())
-			{
+			if (isBeginnerWarrior() || isBeginnerRogue() || isBeginnerMage() || isBeginnerPorutu()) {
 				bNewClass = ELMOPRIEST;
 
 				if (GetRace() == BABARIAN || GetRace() == ELMORAD_MONSTER)
@@ -673,8 +607,7 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 					bNewRace = GetRace();
 			}
 			// Skilled El Morad Warrior, Rogue, Magician
-			else if (isNoviceWarrior() || isNoviceRogue() || isNoviceMage() || isNovicePorutu())
-			{
+			else if (isNoviceWarrior() || isNoviceRogue() || isNoviceMage() || isNovicePorutu()) {
 				bNewClass = CLERIC;
 
 				if (GetRace() == BABARIAN || GetRace() == ELMORAD_MONSTER)
@@ -683,8 +616,7 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 					bNewRace = GetRace();
 			}
 			// Mastered El Morad Warrior, Rogue, Magician
-			else if (isMasteredWarrior() || isMasteredRogue() || isMasteredMage() || isMasteredPorutu())
-			{
+			else if (isMasteredWarrior() || isMasteredRogue() || isMasteredMage() || isMasteredPorutu()) {
 				bNewClass = DRUID;
 
 				if (GetRace() == BABARIAN || GetRace() == ELMORAD_MONSTER)
@@ -700,47 +632,37 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 	}
 
 
-		// If selected a new job Kurian
-	if (NewJob == 5 || NewJob == 6)
-	{
-		if (GetNation() == KARUS)
-		{
+	// If selected a new job Kurian
+	if (NewJob == 5 || NewJob == 6) {
+		if (GetNation() == KARUS) {
 			// Beginner Karus Warrior, Rogue, Magician
-			if (isBeginnerRogue() || isBeginnerMage() || isBeginnerPriest() || isBeginnerWarrior())
-			{
+			if (isBeginnerRogue() || isBeginnerMage() || isBeginnerPriest() || isBeginnerWarrior()) {
 				bNewClass = PORUTU;
 				bNewRace = KARUS_MONSTER;
 			}
 			// Skilled Karus Warrior, Rogue, Magician
-			else if (isNoviceRogue() || isNoviceMage() || isNovicePriest() || isNoviceWarrior())
-			{
+			else if (isNoviceRogue() || isNoviceMage() || isNovicePriest() || isNoviceWarrior()) {
 				bNewClass = PORUTUSKILLED;
 				bNewRace = KARUS_MONSTER;
 			}
 			// Mastered Karus Warrior, Rogue, Magician
-			else if (isMasteredRogue() || isMasteredMage() || isMasteredPriest() || isMasteredWarrior())
-			{
+			else if (isMasteredRogue() || isMasteredMage() || isMasteredPriest() || isMasteredWarrior()) {
 				bNewClass = PORUTUMASTER;
 				bNewRace = KARUS_MONSTER;
 			}
-		}
-		else
-		{
+		} else {
 			// Beginner El Morad Warrior, Rogue, Magician
-			if (isBeginnerRogue() || isBeginnerMage() || isBeginnerPriest() || isBeginnerWarrior())
-			{
+			if (isBeginnerRogue() || isBeginnerMage() || isBeginnerPriest() || isBeginnerWarrior()) {
 				bNewClass = KURIAN;
 				bNewRace = ELMORAD_MONSTER;
 			}
 			// Skilled El Morad Warrior, Rogue, Magician
-			else if (isNoviceRogue() || isNoviceMage() || isNovicePriest() || isNoviceWarrior())
-			{
+			else if (isNoviceRogue() || isNoviceMage() || isNovicePriest() || isNoviceWarrior()) {
 				bNewClass = KURIANSKILLED;
 				bNewRace = ELMORAD_MONSTER;
 			}
 			// Mastered El Morad Warrior, Rogue, Magician
-			else if (isMasteredRogue() || isMasteredMage() || isMasteredPriest() || isMasteredWarrior())
-			{
+			else if (isMasteredRogue() || isMasteredMage() || isMasteredPriest() || isMasteredWarrior()) {
 				bNewClass = KURIANMASTER;
 				bNewRace = ELMORAD_MONSTER;
 			}
@@ -752,9 +674,8 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/)
 	}
 
 
-	if (bResult == 0)
-	{
-		RobItem(ITEM_JOB_CHANGE,1,true);
+	if (bResult == 0) {
+		RobItem(ITEM_JOB_CHANGE, 1, true);
 
 		m_sClass = bNewClass;
 		m_bRace = bNewRace;

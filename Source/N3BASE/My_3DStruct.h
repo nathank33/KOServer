@@ -75,45 +75,38 @@ public:
 	void RotationY(float fDelta);
 };
 
-INLINE void	__Vector3::Normalize()
-{
+INLINE void	__Vector3::Normalize() {
 	float fn = sqrtf(x*x + y*y + z*z);
-	if(fn == 0) return;
+	if (fn == 0) return;
 	x /= fn; y /= fn; z /= fn;
 }
 
-INLINE float __Vector3::Magnitude() const 
-{
+INLINE float __Vector3::Magnitude() const {
 	return sqrtf(x*x + y*y + z*z);
 }
 
-INLINE float __Vector3::Dot(const D3DVECTOR& vec) const 
-{
+INLINE float __Vector3::Dot(const D3DVECTOR& vec) const {
 	return x*vec.x + y*vec.y + z*vec.z;
 }
 
-INLINE void __Vector3::Cross(const D3DVECTOR& v1, const D3DVECTOR& v2)
-{
+INLINE void __Vector3::Cross(const D3DVECTOR& v1, const D3DVECTOR& v2) {
 	x = v1.y * v2.z - v1.z * v2.y;
 	y = v1.z * v2.x - v1.x * v2.z;
 	z = v1.x * v2.y - v1.y * v2.x;
 }
 
-INLINE void __Vector3::Absolute()
-{
-	if(x < 0) x *= -1.0f;
-	if(y < 0) y *= -1.0f;
-	if(z < 0) z *= -1.0f;
+INLINE void __Vector3::Absolute() {
+	if (x < 0) x *= -1.0f;
+	if (y < 0) y *= -1.0f;
+	if (z < 0) z *= -1.0f;
 }
 
-INLINE const __Vector3& __Vector3::operator = (const __Vector3& vec)
-{
+INLINE const __Vector3& __Vector3::operator = (const __Vector3& vec) {
 	x = vec.x; y = vec.y; z = vec.z;
 	return *this;
 }
 
-INLINE const __Vector3 __Vector3::operator * (const D3DMATRIX& mtx) const 
-{
+INLINE const __Vector3 __Vector3::operator * (const D3DMATRIX& mtx) const {
 	static __Vector3 vTmp;
 
 	vTmp.x = x*mtx._11 + y*mtx._21 + z*mtx._31 + mtx._41;
@@ -123,25 +116,22 @@ INLINE const __Vector3 __Vector3::operator * (const D3DMATRIX& mtx) const
 	return vTmp;
 }
 
-INLINE void __Vector3::operator *= (float fDelta)
-{
+INLINE void __Vector3::operator *= (float fDelta) {
 	x *= fDelta;
 	y *= fDelta;
 	z *= fDelta;
 }
 
-INLINE void __Vector3::operator *= (const D3DMATRIX& mtx)
-{
+INLINE void __Vector3::operator *= (const D3DMATRIX& mtx) {
 	static __Vector3 vTmp;
 
-	vTmp.Set(x,y,z);
+	vTmp.Set(x, y, z);
 	x = vTmp.x*mtx._11 + vTmp.y*mtx._21 + vTmp.z*mtx._31 + mtx._41;
 	y = vTmp.x*mtx._12 + vTmp.y*mtx._22 + vTmp.z*mtx._32 + mtx._42;
 	z = vTmp.x*mtx._13 + vTmp.y*mtx._23 + vTmp.z*mtx._33 + mtx._43;
 }
 
-INLINE __Vector3 __Vector3::operator + (const D3DVECTOR& vec) const
-{
+INLINE __Vector3 __Vector3::operator + (const D3DVECTOR& vec) const {
 	static __Vector3 vTmp;
 
 	vTmp.x = x + vec.x;
@@ -150,8 +140,7 @@ INLINE __Vector3 __Vector3::operator + (const D3DVECTOR& vec) const
 	return vTmp;
 }
 
-INLINE __Vector3 __Vector3::operator - (const D3DVECTOR& vec) const 
-{
+INLINE __Vector3 __Vector3::operator - (const D3DVECTOR& vec) const {
 	static __Vector3 vTmp;
 
 	vTmp.x = x - vec.x;
@@ -160,8 +149,7 @@ INLINE __Vector3 __Vector3::operator - (const D3DVECTOR& vec) const
 	return vTmp;
 }
 
-INLINE __Vector3 __Vector3::operator * (const D3DVECTOR& vec) const 
-{
+INLINE __Vector3 __Vector3::operator * (const D3DVECTOR& vec) const {
 	static __Vector3 vTmp;
 
 	vTmp.x = x * vec.x;
@@ -170,8 +158,7 @@ INLINE __Vector3 __Vector3::operator * (const D3DVECTOR& vec) const
 	return vTmp;
 }
 
-INLINE __Vector3 __Vector3::operator / (const D3DVECTOR& vec) const
-{
+INLINE __Vector3 __Vector3::operator / (const D3DVECTOR& vec) const {
 	static __Vector3 vTmp;
 
 	vTmp.x = x / vec.x;
@@ -180,36 +167,31 @@ INLINE __Vector3 __Vector3::operator / (const D3DVECTOR& vec) const
 	return vTmp;
 }
 
-INLINE void __Vector3::operator += (const D3DVECTOR& vec) 
-{
+INLINE void __Vector3::operator += (const D3DVECTOR& vec) {
 	x += vec.x;
 	y += vec.y;
 	z += vec.z;
 }
 
-INLINE void __Vector3::operator -= (const D3DVECTOR& vec) 
-{
+INLINE void __Vector3::operator -= (const D3DVECTOR& vec) {
 	x -= vec.x;
 	y -= vec.y;
 	z -= vec.z;
 }
 
-INLINE void __Vector3::operator *= (const D3DVECTOR& vec) 
-{
+INLINE void __Vector3::operator *= (const D3DVECTOR& vec) {
 	x *= vec.x;
 	y *= vec.y;
 	z *= vec.z;
 }
 
-INLINE void __Vector3::operator /= (const D3DVECTOR& vec) 
-{
+INLINE void __Vector3::operator /= (const D3DVECTOR& vec) {
 	x /= vec.x;
 	y /= vec.y;
 	z /= vec.z;
 }
 
-INLINE __Vector3 __Vector3::operator + (float fDelta) const 
-{ 
+INLINE __Vector3 __Vector3::operator + (float fDelta) const {
 	static __Vector3 vTmp;
 
 	vTmp.x = x + fDelta;
@@ -218,8 +200,7 @@ INLINE __Vector3 __Vector3::operator + (float fDelta) const
 	return vTmp;
 }
 
-INLINE __Vector3 __Vector3::operator - (float fDelta) const 
-{
+INLINE __Vector3 __Vector3::operator - (float fDelta) const {
 	static __Vector3 vTmp;
 
 	vTmp.x = x - fDelta;
@@ -228,8 +209,7 @@ INLINE __Vector3 __Vector3::operator - (float fDelta) const
 	return vTmp;
 }
 
-INLINE __Vector3 __Vector3::operator * (float fDelta) const 
-{
+INLINE __Vector3 __Vector3::operator * (float fDelta) const {
 	static __Vector3 vTmp;
 
 	vTmp.x = x * fDelta;
@@ -238,8 +218,7 @@ INLINE __Vector3 __Vector3::operator * (float fDelta) const
 	return vTmp;
 }
 
-INLINE __Vector3 __Vector3::operator / (float fDelta) const 
-{
+INLINE __Vector3 __Vector3::operator / (float fDelta) const {
 	static __Vector3 vTmp;
 
 	vTmp.x = x / fDelta;
@@ -248,22 +227,19 @@ INLINE __Vector3 __Vector3::operator / (float fDelta) const
 	return vTmp;
 }
 
-INLINE void __Matrix44::Identity()
-{
+INLINE void __Matrix44::Identity() {
 	_12 = _13 = _14 = _21 = _23 = _24 = _31 = _32 = _34 = _41 = _42 = _43 = 0;
 	_11 = _22 = _33 = _44 = 1.0f;
 }
 
-INLINE void __Matrix44::RotationY(float fDelta)
-{
+INLINE void __Matrix44::RotationY(float fDelta) {
 	this->Identity();
 	_11 = cosf(fDelta); _13 = -sinf(fDelta); _31 = -_13; _33 = _11;
 }
 
 INLINE bool _IntersectTriangle(const __Vector3& vOrig, const __Vector3& vDir,
-							   const __Vector3& v0, const __Vector3& v1, const __Vector3& v2,
-							   float& fT, float& fU, float& fV, __Vector3* pVCol = nullptr)
-{
+	const __Vector3& v0, const __Vector3& v1, const __Vector3& v2,
+	float& fT, float& fU, float& fV, __Vector3* pVCol = nullptr) {
 	// Find vectors for two edges sharing vert0
 	static __Vector3 vEdge1, vEdge2;
 
@@ -275,14 +251,14 @@ INLINE bool _IntersectTriangle(const __Vector3& vOrig, const __Vector3& vDir,
 
 	pVec.Cross(vEdge1, vEdge2);
 	fDet = pVec.Dot(vDir);
-	if (fDet > -0.0001f )
+	if (fDet > -0.0001f)
 		return false;
 
 	pVec.Cross(vDir, vEdge2);
 
 	// If determinant is near zero, ray lies in plane of triangle
 	fDet = vEdge1.Dot(pVec);
-	if( fDet < 0.0001f )
+	if (fDet < 0.0001f)
 		return false;
 
 	// Calculate distance from vert0 to ray origin
@@ -290,7 +266,7 @@ INLINE bool _IntersectTriangle(const __Vector3& vOrig, const __Vector3& vDir,
 
 	// Calculate U parameter and test bounds
 	fU = tVec.Dot(pVec);
-	if( fU < 0.0f || fU > fDet )
+	if (fU < 0.0f || fU > fDet)
 		return false;
 
 	// Prepare to test V parameter
@@ -299,7 +275,7 @@ INLINE bool _IntersectTriangle(const __Vector3& vOrig, const __Vector3& vDir,
 
 	// Calculate V parameter and test bounds
 	fV = vDir.Dot(qVec);
-	if( fV < 0.0f || fU + fV > fDet )
+	if (fV < 0.0f || fU + fV > fDet)
 		return false;
 
 	// Calculate t, scale parameters, ray intersects triangle
@@ -309,12 +285,11 @@ INLINE bool _IntersectTriangle(const __Vector3& vOrig, const __Vector3& vDir,
 	fU *= fInvDet;
 	fV *= fInvDet;
 
-	if(pVCol) (*pVCol) = vOrig + (vDir * fT);
+	if (pVCol) (*pVCol) = vOrig + (vDir * fT);
 	return (fT >= 0.0f);
 }
 
-INLINE bool _IntersectTriangle(const __Vector3& vOrig, const __Vector3& vDir, const __Vector3& v0, const __Vector3& v1, const __Vector3& v2)
-{
+INLINE bool _IntersectTriangle(const __Vector3& vOrig, const __Vector3& vDir, const __Vector3& v0, const __Vector3& v1, const __Vector3& v2) {
 	// Find vectors for two edges sharing vert0
 	// Begin calculating determinant - also used to calculate U parameter
 	static float fDet, fT, fU, fV;
@@ -325,14 +300,14 @@ INLINE bool _IntersectTriangle(const __Vector3& vOrig, const __Vector3& vDir, co
 
 	pVec.Cross(vEdge1, vEdge2);
 	fDet = pVec.Dot(vDir);
-	if (fDet > -0.0001f )
+	if (fDet > -0.0001f)
 		return false;
 
 	pVec.Cross(vDir, vEdge2);
 
 	// If determinant is near zero, ray lies in plane of triangle
 	fDet = vEdge1.Dot(pVec);
-	if( fDet < 0.0001f )
+	if (fDet < 0.0001f)
 		return false;
 
 	// Calculate distance from vert0 to ray origin
@@ -340,7 +315,7 @@ INLINE bool _IntersectTriangle(const __Vector3& vOrig, const __Vector3& vDir, co
 
 	// Calculate U parameter and test bounds
 	fU = tVec.Dot(pVec);
-	if( fU < 0.0f || fU > fDet )
+	if (fU < 0.0f || fU > fDet)
 		return false;
 
 	// Prepare to test V parameter
@@ -348,7 +323,7 @@ INLINE bool _IntersectTriangle(const __Vector3& vOrig, const __Vector3& vDir, co
 
 	// Calculate V parameter and test bounds
 	fV = vDir.Dot(qVec);
-	if( fV < 0.0f || fU + fV > fDet )
+	if (fV < 0.0f || fU + fV > fDet)
 		return false;
 
 	// Calculate t, scale parameters, ray intersects triangle

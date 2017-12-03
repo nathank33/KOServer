@@ -1,16 +1,14 @@
 #pragma once
 
-class CPremiumItemSet : public OdbcRecordset
-{
+class CPremiumItemSet : public OdbcRecordset {
 public:
-	CPremiumItemSet(OdbcConnection * dbConnection, PremiumItemArray * pMap) 
+	CPremiumItemSet(OdbcConnection * dbConnection, PremiumItemArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("PREMIUM_ITEM"); }
 	virtual tstring GetColumns() { return _T("Type, ExpRestorePercent, NoahPercent, DropPercent, BonusLoyalty, RepairDiscountPercent, ItemSellPercent"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_PREMIUM_ITEM * pData = new _PREMIUM_ITEM;
 
 		_dbCommand->FetchByte(1, pData->Type);

@@ -1,16 +1,14 @@
 #pragma once
 
-class CMagicType7Set : public OdbcRecordset
-{
+class CMagicType7Set : public OdbcRecordset {
 public:
-	CMagicType7Set(OdbcConnection * dbConnection, Magictype7Array * pMap) 
+	CMagicType7Set(OdbcConnection * dbConnection, Magictype7Array * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("MAGIC_TYPE7"); }
 	virtual tstring GetColumns() { return _T("nIndex, byValidGroup, byNatoinChange, shMonsterNum, byTargetChange, byStateChange, byRadius, shHitrate, shDuration, shDamage, nNeedItem"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_MAGIC_TYPE7 *pData = new _MAGIC_TYPE7;
 
 		int index = 1;

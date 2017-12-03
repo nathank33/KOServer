@@ -13,10 +13,9 @@ static float surround_fx[8] = {0.0f, -0.7071f, -1.0f, -0.7083f,  0.0f,  0.7059f,
 static float surround_fz[8] = {1.0f,  0.7071f,  0.0f, -0.7059f, -1.0f, -0.7083f, -0.0017f, 0.7059f};
 
 CUser::CUser() : Unit(UnitPlayer) {}
-CUser::~CUser() { }
+CUser::~CUser() {}
 
-void CUser::Initialize()
-{
+void CUser::Initialize() {
 	Unit::Initialize();
 
 	m_iUserId = -1;
@@ -41,7 +40,7 @@ void CUser::Initialize()
 	m_FlashWarBonus = 0;
 
 	m_sExpGainAmount = m_bNPGainAmount = m_bNoahGainAmount = 100;
-	m_bPlayerAttackAmount = 100; 
+	m_bPlayerAttackAmount = 100;
 	m_bSkillNPBonus = 0;
 	m_bAddWeaponDamage = 0;
 	m_sAddArmourAc = 0;
@@ -51,8 +50,7 @@ void CUser::Initialize()
 	InitNpcAttack();
 }
 
-void CUser::OnDeath(Unit * pAttacker)
-{
+void CUser::OnDeath(Unit * pAttacker) {
 	if (m_bLive == AI_USER_DEAD)
 		return;
 
@@ -68,96 +66,83 @@ void CUser::OnDeath(Unit * pAttacker)
 	pMap->RegionUserRemove(m_sRegionX, m_sRegionZ, GetID());
 }
 
-void CUser::InitNpcAttack()
-{
+void CUser::InitNpcAttack() {
 	memset(&m_sSurroundNpcNumber, -1, sizeof(m_sSurroundNpcNumber));
 }
 
-int CUser::IsSurroundCheck(float fX, float fY, float fZ, int NpcID)
-{
+int CUser::IsSurroundCheck(float fX, float fY, float fZ, int NpcID) {
 	int nDir = 0;
 	__Vector3 vNpc, vUser, vDis;
 	vNpc.Set(fX, fY, fZ);
 	float fDX, fDZ;
-	float fDis = 0.0f, fCurDis=1000.0f;
+	float fDis = 0.0f, fCurDis = 1000.0f;
 	bool bFlag = false;
-	for(int i=0; i<8; i++)
-	{
+	for (int i = 0; i < 8; i++) {
 		//if(m_sSurroundNpcNumber[i] != -1) continue;
-		if(m_sSurroundNpcNumber[i] == NpcID)
-		{
+		if (m_sSurroundNpcNumber[i] == NpcID) {
 			if (bFlag)
 				m_sSurroundNpcNumber[i] = -1;
-			else
-			{
+			else {
 				m_sSurroundNpcNumber[i] = NpcID;
-				nDir = i+1;
+				nDir = i + 1;
 				bFlag = true;
 			}
 			//return nDir;
 		}
 
-		if(m_sSurroundNpcNumber[i] == -1 && bFlag==false)
-		{
-			fDX = GetX() + surround_fx[i]; 
-			fDZ = GetZ() + surround_fz[i]; 
+		if (m_sSurroundNpcNumber[i] == -1 && bFlag == false) {
+			fDX = GetX() + surround_fx[i];
+			fDZ = GetZ() + surround_fz[i];
 			vUser.Set(fDX, 0.0f, fDZ);
 			vDis = vUser - vNpc;
 			fDis = vDis.Magnitude();
-			if(fDis < fCurDis)
-			{
-				nDir = i+1;
+			if (fDis < fCurDis) {
+				nDir = i + 1;
 				fCurDis = fDis;
 			}
 		}
 	}
 
 
-	/*	TRACE("User-Sur : [0=%d,1=%d,2=%d,3=%d,4=%d,5=%d,6=%d,7=%d]\n", m_sSurroundNpcNumber[0], 
+	/*	TRACE("User-Sur : [0=%d,1=%d,2=%d,3=%d,4=%d,5=%d,6=%d,7=%d]\n", m_sSurroundNpcNumber[0],
 	m_sSurroundNpcNumber[1], m_sSurroundNpcNumber[2], m_sSurroundNpcNumber[3], m_sSurroundNpcNumber[4],
 	m_sSurroundNpcNumber[5],m_sSurroundNpcNumber[6], m_sSurroundNpcNumber[7]);
 	*/
-	if(nDir != 0)
-	{
-		m_sSurroundNpcNumber[nDir-1] = NpcID;
+	if (nDir != 0) {
+		m_sSurroundNpcNumber[nDir - 1] = NpcID;
 	}
 
 	return nDir;
 }
 
-void CUser::HealMagic()
-{
-	int region_x = (int)(GetX() / VIEW_DIST);
-	int region_z = (int)(GetZ() / VIEW_DIST);
+void CUser::HealMagic() {
+	int region_x = (int) (GetX() / VIEW_DIST);
+	int region_z = (int) (GetZ() / VIEW_DIST);
 
 	MAP* pMap = GetMap();
 	if (pMap == nullptr) return;
-	int min_x = region_x - 1;	if(min_x < 0) min_x = 0;
-	int min_z = region_z - 1;	if(min_z < 0) min_z = 0;
-	int max_x = region_x + 1;	if(max_x > pMap->GetXRegionMax()) max_x = pMap->GetXRegionMax();
-	int max_z = region_z + 1;	if(min_z > pMap->GetZRegionMax()) min_z = pMap->GetZRegionMax();
+	int min_x = region_x - 1;	if (min_x < 0) min_x = 0;
+	int min_z = region_z - 1;	if (min_z < 0) min_z = 0;
+	int max_x = region_x + 1;	if (max_x > pMap->GetXRegionMax()) max_x = pMap->GetXRegionMax();
+	int max_z = region_z + 1;	if (min_z > pMap->GetZRegionMax()) min_z = pMap->GetZRegionMax();
 
-	int search_x = max_x - min_x + 1;		
-	int search_z = max_z - min_z + 1;	
+	int search_x = max_x - min_x + 1;
+	int search_z = max_z - min_z + 1;
 
 	int i, j;
 
-	for(i = 0; i < search_x; i++)	
-	{
-		for(j = 0; j < search_z; j++)	
-		{
-			HealAreaCheck( min_x+i, min_z+j );
+	for (i = 0; i < search_x; i++) {
+		for (j = 0; j < search_z; j++) {
+			HealAreaCheck(min_x + i, min_z + j);
 		}
 	}
 }
 
-void CUser::HealAreaCheck(int rx, int rz)
-{
+void CUser::HealAreaCheck(int rx, int rz) {
 	MAP* pMap = GetMap();
 	if (pMap == nullptr) return;
 
-	if (rx < 0 || rz < 0 || rx > pMap->GetXRegionMax() || rz > pMap->GetZRegionMax())	
-	{
+	if (rx < 0 || rz < 0 || rx > pMap->GetXRegionMax() || rz > pMap->GetZRegionMax()) {
 		//TRACE("#### CUser-HealAreaCheck() Fail : [nid=%d, name=%s], nRX=%d, nRZ=%d #####\n", GetID(), GetName().c_str(), rx, rz);
 		return;
 	}
@@ -169,18 +154,16 @@ void CUser::HealAreaCheck(int rx, int rz)
 
 	if (pRegion == nullptr || (pRegion && pRegion->m_RegionNpcArray.GetSize() <= 0))
 		return;
-		
-	foreach_stlmap (itr, pRegion->m_RegionNpcArray)
-	{
+
+	foreach_stlmap(itr, pRegion->m_RegionNpcArray) {
 		CNpc * pNpc = g_pMain->GetNpcPtr(itr->first);
 		if (pNpc == nullptr)
 			continue;
 
-		if(pNpc->isDead() || !pNpc->isHostileTo(this))
+		if (pNpc->isDead() || !pNpc->isHostileTo(this))
 			continue;
 
-		if (pNpc->isInRangeSlow(this, fRadius))
-		{
+		if (pNpc->isInRangeSlow(this, fRadius)) {
 			pNpc->ChangeTarget(1004, this);
 			break;
 		}

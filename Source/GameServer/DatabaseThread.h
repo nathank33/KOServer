@@ -1,7 +1,6 @@
 #pragma once
 
-class DatabaseThread
-{
+class DatabaseThread {
 public:
 	// Startup the database threads
 	static void Startup();

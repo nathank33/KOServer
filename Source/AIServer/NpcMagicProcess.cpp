@@ -3,8 +3,7 @@
 #include "ServerDlg.h"
 #include "Npc.h"
 
-time_t CNpcMagicProcess::MagicPacket(uint8 opcode, uint32 nSkillID, int16 sCasterID, int16 sTargetID, int16 sData1, int16 sData2, int16 sData3)
-{
+time_t CNpcMagicProcess::MagicPacket(uint8 opcode, uint32 nSkillID, int16 sCasterID, int16 sTargetID, int16 sData1, int16 sData2, int16 sData3) {
 	_MAGIC_TABLE * pSkill = g_pMain->m_MagictableArray.GetData(nSkillID);
 	if (pSkill == nullptr)
 		return -1;
@@ -16,8 +15,7 @@ time_t CNpcMagicProcess::MagicPacket(uint8 opcode, uint32 nSkillID, int16 sCaste
 	// NOTE: Client controls skill hits.
 	// Since we block these, we need to handle this ourselves.
 	// This WILL need to be rewritten once spawns are though, as it is HORRIBLE.
-	if (opcode != MAGIC_EFFECTING)
-	{
+	if (opcode != MAGIC_EFFECTING) {
 		CNpc * pNpc = g_pMain->GetNpcPtr(sCasterID);
 		if (pNpc == nullptr)
 			return -1;

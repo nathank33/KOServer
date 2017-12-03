@@ -1,16 +1,14 @@
 #pragma once
 
-class CKnightsUserSet : public OdbcRecordset
-{
+class CKnightsUserSet : public OdbcRecordset {
 public:
-	CKnightsUserSet(OdbcConnection * dbConnection, void * dummy) 
+	CKnightsUserSet(OdbcConnection * dbConnection, void * dummy)
 		: OdbcRecordset(dbConnection) {}
 
 	virtual tstring GetTableName() { return _T("KNIGHTS_USER"); }
 	virtual tstring GetColumns() { return _T("sIDNum, strUserID, nDonatedNP"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		uint16 sIDNum;
 		std::string strUserID;
 		uint32 nDonatedNP;

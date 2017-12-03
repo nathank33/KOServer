@@ -14,8 +14,7 @@
 #endif
 
 #if defined(GAMESERVER)
-void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
-{
+void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/) {
 	if (g_pMain->m_IsMagicTableInUpdateProcess)
 		return;
 
@@ -23,16 +22,14 @@ void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 	pkt >> instance.bOpcode >> instance.nSkillID;
 
 	instance.pSkill = g_pMain->m_MagictableArray.GetData(instance.nSkillID);
-	if (instance.pSkill == nullptr)
-	{
+	if (instance.pSkill == nullptr) {
 		if (pCaster != nullptr)
 			TRACE("[%s] Used skill %d but it does not exist.\n", pCaster->GetName().c_str(), instance.nSkillID);
 
-		if (pCaster->isPlayer() && instance.nSkillID < 0)
-		{
+		if (pCaster->isPlayer() && instance.nSkillID < 0) {
 			DateTime time;
-			g_pMain->SendFormattedNotice("%s is currently disconnect for skill hack.",Nation::ALL, pCaster->GetName().c_str());
-			g_pMain->WriteCheatLogFile(string_format("[ SkillHack - %d:%d:%d ] %s Disconnected for SkillHack.\n", time.GetHour(),time.GetMinute(),time.GetSecond(), pCaster->GetName().c_str()));
+			g_pMain->SendFormattedNotice("%s is currently disconnect for skill hack.", Nation::ALL, pCaster->GetName().c_str());
+			g_pMain->WriteCheatLogFile(string_format("[ SkillHack - %d:%d:%d ] %s Disconnected for SkillHack.\n", time.GetHour(), time.GetMinute(), time.GetSecond(), pCaster->GetName().c_str()));
 			TO_USER(pCaster)->Disconnect();
 		}
 
@@ -41,22 +38,21 @@ void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 
 	pkt >> instance.sCasterID >> instance.sTargetID
 		>> instance.sData[0] >> instance.sData[1] >> instance.sData[2] >> instance.sData[3]
-	>> instance.sData[4] >> instance.sData[5] >> instance.sData[6];
+		>> instance.sData[4] >> instance.sData[5] >> instance.sData[6];
 
 	// Prevent users from faking other players or NPCs.
 	if (pCaster != nullptr // if it's nullptr, it's from AI.
-		&& (instance.sCasterID >= NPC_BAND 
-		|| instance.sCasterID != pCaster->GetID()))
+		&& (instance.sCasterID >= NPC_BAND
+			|| instance.sCasterID != pCaster->GetID()))
 		return;
 
 	instance.bIsRecastingSavedMagic = false;
 	instance.Run();
 }
 
-void CMagicProcess::UpdateAIServer(uint32 nSkillID, AISkillOpcode opcode, 
-								   Unit * pTarget, Unit * pCaster /*= nullptr*/, 
-								   bool bIsRecastingSavedMagic /*= false*/)
-{
+void CMagicProcess::UpdateAIServer(uint32 nSkillID, AISkillOpcode opcode,
+	Unit * pTarget, Unit * pCaster /*= nullptr*/,
+	bool bIsRecastingSavedMagic /*= false*/) {
 	Packet result(AG_MAGIC_ATTACK_REQ, uint8(opcode));
 	int16	sCasterID = (pCaster == nullptr ? -1 : pCaster->GetID()),
 		sTargetID = (pTarget == nullptr ? -1 : pTarget->GetID());
@@ -64,11 +60,10 @@ void CMagicProcess::UpdateAIServer(uint32 nSkillID, AISkillOpcode opcode,
 	g_pMain->Send_AIServer(&result);
 }
 #else
-void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
-{
+void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/) {
 	_MAGIC_TABLE * pSkill;
 	_MAGIC_TYPE4 * pType4;
-	Unit * pSkillCaster, * pSkillTarget;
+	Unit * pSkillCaster, *pSkillTarget;
 	uint32 nSkillID;
 	uint16 sCasterID, sTargetID;
 	uint8 bOpcode;
@@ -83,8 +78,7 @@ void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 	pSkillCaster = g_pMain->GetUnitPtr(sCasterID);
 	pSkillTarget = g_pMain->GetUnitPtr(sTargetID);
 
-	if (bOpcode == AISkillOpcodeBuff || bOpcode == AISkillOpcodeRemoveBuff)
-	{
+	if (bOpcode == AISkillOpcodeBuff || bOpcode == AISkillOpcodeRemoveBuff) {
 		pType4 = g_pMain->m_Magictype4Array.GetData(nSkillID);
 		if (pType4 == nullptr)
 			return;
@@ -93,8 +87,7 @@ void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 	/*if(pSkillCaster != nullptr)
 	printf("Target : %s, pType4: %d\n",pSkillCaster->GetName().c_str(),pType4->bSpeed);*/
 
-	switch (bOpcode)
-	{
+	switch (bOpcode) {
 	case AISkillOpcodeBuff:
 		if (pSkillCaster == nullptr || pSkillTarget == nullptr)
 			return;
@@ -118,14 +111,12 @@ void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 #endif
 
 // TODO: Clean this up (even using unit code...)
-bool CMagicProcess::UserRegionCheck(Unit * pSkillCaster, Unit * pSkillTarget, _MAGIC_TABLE * pSkill, int radius, short mousex /*= 0*/, short mousez /*= 0*/)
-{
+bool CMagicProcess::UserRegionCheck(Unit * pSkillCaster, Unit * pSkillTarget, _MAGIC_TABLE * pSkill, int radius, short mousex /*= 0*/, short mousez /*= 0*/) {
 	if (pSkillCaster->isDead()
 		|| pSkillTarget == nullptr)
 		return false;
 
-	switch (pSkill->bMoral)
-	{
+	switch (pSkill->bMoral) {
 	case MORAL_PARTY_ALL:		// Check that it's your party.
 		// NPCs cannot be in parties.
 		if (pSkillCaster->isNPC()
@@ -138,13 +129,12 @@ bool CMagicProcess::UserRegionCheck(Unit * pSkillCaster, Unit * pSkillTarget, _M
 		if (TO_USER(pSkillTarget)->GetPartyID() == TO_USER(pSkillCaster)->GetPartyID()
 			&& pSkill->bType[0] != 8)
 			goto final_test;
-		else if (TO_USER(pSkillTarget)->GetPartyID() == TO_USER(pSkillCaster)->GetPartyID() 
-			&& pSkill->bType[0] == 8)
-		{
+		else if (TO_USER(pSkillTarget)->GetPartyID() == TO_USER(pSkillCaster)->GetPartyID()
+			&& pSkill->bType[0] == 8) {
 			if (pSkillTarget->GetMap()->isWarZone() && (UNIXTIME - TO_USER(pSkillTarget)->m_tLastRegeneTime < CLAN_SUMMON_TIME))
 				return false;
 
-			goto final_test;	
+			goto final_test;
 		}
 
 		break;
@@ -163,15 +153,15 @@ bool CMagicProcess::UserRegionCheck(Unit * pSkillCaster, Unit * pSkillTarget, _M
 			|| pSkillTarget->isNPC())
 			return false;
 
-		if ((TO_USER(pSkillCaster)->isInArena() 
+		if ((TO_USER(pSkillCaster)->isInArena()
 			&& TO_USER(pSkillTarget)->isInArena())
-			|| (TO_USER(pSkillCaster)->isInPartyArena() 
-			&& (TO_USER(pSkillCaster)->GetPartyID() != TO_USER(pSkillTarget)->GetPartyID() || TO_USER(pSkillCaster)->GetPartyID() == uint16(-1) || TO_USER(pSkillTarget)->GetPartyID() == uint16(-1))
-			&& TO_USER(pSkillTarget)->isInPartyArena())
-			|| (TO_USER(pSkillCaster)->isInPVPZone() 
-			&& TO_USER(pSkillTarget)->isInPVPZone())
+			|| (TO_USER(pSkillCaster)->isInPartyArena()
+				&& (TO_USER(pSkillCaster)->GetPartyID() != TO_USER(pSkillTarget)->GetPartyID() || TO_USER(pSkillCaster)->GetPartyID() == uint16(-1) || TO_USER(pSkillTarget)->GetPartyID() == uint16(-1))
+				&& TO_USER(pSkillTarget)->isInPartyArena())
+			|| (TO_USER(pSkillCaster)->isInPVPZone()
+				&& TO_USER(pSkillTarget)->isInPVPZone())
 			|| (TO_USER(pSkillCaster)->isInTempleEventZone()
-			&& TO_USER(pSkillTarget)->isInTempleEventZone()))
+				&& TO_USER(pSkillTarget)->isInTempleEventZone()))
 			goto final_test;
 
 		// Players cant attack other players in the safety area.
@@ -193,27 +183,25 @@ bool CMagicProcess::UserRegionCheck(Unit * pSkillCaster, Unit * pSkillTarget, _M
 		if (!TO_USER(pSkillTarget)->isInClan())
 			return (pSkillTarget == pSkillCaster);
 
-		if (TO_USER(pSkillTarget)->GetClanID() == TO_USER(pSkillCaster)->GetClanID() 
+		if (TO_USER(pSkillTarget)->GetClanID() == TO_USER(pSkillCaster)->GetClanID()
 			&& pSkill->bType[0] != 8)
 			goto final_test;
-		else if (TO_USER(pSkillTarget)->GetClanID() == TO_USER(pSkillCaster)->GetClanID() 
-			&& pSkill->bType[0] == 8)
-		{
+		else if (TO_USER(pSkillTarget)->GetClanID() == TO_USER(pSkillCaster)->GetClanID()
+			&& pSkill->bType[0] == 8) {
 			if (pSkillTarget->GetMap()->isWarZone() && (UNIXTIME - TO_USER(pSkillTarget)->m_tLastRegeneTime < CLAN_SUMMON_TIME))
 				return false;
-			goto final_test;	
+			goto final_test;
 		}
 		break;
 	}
-	return false;	
+	return false;
 
 final_test:
 	return (radius == 0 || pSkillTarget->isInRangeSlow(mousex, mousez, (float) radius));
 }
 
 #if defined(GAMESERVER)
-void CMagicProcess::CheckExpiredType6Skills(Unit * pTarget)
-{
+void CMagicProcess::CheckExpiredType6Skills(Unit * pTarget) {
 	if (!pTarget->isPlayer()
 		|| !TO_USER(pTarget)->isTransformed()
 		|| (UNIXTIME - TO_USER(pTarget)->m_tTransformationStartTime) < TO_USER(pTarget)->m_sTransformationDuration)
@@ -224,8 +212,7 @@ void CMagicProcess::CheckExpiredType6Skills(Unit * pTarget)
 	instance.Type6Cancel();
 }
 
-void CMagicProcess::CheckExpiredType9Skills(Unit * pTarget, bool bForceExpiration /*= false*/)
-{
+void CMagicProcess::CheckExpiredType9Skills(Unit * pTarget, bool bForceExpiration /*= false*/) {
 	if (!pTarget->isPlayer())
 		return;
 
@@ -235,24 +222,19 @@ void CMagicProcess::CheckExpiredType9Skills(Unit * pTarget, bool bForceExpiratio
 	MagicInstance instance;
 	instance.pSkillCaster = pTarget;
 
-	for (auto itr = buffMap.begin(); itr != buffMap.end();)
-	{
-		if (bForceExpiration || UNIXTIME >= itr->second.tEndTime) 
-		{
+	for (auto itr = buffMap.begin(); itr != buffMap.end();) {
+		if (bForceExpiration || UNIXTIME >= itr->second.tEndTime) {
 			// Cancel the skill, but don't remove it from the map. We'll do that.
 			instance.nSkillID = itr->second.nSkillID;
-			instance.Type9Cancel(false); 
+			instance.Type9Cancel(false);
 			itr = buffMap.erase(itr);
-		}
-		else 
-		{
+		} else {
 			++itr;
 		}
 	}
 }
 
-void CMagicProcess::RemoveStealth(Unit * pTarget, InvisibilityType bInvisibilityType)
-{
+void CMagicProcess::RemoveStealth(Unit * pTarget, InvisibilityType bInvisibilityType) {
 	if (bInvisibilityType != INVIS_DISPEL_ON_MOVE
 		&& bInvisibilityType != INVIS_DISPEL_ON_ATTACK)
 		return;
@@ -275,15 +257,13 @@ void CMagicProcess::RemoveStealth(Unit * pTarget, InvisibilityType bInvisibility
 }
 #endif
 
-bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, Unit * pCaster, Unit *pTarget, bool bIsRecastingSavedMagic /*= false*/)
-{
+bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, Unit * pCaster, Unit *pTarget, bool bIsRecastingSavedMagic /*= false*/) {
 	// Buff mustn't already be added at this point.
 	Guard lock(pTarget->_unitlock);
 	if (pTarget->m_buffMap.find(pType->bBuffType) != pTarget->m_buffMap.end())
 		return false;
 
-	switch (pType->bBuffType)
-	{
+	switch (pType->bBuffType) {
 	case BUFF_TYPE_HP_MP:
 		if (pType->sMaxHP == 0 && pType->sMaxHPPct > 0)
 			pTarget->m_sMaxHPAmount = (pType->sMaxHPPct - 100) * (pTarget->GetMaxHealth() - pTarget->m_sMaxHPAmount) / 100;
@@ -304,13 +284,11 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 		break;
 
 	case BUFF_TYPE_SIZE:
-		if (pCaster->isPlayer())
-		{
+		if (pCaster->isPlayer()) {
 			// Unfortunately there's no way to differentiate which does what.
 			// Officially it also resorts to checking the skill ID.
 			uint8 bEffect = ABNORMAL_NORMAL;
-			switch (pSkill->iNum)
-			{
+			switch (pSkill->iNum) {
 			case 490034: // Bezoar
 				bEffect = ABNORMAL_GIANT;
 				break;
@@ -330,7 +308,7 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 		}
 		break;
 
-	if (pTarget->isPlayer())
+		if (pTarget->isPlayer())
 			TO_USER(pTarget)->m_bAttackAmount += (pType->bAttack - 100);
 		break;
 
@@ -344,13 +322,12 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 
 	case BUFF_TYPE_BATTLE_CRY:
 	case BUFF_TYPE_STATS:
-		if (pTarget->isPlayer())
-		{
+		if (pTarget->isPlayer()) {
 			TO_USER(pTarget)->SetStatBuff(STAT_STR, pType->bStr);
 			TO_USER(pTarget)->SetStatBuff(STAT_STA, pType->bSta);
 			TO_USER(pTarget)->SetStatBuff(STAT_DEX, pType->bDex);
 			TO_USER(pTarget)->SetStatBuff(STAT_INT, pType->bIntel);
-			TO_USER(pTarget)->SetStatBuff(STAT_CHA, pType->bCha);	
+			TO_USER(pTarget)->SetStatBuff(STAT_CHA, pType->bCha);
 		}
 		break;
 
@@ -366,7 +343,7 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 	case BUFF_TYPE_ACCURACY:
 		pTarget->m_bHitRateAmount = pType->bHitRate;
 		pTarget->m_sAvoidRateAmount = pType->sAvoidRate;
-		break;	
+		break;
 
 	case BUFF_TYPE_MAGIC_POWER:
 		if (pTarget->isPlayer())
@@ -403,8 +380,7 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 		break;
 
 	case BUFF_TYPE_WEAPON_AC:
-		if (pTarget->isPlayer())
-		{
+		if (pTarget->isPlayer()) {
 			if (pType->sAC == 0 && pType->sACPct > 0)
 				TO_USER(pTarget)->m_bPctArmourAc += (pType->sACPct - 100);
 			else
@@ -413,12 +389,12 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 		break;
 
 	case BUFF_TYPE_LOYALTY:
-		if(pTarget->isPlayer())
+		if (pTarget->isPlayer())
 			TO_USER(pTarget)->m_bNPGainAmount = (uint8) pType->sExpPct;
 		break;
 
 	case BUFF_TYPE_NOAH_BONUS:
-		if(pTarget->isPlayer())
+		if (pTarget->isPlayer())
 			TO_USER(pTarget)->m_bNoahGainAmount = (uint8) pType->sExpPct;
 		break;
 
@@ -466,12 +442,12 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 		break;
 
 	case BUFF_TYPE_DECREASE_RESIST:
-		pTarget->m_bPctFireR		= (100 - pType->bFireR);
-		pTarget->m_bPctColdR		= (100 - pType->bColdR);
-		pTarget->m_bPctLightningR	= (100 - pType->bLightningR);
-		pTarget->m_bPctMagicR		= (100 - pType->bMagicR);
-		pTarget->m_bPctDiseaseR		= (100 - pType->bDiseaseR);
-		pTarget->m_bPctPoisonR		= (100 - pType->bPoisonR);
+		pTarget->m_bPctFireR = (100 - pType->bFireR);
+		pTarget->m_bPctColdR = (100 - pType->bColdR);
+		pTarget->m_bPctLightningR = (100 - pType->bLightningR);
+		pTarget->m_bPctMagicR = (100 - pType->bMagicR);
+		pTarget->m_bPctDiseaseR = (100 - pType->bDiseaseR);
+		pTarget->m_bPctPoisonR = (100 - pType->bPoisonR);
 		break;
 
 	case BUFF_TYPE_MAGE_ARMOR:
@@ -487,8 +463,7 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 		break;
 
 	case BUFF_TYPE_TRIPLEAC_HALFSPEED:	// Wall of Iron
-		switch (pSkill->iNum)
-		{
+		switch (pSkill->iNum) {
 		case 115820:
 			pTarget->m_sACPercent += (pType->sACPct - 100);
 			pTarget->m_bSpeedAmount = pTarget->m_bSpeedAmount / 2;
@@ -542,8 +517,7 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 	case BUFF_TYPE_IGNORE_WEAPON:		// Weapon cancellation
 		// Disarms the opponent. (rendering them unable to attack)
 #if defined(GAMESERVER)
-		if (pTarget->isPlayer())
-		{
+		if (pTarget->isPlayer()) {
 			CUser * pTUser = TO_USER(pTarget);
 
 			pTUser->m_bWeaponsDisabled = true;
@@ -568,7 +542,7 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 		pTarget->m_sMagicAttackAmount += (pType->bMagicAttack - 100);
 		pTarget->m_bAttackAmount += (pType->bAttack - 100);
 		break;
-	
+
 	case BUFF_TYPE_ATTACK_TIME:
 		pTarget->m_bAttackAmount += (pType->bAttack - 100);
 		break;
@@ -606,8 +580,8 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 		break;
 
 	case BUFF_TYPE_STUN:  // Lighting Skill Stun
-         pTarget->m_bSpeedAmount = pType->bSpeed;
-         break;
+		pTarget->m_bSpeedAmount = pType->bSpeed;
+		break;
 	case BUFF_TYPE_DEVIL_TRANSFORM:	// Devil Transform
 		pTarget->m_bIsDevil = true;
 		pTarget->AbsorbedAmmount = 0;
@@ -627,8 +601,7 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 		// NOTE: Skill description says "Enlarge enemy, but decrease attack and defense rate by 5%"
 		// There's nothing else set in the client to give those stats, and AC's reduced by 15% according to the data...
 		// Just working with the TBL data for now (i.e. just the 15% AC reduction).
-		if (pTarget->isPlayer())
-		{
+		if (pTarget->isPlayer()) {
 			pTarget->StateChangeServerDirect(3, ABNORMAL_GIANT_TARGET);
 			pTarget->m_sACPercent += (pType->sACPct - 100);
 		}
@@ -643,8 +616,7 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 		break;
 
 	case BUFF_TYPE_KAUL_TRANSFORMATION:	// Transforms the target into a Kaul (a pig thing), preventing you from /town'ing or attacking, but increases defense.
-		if (pTarget->isPlayer())
-		{
+		if (pTarget->isPlayer()) {
 			pTarget->m_bIsKaul = true;
 			pTarget->m_sACAmount += 500;
 			pTarget->StateChangeServerDirect(3, pType->iNum);
@@ -725,8 +697,7 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 	return true;
 }
 
-bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemoveSavedMagic /*= true*/, bool bRecastSavedMagic /*= false*/)
-{
+bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemoveSavedMagic /*= true*/, bool bRecastSavedMagic /*= false*/) {
 	// Buff must be added at this point. If it doesn't exist, we can't remove it twice.
 	Guard lock(pTarget->m_buffLock);
 	auto itr = pTarget->m_buffMap.find(byBuffType);
@@ -754,8 +725,7 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 
 	pTarget->m_buffMap.erase(itr);
 
-	switch (byBuffType)
-	{
+	switch (byBuffType) {
 	case BUFF_TYPE_HP_MP:
 		pTarget->m_sMaxHPAmount = 0;
 		pTarget->m_sMaxMPAmount = 0;
@@ -803,7 +773,7 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 		break;
 
 	case BUFF_TYPE_DAMAGE:
-			pTarget->m_bAttackAmount -= (pType->bAttack - 100);
+		pTarget->m_bAttackAmount -= (pType->bAttack - 100);
 		break;
 
 	case BUFF_TYPE_ATTACK_SPEED:
@@ -815,29 +785,28 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 		break;
 	case BUFF_TYPE_BATTLE_CRY:
 	case BUFF_TYPE_STATS:
-		if (pTarget->isPlayer())
-		{
+		if (pTarget->isPlayer()) {
 			TO_USER(pTarget)->RemoveStatBuff(STAT_STR, pType->bStr);
 			TO_USER(pTarget)->RemoveStatBuff(STAT_STA, pType->bSta);
 			TO_USER(pTarget)->RemoveStatBuff(STAT_DEX, pType->bDex);
 			TO_USER(pTarget)->RemoveStatBuff(STAT_INT, pType->bIntel);
-			TO_USER(pTarget)->RemoveStatBuff(STAT_CHA, pType->bCha);	
+			TO_USER(pTarget)->RemoveStatBuff(STAT_CHA, pType->bCha);
 		}
 		break;
 
 	case BUFF_TYPE_RESISTANCES:
-		pTarget->m_bAddFireR		= 0;
-		pTarget->m_bAddColdR		= 0;
-		pTarget->m_bAddLightningR	= 0;
-		pTarget->m_bAddMagicR		= 0;
-		pTarget->m_bAddDiseaseR		= 0;
-		pTarget->m_bAddPoisonR		= 0;
+		pTarget->m_bAddFireR = 0;
+		pTarget->m_bAddColdR = 0;
+		pTarget->m_bAddLightningR = 0;
+		pTarget->m_bAddMagicR = 0;
+		pTarget->m_bAddDiseaseR = 0;
+		pTarget->m_bAddPoisonR = 0;
 		break;
 
 	case BUFF_TYPE_ACCURACY:
 		pTarget->m_bHitRateAmount = 100;
 		pTarget->m_sAvoidRateAmount = 100;
-		break;	
+		break;
 
 	case BUFF_TYPE_MAGIC_POWER:
 		pTarget->m_sMagicAttackAmount = 0;
@@ -886,9 +855,9 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 	case BUFF_TYPE_ATTACK_SPEED_ARMOR:
 		pTarget->m_sACAmount -= pType->sAC;
 		if (pType->bAttack > 100)
-		pTarget->m_bAttackAmount -= (pType->bAttack - 100);
+			pTarget->m_bAttackAmount -= (pType->bAttack - 100);
 		else
-		pTarget->m_bAttackAmount -= pType->bAttack;
+			pTarget->m_bAttackAmount -= pType->bAttack;
 		break;
 
 	case BUFF_TYPE_DAMAGE_DOUBLE:
@@ -902,8 +871,7 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 
 	case BUFF_TYPE_BLIND:
 		// Only players can be blinded (at least by the only skill - "Blinding Strafe" - that uses this type).
-		if (pTarget->isPlayer())
-		{
+		if (pTarget->isPlayer()) {
 			pTarget->m_bIsBlinded = false;
 			TO_USER(pTarget)->SendUserStatusUpdate(USER_STATUS_POISON, USER_STATUS_CURE);
 		}
@@ -920,12 +888,12 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 		break;
 
 	case BUFF_TYPE_DECREASE_RESIST:
-		pTarget->m_bPctFireR		= 100;
-		pTarget->m_bPctColdR		= 100;
-		pTarget->m_bPctLightningR	= 100;
-		pTarget->m_bPctMagicR		= 100;
-		pTarget->m_bPctDiseaseR		= 100;
-		pTarget->m_bPctPoisonR		= 100;
+		pTarget->m_bPctFireR = 100;
+		pTarget->m_bPctColdR = 100;
+		pTarget->m_bPctLightningR = 100;
+		pTarget->m_bPctMagicR = 100;
+		pTarget->m_bPctDiseaseR = 100;
+		pTarget->m_bPctPoisonR = 100;
 		break;
 
 	case BUFF_TYPE_MAGE_ARMOR:
@@ -938,13 +906,12 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 
 	case BUFF_TYPE_RESIS_AND_MAGIC_DMG: // Elysian Web
 		pTarget->m_bMagicDamageReduction = 100;
-		if(pTarget->isPlayer())
-			TO_USER(pTarget)->SendUserStatusUpdate(USER_STATUS_POISON,USER_STATUS_CURE);
+		if (pTarget->isPlayer())
+			TO_USER(pTarget)->SendUserStatusUpdate(USER_STATUS_POISON, USER_STATUS_CURE);
 		break;
 
 	case BUFF_TYPE_TRIPLEAC_HALFSPEED:	// Wall of Iron
-		switch (pSkill->iNum)
-		{
+		switch (pSkill->iNum) {
 		case 115820:
 			pTarget->m_sACPercent -= (pType->sACPct - 100);
 			pTarget->m_bSpeedAmount = 100;
@@ -974,13 +941,12 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 
 	case BUFF_TYPE_IGNORE_WEAPON:		// Weapon cancellation
 #if defined(GAMESERVER)
-		if (pTarget->isPlayer())
-		{
+		if (pTarget->isPlayer()) {
 			CUser * pTUser = TO_USER(pTarget);
-			_ITEM_DATA * pLeftItem, * pRightItem;
+			_ITEM_DATA * pLeftItem, *pRightItem;
 
-			_ITEM_TABLE * pLeftHand  = pTUser->GetItemPrototype(LEFTHAND, pLeftItem),
-				* pRightHand = pTUser->GetItemPrototype(RIGHTHAND, pRightItem);
+			_ITEM_TABLE * pLeftHand = pTUser->GetItemPrototype(LEFTHAND, pLeftItem),
+				*pRightHand = pTUser->GetItemPrototype(RIGHTHAND, pRightItem);
 
 			pTUser->m_bWeaponsDisabled = false;
 
@@ -1062,9 +1028,9 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 		pTarget->StateChangeServerDirect(12, 0);
 		break;
 
-	case BUFF_TYPE_STUN : // Lighting Skill
+	case BUFF_TYPE_STUN: // Lighting Skill
 		pTarget->m_bSpeedAmount = 100;
-		break; 
+		break;
 
 	case BUFF_TYPE_LOYALTY_AMOUNT:		// Santa's Present (gives an extra +2NP per kill, unlike BUFF_TYPE_LOYALTY which uses an percent).
 		if (pTarget->isPlayer())
@@ -1079,8 +1045,7 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 		// NOTE: Skill description says "Enlarge enemy, but decrease attack and defense rate by 5%"
 		// There's nothing else set in the client to give those stats, and AC's reduced by 15% according to the data...
 		// Just working with the TBL data for now (i.e. just the 15% AC reduction).
-		if (pTarget->isPlayer())
-		{
+		if (pTarget->isPlayer()) {
 			pTarget->StateChangeServerDirect(3, ABNORMAL_NORMAL);
 			pTarget->m_sACPercent -= (pType->sACPct - 100);
 		}
@@ -1095,8 +1060,7 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 		break;
 
 	case BUFF_TYPE_KAUL_TRANSFORMATION:	// Transforms the target into a Kaul (a pig thing), preventing you from /town'ing or attacking, but increases defense.
-		if (pTarget->isPlayer())
-		{
+		if (pTarget->isPlayer()) {
 			pTarget->m_bIsKaul = false;
 			pTarget->m_sACAmount -= 500;
 			pTarget->StateChangeServerDirect(3, TO_USER(pTarget)->m_nOldAbnormalType);
@@ -1139,10 +1103,8 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 		return false;
 	}
 
-	if (pTarget->isPlayer())
-	{
-		if (pSkill->bMoral >= MORAL_ENEMY)
-		{
+	if (pTarget->isPlayer()) {
+		if (pSkill->bMoral >= MORAL_ENEMY) {
 			if (byBuffType == BUFF_TYPE_SPEED || byBuffType == BUFF_TYPE_SPEED2)
 				TO_USER(pTarget)->SendUserStatusUpdate(USER_STATUS_SPEED, USER_STATUS_CURE);
 		}
@@ -1151,8 +1113,7 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 
 
 
-		if (bRemoveSavedMagic)
-		{
+		if (bRemoveSavedMagic) {
 			Packet result(WIZ_MAGIC_PROCESS, uint8(MAGIC_DURATION_EXPIRED));
 			result << byBuffType;
 			TO_USER(pTarget)->Send(&result);
@@ -1161,8 +1122,7 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 
 #if defined(GAMESERVER) // update the target data in the AI server.
 
-	if (bRecastSavedMagic && TO_USER(pTarget)->isLockableScroll(pType->bBuffType))
-	{
+	if (bRecastSavedMagic && TO_USER(pTarget)->isLockableScroll(pType->bBuffType)) {
 		TO_USER(pTarget)->SendUserStatusUpdate(USER_STATUS_POISON, USER_STATUS_CURE);
 		TO_USER(pTarget)->RecastLockableScrolls(pType->bBuffType);
 	}
@@ -1181,10 +1141,8 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 *
 * @return	true if skill is a buff, false if debuff.
 */
-bool CMagicProcess::IsBuff(_MAGIC_TYPE4 * pType)
-{
-	switch (pType->bBuffType)
-	{
+bool CMagicProcess::IsBuff(_MAGIC_TYPE4 * pType) {
+	switch (pType->bBuffType) {
 	case BUFF_TYPE_NONE: // used by things like firecrackers.
 		return true;
 
@@ -1220,7 +1178,7 @@ bool CMagicProcess::IsBuff(_MAGIC_TYPE4 * pType)
 		// If any of the stats are below 0, it's a debuff.
 	case BUFF_TYPE_BATTLE_CRY:
 	case BUFF_TYPE_STATS:
-		return !(pType->bStr < 0 || pType->bSta < 0 || pType->bDex < 0 || pType->bIntel < 0 || pType->bCha < 0); 
+		return !(pType->bStr < 0 || pType->bSta < 0 || pType->bDex < 0 || pType->bIntel < 0 || pType->bCha < 0);
 
 		// There are no skills that negatively affect resistances, so it will always be a buff.
 	case BUFF_TYPE_RESISTANCES:
@@ -1273,7 +1231,7 @@ bool CMagicProcess::IsBuff(_MAGIC_TYPE4 * pType)
 	case BUFF_TYPE_MANA_ABSORB:		// Outrage / Frenzy / Mana Shield
 	case BUFF_TYPE_ARMORED:
 		return true;
-	
+
 	case BUFF_TYPE_IMIR_ROAR:
 	case BUFF_TYPE_LOGOS_HORNS:
 	case BUFF_TYPE_MAMA_MAGPIE:
@@ -1307,12 +1265,12 @@ bool CMagicProcess::IsBuff(_MAGIC_TYPE4 * pType)
 	case BUFF_TYPE_DAGGER_BOW_DEFENSE:	// Eskrima
 		return false;
 
-    case BUFF_TYPE_STUN:  // Lighting Skill Stun
+	case BUFF_TYPE_STUN:  // Lighting Skill Stun
 	case BUFF_TYPE_DRAKEY:
 	case BUFF_TYPE_SPEED3:
 	case BUFF_TYPE_GM_BUFF:
-     return false;
-	 
+		return false;
+
 	case BUFF_TYPE_UNKNOW: // unknown, assume debuff for now.
 	case BUFF_TYPE_DROP_RATE:
 	case BUFF_TYPE_INC_CONTRIBUTION:

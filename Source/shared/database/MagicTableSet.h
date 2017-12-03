@@ -1,16 +1,14 @@
 #pragma once
 
-class CMagicTableSet : public OdbcRecordset
-{
+class CMagicTableSet : public OdbcRecordset {
 public:
-	CMagicTableSet(OdbcConnection * dbConnection, MagictableArray * pMap) 
+	CMagicTableSet(OdbcConnection * dbConnection, MagictableArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("MAGIC"); }
 	virtual tstring GetColumns() { return _T("MagicNum, BeforeAction, TargetAction, SelfEffect, FlyingEffect, TargetEffect, Moral, SkillLevel, Skill, Msp, HP, ItemGroup, UseItem, CastTime, ReCastTime, SuccessRate, Type1, Type2, Range, UseStanding, Etc"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_MAGIC_TABLE *pData = new _MAGIC_TABLE;
 
 		int i = 1;

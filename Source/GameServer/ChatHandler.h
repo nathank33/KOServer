@@ -1,16 +1,14 @@
 #pragma once
 
-class ChatPacket
-{
+class ChatPacket {
 public:
 	// Construct a chat packet from the data provided
 	// NOTE: Using pointers here for more flexible input (references would be nice, but implementation can be fiddly)
-	static void Construct(Packet * result, uint8 bType, std::string * strMessage = nullptr, std::string * strSender = nullptr, 
-		uint8 bNation = 1, int16 senderID = -1)
-	{
+	static void Construct(Packet * result, uint8 bType, std::string * strMessage = nullptr, std::string * strSender = nullptr,
+		uint8 bNation = 1, int16 senderID = -1) {
 		result->Initialize(WIZ_CHAT);
 		*result << bType << bNation << senderID;
-		
+
 		result->SByte();
 		if (strSender == nullptr) *result << uint8(0);
 		else *result << *strSender;
@@ -21,8 +19,7 @@ public:
 	}
 
 	static void Construct(Packet * result, uint8 bType, const char * szMessage, const char * szSender = "",
-		uint8 bNation = 1, int16 senderID = -1)
-	{
+		uint8 bNation = 1, int16 senderID = -1) {
 		std::string strSender = szSender, strMessage = szMessage;
 		Construct(result, bType, &strMessage, &strSender, bNation, senderID);
 	}
@@ -33,17 +30,15 @@ public:
 typedef std::list<std::string> CommandArgs;
 
 template <class T>
-class Command
-{
+class Command {
 public:
 	const char * Name;
 	COMMAND_HANDLER((T::*Handler));
 	const char * Help;
 };
 
-INLINE void* allocate_and_copy(uint32 len, void * pointer)
-{
-	void * data = (void*)malloc(len);
+INLINE void* allocate_and_copy(uint32 len, void * pointer) {
+	void * data = (void*) malloc(len);
 	if (data == nullptr)
 		return data;
 
@@ -60,24 +55,19 @@ INLINE void* allocate_and_copy(uint32 len, void * pointer)
 	delete itr->second; \
 	command_map.clear();
 
-static std::list<std::string> StrSplit(const std::string &src, const std::string &sep)
-{
+static std::list<std::string> StrSplit(const std::string &src, const std::string &sep) {
 	std::list<std::string> r;
 	std::string s;
-	for (std::string::const_iterator i = src.begin(); i != src.end(); ++i)
-	{
-		if (sep.find(*i) != std::string::npos)
-		{
+	for (std::string::const_iterator i = src.begin(); i != src.end(); ++i) {
+		if (sep.find(*i) != std::string::npos) {
 			if (!s.empty())
 				r.push_back(s);
 			s = "";
-		}
-		else
-		{
+		} else {
 			s += *i;
 		}
 	}
-	if (!s.empty()) 
+	if (!s.empty())
 		r.push_back(s);
 	return r;
 }

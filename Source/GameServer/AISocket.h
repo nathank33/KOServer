@@ -3,8 +3,7 @@
 #include "../shared/KOSocket.h"
 #include "MagicProcess.h"
 
-class CAISocket : public KOSocket 
-{
+class CAISocket : public KOSocket {
 public:
 	CAISocket(uint16 socketID, SocketMgr * mgr) : KOSocket(socketID, mgr, 0, 524288, 524288), m_bHasConnected(false) {}
 

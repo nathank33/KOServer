@@ -4,37 +4,31 @@
 
 static Thread s_consoleInputThread;
 
-void StartConsoleInputThread()
-{
+void StartConsoleInputThread() {
 	s_consoleInputThread.start(ConsoleInputThread, nullptr);
 }
 
-void CleanupConsoleInputThread()
-{
+void CleanupConsoleInputThread() {
 	// The thread is still pretty primitive; there's no way to signal the thread to end
 	// as it's blocking on fgets(). Need to fix this up so that we can wait for the thread.
 	// Currently we close the thread when a read error occurs (ctrl-c causes a read error, exiting does not).
 	s_consoleInputThread.waitForExit();
 }
 
-uint32 THREADCALL ConsoleInputThread(void * lpParam)
-{
+uint32 THREADCALL ConsoleInputThread(void * lpParam) {
 	size_t i = 0;
 	size_t len;
 	char cmd[300];
 
-	while (g_bRunning)
-	{
-		if (!_kbhit())
-		{
+	while (g_bRunning) {
+		if (!_kbhit()) {
 			sleep(100);
 			continue;
 		}
 
 		// Read in single line from stdin
-		memset(cmd, 0, sizeof(cmd)); 
-		if (fgets(cmd, sizeof(cmd), stdin) == nullptr)
-		{
+		memset(cmd, 0, sizeof(cmd));
+		if (fgets(cmd, sizeof(cmd), stdin) == nullptr) {
 			printf("Console input thread closing...\n");
 			break;
 		}
@@ -43,8 +37,7 @@ uint32 THREADCALL ConsoleInputThread(void * lpParam)
 			break;
 
 		len = strlen(cmd);
-		for (i = 0; i < len; i++)
-		{
+		for (i = 0; i < len; i++) {
 			if (cmd[i] == '\n' || cmd[i] == '\r')
 				cmd[i] = '\0';
 		}

@@ -3,11 +3,9 @@
 #define MAX_FRIEND_COUNT	24
 
 // From the client
-void CUser::FriendProcess(Packet & pkt)
-{
+void CUser::FriendProcess(Packet & pkt) {
 	uint8 opcode = pkt.read<uint8>();
-	switch (opcode)
-	{
+	switch (opcode) {
 	case FRIEND_REQUEST:
 		FriendRequest();
 		break;
@@ -22,28 +20,26 @@ void CUser::FriendProcess(Packet & pkt)
 }
 
 // Request friend list.
-void CUser::FriendRequest()
-{
+void CUser::FriendRequest() {
 	Packet result(WIZ_FRIEND_PROCESS, uint8(FRIEND_REQUEST));
 	g_pMain->AddDatabaseRequest(result, this);
 }
 
 // Add or remove a friend from your list.
-void CUser::FriendModify(Packet & pkt, uint8 opcode)
-{
+void CUser::FriendModify(Packet & pkt, uint8 opcode) {
 	std::string strUserID;
 	CUser *pUser;
 	CBot *pBot;
 	pkt >> strUserID;
 
-	if (strUserID.empty() || strUserID.size() > MAX_ID_SIZE 
+	if (strUserID.empty() || strUserID.size() > MAX_ID_SIZE
 		|| (opcode == FRIEND_ADD && ((pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER)) == nullptr && (pBot = g_pMain->GetBotPtr(strUserID, TYPE_CHARACTER)) == nullptr)))
 		return;
 
 	Packet result(WIZ_FRIEND_PROCESS, opcode);
 	if (opcode == FRIEND_ADD && pUser != nullptr)
 		result << pUser->GetSocketID();
-	else if(pUser == nullptr && opcode == FRIEND_ADD)
+	else if (pUser == nullptr && opcode == FRIEND_ADD)
 		result << pBot->GetID();
 
 
@@ -53,17 +49,15 @@ void CUser::FriendModify(Packet & pkt, uint8 opcode)
 }
 
 // Refresh the status of your friends.
-void CUser::FriendReport(Packet & pkt)
-{
+void CUser::FriendReport(Packet & pkt) {
 	Packet result(WIZ_FRIEND_PROCESS, uint8(FRIEND_REPORT));
 	uint16 usercount = pkt.read<uint16>();
 
-	if (usercount > MAX_FRIEND_COUNT) 
+	if (usercount > MAX_FRIEND_COUNT)
 		return;
 
 	result << usercount;
-	for (int i = 0; i < usercount; i++) 
-	{
+	for (int i = 0; i < usercount; i++) {
 		std::string strUserID;
 		int16 sid;
 
@@ -79,28 +73,24 @@ void CUser::FriendReport(Packet & pkt)
 }
 
 // Retrieves the status (and socket ID) of a character.
-uint8 CUser::GetFriendStatus(std::string & charName, int16 & sid)
-{
+uint8 CUser::GetFriendStatus(std::string & charName, int16 & sid) {
 	CUser *pUser;
 	CBot *pBot;
 	if (charName.empty()
-		|| ((pUser = g_pMain->GetUserPtr(charName, TYPE_CHARACTER)) == nullptr &&  (pBot = g_pMain->GetBotPtr(charName, TYPE_CHARACTER)) == nullptr))
-	{
+		|| ((pUser = g_pMain->GetUserPtr(charName, TYPE_CHARACTER)) == nullptr && (pBot = g_pMain->GetBotPtr(charName, TYPE_CHARACTER)) == nullptr)) {
 		sid = -1;
 		return 0; // user not found
 	}
 
 	sid = pUser != nullptr ? pUser->GetSocketID() : pBot->GetID();
-	if(pUser != nullptr)
-	{
-	if (pUser->isInParty()) // user in party
-		return 3;
+	if (pUser != nullptr) {
+		if (pUser->isInParty()) // user in party
+			return 3;
 	}
 	return 1; // user not in party
 }
 
-void CUser::RecvFriendModify(Packet & pkt, uint8 opcode)
-{
+void CUser::RecvFriendModify(Packet & pkt, uint8 opcode) {
 	Packet result(WIZ_FRIEND_PROCESS);
 	std::string strUserID;
 	int16 sid = -1;

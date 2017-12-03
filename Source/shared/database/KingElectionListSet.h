@@ -1,16 +1,14 @@
 #pragma once
 
-class CKingElectionListSet : public OdbcRecordset
-{
+class CKingElectionListSet : public OdbcRecordset {
 public:
-	CKingElectionListSet(OdbcConnection * dbConnection, KingSystemArray * pMap) 
+	CKingElectionListSet(OdbcConnection * dbConnection, KingSystemArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("KING_ELECTION_LIST"); }
 	virtual tstring GetColumns() { return _T("byNation, byType, strName, nKnights, nMoney"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		CKingSystem * pData;
 		uint8 byNation, byType;
 
@@ -50,8 +48,7 @@ public:
 		KingElectionList::iterator itr = pList->find(strUserID);
 
 		// Nope, let's add them.
-		if (itr == pList->end())
-		{
+		if (itr == pList->end()) {
 			_KING_ELECTION_LIST * pEntry = new _KING_ELECTION_LIST;
 
 			_dbCommand->FetchUInt16(4, pEntry->sKnights);

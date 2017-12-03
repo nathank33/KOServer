@@ -2,8 +2,7 @@
 
 #define MONSTER_SPEED	5000
 
-class CNpcTable  
-{
+class CNpcTable {
 public:
 	uint16	m_sSid;				// MONSTER(NPC) Serial ID
 	std::string	m_strName;		// MONSTER(NPC) Name
@@ -60,7 +59,5 @@ public:
 	uint8	m_byMagicAttack;	// 마법공격( 0:마법공격 없음, 1:마법공격, 2:독공격, 3:힐링)
 	uint8	m_byGroupSpecial;
 
-	CNpcTable() : m_sSpeed(MONSTER_SPEED)
-	{
-	}
+	CNpcTable() : m_sSpeed(MONSTER_SPEED) {}
 };

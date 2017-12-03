@@ -1,21 +1,19 @@
 #include "stdafx.h"
 #include "DBAgent.h"
 
-void CUser::VersionCheck(Packet & pkt)
-{
-	iguard2 =0;
+void CUser::VersionCheck(Packet & pkt) {
+	iguard2 = 0;
 	Packet result(WIZ_VERSION_CHECK);
-	 srand ((int)time(NULL));
-	iguardkey = rand() % 250 +1;
-	result	<< uint8(0) << uint16(__VERSION) << m_crypto.GenerateKey()
-		<< uint8(0)<< uint8(0x31)<<iguardkey; // 0 = success, 1 = prem error
+	srand((int) time(NULL));
+	iguardkey = rand() % 250 + 1;
+	result << uint8(0) << uint16(__VERSION) << m_crypto.GenerateKey()
+		<< uint8(0) << uint8(0x31) << iguardkey; // 0 = success, 1 = prem error
 	Send(&result);
-	
+
 	EnableCrypto();
 }
 
-void CUser::LoginProcess(Packet & pkt)
-{
+void CUser::LoginProcess(Packet & pkt) {
 	// Enforce only one login request per session
 	// It's common for players to spam this at the server list when a response isn't received immediately.
 	if (!m_strAccountID.empty())
@@ -32,16 +30,15 @@ void CUser::LoginProcess(Packet & pkt)
 
 	CUser * pUser = g_pMain->GetUserPtr(strAccountID, TYPE_ACCOUNT);
 
-	if (pUser && (pUser->GetSocketID() != GetSocketID()))
-	{
+	if (pUser && (pUser->GetSocketID() != GetSocketID())) {
 		pUser->Disconnect();
 		goto fail_return;
 	}
 
 	result << strPasswd;
 	m_strAccountID = strAccountID;
-	
-	
+
+
 	g_pMain->AddDatabaseRequest(result, this);
 	return;
 

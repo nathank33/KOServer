@@ -4,8 +4,7 @@
 
 using std::string;
 
-CKnights::CKnights()
-{
+CKnights::CKnights() {
 	m_sIndex = 0;
 	m_byFlag = ClanTypeNone;
 	m_byNation = 0;
@@ -25,23 +24,21 @@ CKnights::CKnights()
 	m_sClanPointMethod = 0;
 }
 
-void CKnights::OnLogin(CUser *pUser)
-{
+void CKnights::OnLogin(CUser *pUser) {
 	Packet result, result2;
 	string Name = "", myName = pUser->GetName();
 	STRTOUPPER(myName);
 	// Set the active session for this user
-	foreach_array (i, m_arKnightsUser)
-	{
+	foreach_array(i, m_arKnightsUser) {
 		_KNIGHTS_USER * p = &m_arKnightsUser[i];
 		if (!p->byUsed)
 			continue;
 
 		Name = p->strUserName;
 		STRTOUPPER(Name);
-				
-			if(Name != myName)
-				continue;
+
+		if (Name != myName)
+			continue;
 
 		p->pSession = pUser;
 		pUser->m_pKnightsUser = p;
@@ -50,31 +47,28 @@ void CKnights::OnLogin(CUser *pUser)
 
 	// Send login notice
 	// TODO: Shift this to SERVER_RESOURCE
-	std::string buffer = string_format("%s is online.", pUser->GetName().c_str()); 
+	std::string buffer = string_format("%s is online.", pUser->GetName().c_str());
 	ChatPacket::Construct(&result, KNIGHTS_CHAT, &buffer);
 	Send(&result);
 
 	// Construct the clan notice packet to send to the logged in player
-	if (!m_strClanNotice.empty())
-	{
+	if (!m_strClanNotice.empty()) {
 		ConstructClanNoticePacket(&result);
 		pUser->Send(&result);
 	}
 
-	if(m_sAlliance != 0)
-	{
-	std::string buffer2 = string_format("%s is online.", pUser->GetName().c_str()); 
-	ChatPacket::Construct(&result2, ALLIANCE_CHAT, &buffer2);
-	g_pMain->Send_KnightsAlliance(GetAllianceID(), &result2);
+	if (m_sAlliance != 0) {
+		std::string buffer2 = string_format("%s is online.", pUser->GetName().c_str());
+		ChatPacket::Construct(&result2, ALLIANCE_CHAT, &buffer2);
+		g_pMain->Send_KnightsAlliance(GetAllianceID(), &result2);
 	}
 }
 
 
-void CKnights::ConstructClanNoticePacket(Packet *result)
-{
+void CKnights::ConstructClanNoticePacket(Packet *result) {
 	result->Initialize(WIZ_NOTICE);
 	result->DByte();
-	*result	<< uint8(4)			// type
+	*result << uint8(4)			// type
 		<< uint8(1)			// total blocks
 		<< m_strName	// header
 		<< m_strClanNotice;
@@ -86,8 +80,7 @@ void CKnights::ConstructClanNoticePacket(Packet *result)
 *
 * @param	clanNotice	The clan notice.
 */
-void CKnights::UpdateClanNotice(std::string & clanNotice)
-{
+void CKnights::UpdateClanNotice(std::string & clanNotice) {
 	if (clanNotice.length() > MAX_CLAN_NOTICE_LENGTH || clanNotice.size() == 0)
 		return;
 
@@ -97,7 +90,7 @@ void CKnights::UpdateClanNotice(std::string & clanNotice)
 	m_strClanNotice = clanNotice;
 
 	// Construct the update notice packet to inform players the clan notice has changed
-	std::string updateNotice = string_format("%s updated the clan notice.", m_strChief.c_str()); 
+	std::string updateNotice = string_format("%s updated the clan notice.", m_strChief.c_str());
 	ChatPacket::Construct(&result, KNIGHTS_CHAT, &updateNotice);
 	Send(&result);
 
@@ -114,51 +107,45 @@ void CKnights::UpdateClanNotice(std::string & clanNotice)
 /**
 * @brief	Sends a request to update the clan's fund in the database.
 */
-void CKnights::UpdateClanFund()
-{
+void CKnights::UpdateClanFund() {
 	Packet result(WIZ_KNIGHTS_PROCESS, uint8(KNIGHTS_UPDATE_FUND));
 	result << GetID() << uint32(m_nClanPointFund);
 	g_pMain->AddDatabaseRequest(result);
 }
 
-void CKnights::OnLogout(CUser *pUser)
-{
+void CKnights::OnLogout(CUser *pUser) {
 
 
-// Unset the active session for this user
-if (pUser->m_pKnightsUser != nullptr)
-{
+	// Unset the active session for this user
+	if (pUser->m_pKnightsUser != nullptr) {
 
-pUser->m_pKnightsUser->m_lastLogin = UNIXTIME;
-pUser->m_pKnightsUser->m_lastLogined = uint32(UNIXTIME);
-pUser->m_pKnightsUser->pSession = nullptr;
-pUser->m_pKnightsUser = nullptr;
-}
+		pUser->m_pKnightsUser->m_lastLogin = UNIXTIME;
+		pUser->m_pKnightsUser->m_lastLogined = uint32(UNIXTIME);
+		pUser->m_pKnightsUser->pSession = nullptr;
+		pUser->m_pKnightsUser = nullptr;
+	}
 
 
-Packet logoutNotice;
-// TODO: Shift this to SERVER_RESOURCE
-std::string buffer = string_format("%s is offline.", pUser->GetName().c_str()); 
-ChatPacket::Construct(&logoutNotice, KNIGHTS_CHAT, &buffer);
-Send(&logoutNotice);
+	Packet logoutNotice;
+	// TODO: Shift this to SERVER_RESOURCE
+	std::string buffer = string_format("%s is offline.", pUser->GetName().c_str());
+	ChatPacket::Construct(&logoutNotice, KNIGHTS_CHAT, &buffer);
+	Send(&logoutNotice);
 
 
 	Packet result2;
 
-	if(m_sAlliance != 0)
-	{
-	std::string buffer2 = string_format("%s is offline.", pUser->GetName().c_str()); 
-	ChatPacket::Construct(&result2, ALLIANCE_CHAT, &buffer2);
-	g_pMain->Send_KnightsAlliance(GetAllianceID(), &result2);
+	if (m_sAlliance != 0) {
+		std::string buffer2 = string_format("%s is offline.", pUser->GetName().c_str());
+		ChatPacket::Construct(&result2, ALLIANCE_CHAT, &buffer2);
+		g_pMain->Send_KnightsAlliance(GetAllianceID(), &result2);
 	}
 
 
 }
 
-bool CKnights::AddUser(std::string & strUserID)
-{
-	for (int i = 0; i < MAX_CLAN_USERS; i++)
-	{
+bool CKnights::AddUser(std::string & strUserID) {
+	for (int i = 0; i < MAX_CLAN_USERS; i++) {
 		_KNIGHTS_USER * p = &m_arKnightsUser[i];
 		if (p->byUsed)
 			continue;
@@ -166,15 +153,14 @@ bool CKnights::AddUser(std::string & strUserID)
 		p->byUsed = 1;
 		p->strUserName = strUserID;
 		p->pSession = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER);
-		if (p->pSession != nullptr)
-		{
+		if (p->pSession != nullptr) {
 			p->pSession->m_pKnightsUser = p;
 			p->m_sFame = p->pSession->m_bFame;
 			p->m_bLevel = p->pSession->GetLevel();
 			p->m_sClass = p->pSession->GetClass();
 		}
-		if(p->pSession == nullptr)
-			g_DBAgent.GetClanUserData(GetID(),m_arKnightsUser[i]);
+		if (p->pSession == nullptr)
+			g_DBAgent.GetClanUserData(GetID(), m_arKnightsUser[i]);
 
 		return true;
 	}
@@ -182,8 +168,7 @@ bool CKnights::AddUser(std::string & strUserID)
 	return false;
 }
 
-bool CKnights::AddUser(CUser *pUser)
-{
+bool CKnights::AddUser(CUser *pUser) {
 	if (pUser == nullptr
 		|| !AddUser(pUser->GetName()))
 		return false;
@@ -200,12 +185,10 @@ bool CKnights::AddUser(CUser *pUser)
 *
 * @return	.
 */
-bool CKnights::RemoveUser(std::string & strUserID)
-{
+bool CKnights::RemoveUser(std::string & strUserID) {
 	string Name;
 	STRTOUPPER(strUserID);
-	for (int i = 0; i < MAX_CLAN_USERS; i++)
-	{
+	for (int i = 0; i < MAX_CLAN_USERS; i++) {
 		_KNIGHTS_USER * p = &m_arKnightsUser[i];
 		if (p->byUsed == 0)
 			continue;
@@ -213,16 +196,16 @@ bool CKnights::RemoveUser(std::string & strUserID)
 		Name = p->strUserName;
 		STRTOUPPER(Name);
 
-		if(Name != strUserID)
+		if (Name != strUserID)
 			continue;
 
-			// If they're not logged in (note: logged in users being removed have their NP refunded in the other handler)
-			// but they've donated NP, ensure they're refunded for the next time they login.
-			if (p->nDonatedNP > 0)
-				RefundDonatedNP(p->nDonatedNP, p->pSession, p->strUserName.c_str());
+		// If they're not logged in (note: logged in users being removed have their NP refunded in the other handler)
+		// but they've donated NP, ensure they're refunded for the next time they login.
+		if (p->nDonatedNP > 0)
+			RefundDonatedNP(p->nDonatedNP, p->pSession, p->strUserName.c_str());
 
-			p->Initialise();
-			return true;
+		p->Initialise();
+		return true;
 	}
 
 	return false;
@@ -233,23 +216,22 @@ bool CKnights::RemoveUser(std::string & strUserID)
 *
 * @param	pUser	The user.
 */
-bool CKnights::RemoveUser(CUser *pUser)
-{
+bool CKnights::RemoveUser(CUser *pUser) {
 	if (pUser == nullptr)
 		//|| pUser->m_pKnightsUser == nullptr)
 		return false;
 
-	uint32 nDonatedNP =  0;
-	if( pUser->m_pKnightsUser != nullptr )
+	uint32 nDonatedNP = 0;
+	if (pUser->m_pKnightsUser != nullptr)
 		nDonatedNP = pUser->m_pKnightsUser->nDonatedNP;
-	
+
 	if (nDonatedNP > 0)
 		RefundDonatedNP(nDonatedNP, pUser);
 
 	pUser->SetClanID(0);
 	pUser->m_bFame = 0;
 
-	if( pUser->m_pKnightsUser != nullptr )
+	if (pUser->m_pKnightsUser != nullptr)
 		pUser->m_pKnightsUser->Initialise();
 
 	pUser->m_pKnightsUser = nullptr;
@@ -262,41 +244,37 @@ bool CKnights::RemoveUser(CUser *pUser)
 
 /**
 * @brief	Refunds 30% of the user's donated NP.
-* 			If the user has the item "CONT Recovery", refund ALL of the user's 
+* 			If the user has the item "CONT Recovery", refund ALL of the user's
 * 			donated NP.
 *
 * @param	nDonatedNP	The donated NP.
 * @param	pUser	  	The user's session, when refunding the user in-game.
 * 						Set to nullptr to indicate the use of the character's name
 * 						and consequently a database update instead.
-* @param	strUserID 	Logged out character's name. 
-* 						Used to refund logged out characters' national points 
+* @param	strUserID 	Logged out character's name.
+* 						Used to refund logged out characters' national points
 * 						when pUser is set to nullptr.
 */
-void CKnights::RefundDonatedNP(uint32 nDonatedNP, CUser * pUser /*= nullptr*/, const char * strUserID /*= nullptr*/)
-{
+void CKnights::RefundDonatedNP(uint32 nDonatedNP, CUser * pUser /*= nullptr*/, const char * strUserID /*= nullptr*/) {
 	// Refund 30% of NP unless the user has the item "CONT Recovery".
 	// In this case, ALL of the donated NP will be refunded.
-	
-	if (pUser != nullptr) 
-	{
+
+	if (pUser != nullptr) {
 		if (pUser->CheckExistItem(ITEM_CONT_RECOVERY))
 			pUser->RobItem(ITEM_CONT_RECOVERY);
 		else
-		nDonatedNP = (nDonatedNP * 30) / 100;
-	}
-	else
+			nDonatedNP = (nDonatedNP * 30) / 100;
+	} else
 		nDonatedNP = (nDonatedNP * 30) / 100;
 
 	// Remove the refunded NP from the clan fund
-	if(m_nClanPointFund > nDonatedNP)
-	m_nClanPointFund -= nDonatedNP;
+	if (m_nClanPointFund > nDonatedNP)
+		m_nClanPointFund -= nDonatedNP;
 	else
-	m_nClanPointFund = 0;
+		m_nClanPointFund = 0;
 
 	// If the player's logged in, just adjust their national points in-game.
-	if (pUser != nullptr)
-	{
+	if (pUser != nullptr) {
 		pUser->m_iLoyalty += nDonatedNP;
 		pUser->SendLoyaltyChange(0);
 		return;
@@ -307,10 +285,8 @@ void CKnights::RefundDonatedNP(uint32 nDonatedNP, CUser * pUser /*= nullptr*/, c
 	g_pMain->AddDatabaseRequest(result);
 }
 
-void CKnights::SendToRegion(Packet *pkt)
-{
-	foreach_array (i, m_arKnightsUser)
-	{
+void CKnights::SendToRegion(Packet *pkt) {
+	foreach_array(i, m_arKnightsUser) {
 		_KNIGHTS_USER *p = &m_arKnightsUser[i];
 		if (p->byUsed && p->pSession != nullptr
 			&& p->pSession->GetClanID() == m_sIndex)
@@ -318,15 +294,13 @@ void CKnights::SendToRegion(Packet *pkt)
 	}
 }
 
-void CKnights::Disband(CUser *pLeader /*= nullptr*/)
-{
+void CKnights::Disband(CUser *pLeader /*= nullptr*/) {
 	std::string clanNotice;
-	g_pMain->GetServerResource(m_byFlag == ClanTypeTraining ? IDS_CLAN_DESTROY : IDS_KNIGHTS_DESTROY, 
+	g_pMain->GetServerResource(m_byFlag == ClanTypeTraining ? IDS_CLAN_DESTROY : IDS_KNIGHTS_DESTROY,
 		&clanNotice, m_strName.c_str());
 	SendChat(clanNotice.c_str());
 
-	foreach_array (i, m_arKnightsUser)
-	{
+	foreach_array(i, m_arKnightsUser) {
 		_KNIGHTS_USER *p = &m_arKnightsUser[i];
 		if (!p->byUsed)
 			continue;
@@ -346,17 +320,15 @@ void CKnights::Disband(CUser *pLeader /*= nullptr*/)
 	pLeader->Send(&result);
 }
 
-void CKnights::SendUpdate()
-{
+void CKnights::SendUpdate() {
 	CKnights *aKnights = g_pMain->GetClanPtr(GetAllianceID());
 
 	Packet result(WIZ_KNIGHTS_PROCESS, uint8(KNIGHTS_UPDATE));
-	result	<< GetID() << m_byFlag << GetCapeID(aKnights);
+	result << GetID() << m_byFlag << GetCapeID(aKnights);
 	Send(&result);
 }
 
-void CKnights::SendChat(const char * format, ...)
-{
+void CKnights::SendChat(const char * format, ...) {
 	char buffer[128];
 	va_list ap;
 	va_start(ap, format);
@@ -368,8 +340,7 @@ void CKnights::SendChat(const char * format, ...)
 	Send(&result);
 }
 
-void CKnights::SendChatAlliance(const char * format, ...)
-{
+void CKnights::SendChatAlliance(const char * format, ...) {
 	char buffer[128];
 	va_list ap;
 	va_start(ap, format);
@@ -381,16 +352,12 @@ void CKnights::SendChatAlliance(const char * format, ...)
 	Send(&result);
 }
 
-void CKnights::Send(Packet *pkt)
-{
-	foreach_array (i, m_arKnightsUser)
-	{
+void CKnights::Send(Packet *pkt) {
+	foreach_array(i, m_arKnightsUser) {
 		_KNIGHTS_USER *p = &m_arKnightsUser[i];
 		if (p->byUsed && p->pSession != nullptr)
 			p->pSession->Send(pkt);
 	}
 }
 
-CKnights::~CKnights()
-{
-}
+CKnights::~CKnights() {}

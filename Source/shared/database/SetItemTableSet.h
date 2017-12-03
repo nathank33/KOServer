@@ -1,22 +1,19 @@
 #pragma once
 
-class CSetItemTableSet : public OdbcRecordset
-{
+class CSetItemTableSet : public OdbcRecordset {
 public:
-	CSetItemTableSet(OdbcConnection * dbConnection, SetItemArray * pMap) 
+	CSetItemTableSet(OdbcConnection * dbConnection, SetItemArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("SET_ITEM"); }
-	virtual tstring GetColumns() 
-	{
+	virtual tstring GetColumns() {
 		return _T("SetIndex, HPBonus, MPBonus, StrengthBonus, StaminaBonus, DexterityBonus, IntelBonus, CharismaBonus, "
 			"FlameResistance, GlacierResistance, LightningResistance, PoisonResistance, MagicResistance, CurseResistance, "
 			"XPBonusPercent, CoinBonusPercent, APBonusPercent, APBonusClassType, APBonusClassPercent, ACBonus, ACBonusClassType, ACBonusClassPercent, "
 			"MaxWeightBonus, NPBonus");
 	}
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_SET_ITEM *pData = new _SET_ITEM;
 		int i = 1;
 

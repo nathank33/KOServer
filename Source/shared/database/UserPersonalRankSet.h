@@ -1,16 +1,14 @@
 #pragma once
 
-class CUserPersonalRankSet : public OdbcRecordset
-{
+class CUserPersonalRankSet : public OdbcRecordset {
 public:
-	CUserPersonalRankSet(OdbcConnection * dbConnection, UserNameRankMap * pMap) 
+	CUserPersonalRankSet(OdbcConnection * dbConnection, UserNameRankMap * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("USER_PERSONAL_RANK"); }
 	virtual tstring GetColumns() { return _T("nRank, nSalary, strElmoUserID, strKarusUserID, nElmoLoyaltyMonthly, nKarusLoyaltyMonthly"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_USER_RANK *pData = new _USER_RANK;
 		std::string strElmoUserID, strKarusUserID;
 
@@ -30,8 +28,7 @@ public:
 		STRTOUPPER(strKarusUserID);
 
 		// We're not going to insert either of them, so ignore this row and avoid a mem leak.
-		if (strElmoUserID.empty() && strKarusUserID.empty())
-		{
+		if (strElmoUserID.empty() && strKarusUserID.empty()) {
 			delete pData;
 			return true; // this is normal.
 		}
@@ -40,17 +37,14 @@ public:
 		return true;
 	}
 
-	virtual void InsertToMap(std::string & strKarusUserID, std::string & strElmoUserID, _USER_RANK * pData) 
-	{
-		if (!strElmoUserID.empty())
-		{
+	virtual void InsertToMap(std::string & strKarusUserID, std::string & strElmoUserID, _USER_RANK * pData) {
+		if (!strElmoUserID.empty()) {
 			m_pMap->insert(make_pair(strElmoUserID, pData));
-			g_pMain->m_playerPersonalRankings[ELMORAD_ARRAY].insert(std::make_pair((uint8)pData->nRank, pData));
+			g_pMain->m_playerPersonalRankings[ELMORAD_ARRAY].insert(std::make_pair((uint8) pData->nRank, pData));
 		}
-		if (!strKarusUserID.empty())
-		{
+		if (!strKarusUserID.empty()) {
 			m_pMap->insert(make_pair(strKarusUserID, pData));
-			g_pMain->m_playerPersonalRankings[KARUS_ARRAY].insert(std::make_pair((uint8)pData->nRank, pData));
+			g_pMain->m_playerPersonalRankings[KARUS_ARRAY].insert(std::make_pair((uint8) pData->nRank, pData));
 		}
 	}
 

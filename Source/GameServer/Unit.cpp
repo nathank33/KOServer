@@ -10,19 +10,17 @@
 #endif
 #include <cfloat>
 
-Unit::Unit(UnitType unitType) 
-	: m_pMap(nullptr), m_pRegion(nullptr), m_sRegionX(0), m_sRegionZ(0), m_unitType(unitType)
-{
+Unit::Unit(UnitType unitType)
+	: m_pMap(nullptr), m_pRegion(nullptr), m_sRegionX(0), m_sRegionZ(0), m_unitType(unitType) {
 	Initialize();
 }
 
-void Unit::Initialize()
-{
+void Unit::Initialize() {
 	InitType4(true);
 	m_pMap = nullptr;
 	m_pRegion = nullptr;
 
-	
+
 	m_reblvl = 0;
 
 	SetPosition(0.0f, 0.0f, 0.0f);
@@ -37,9 +35,9 @@ void Unit::Initialize()
 	m_bResistanceBonus = 0;
 	m_bAttackAmount = 100;
 	m_sFireR = m_sColdR = m_sLightningR = m_sMagicR = m_sDiseaseR = m_sPoisonR = 0;
-	m_sDaggerR = m_sSwordR = m_sAxeR = m_sMaceR = m_sSpearR = m_sBowR = 0;		
+	m_sDaggerR = m_sSwordR = m_sAxeR = m_sMaceR = m_sSpearR = m_sBowR = 0;
 	m_byDaggerRAmount = m_byBowRAmount = 0;
-	
+
 	m_equippedItemBonuses.clear();
 
 	m_bCanStealth = true;
@@ -49,7 +47,7 @@ void Unit::Initialize()
 	m_bInstantCast = false;
 	m_bIsUndead = m_bIsKaul = false;
 	m_bisReturnee = false;
-	
+
 	m_bIsDevil = false;
 	m_bBlockPhysical = m_bBlockMagic = false;
 	m_bBlockCurses = m_bReflectCurses = false;
@@ -74,7 +72,7 @@ void Unit::Initialize()
 	AbsorbCount = 0;
 	m_bRadiusAmount = 0;
 	m_buffCount = 0;
-	
+
 	m_bIceSpeedAmount = 0;
 	AbsorbedAmmount = 0;
 
@@ -85,20 +83,18 @@ void Unit::Initialize()
 	InitType3();
 }
 
-/* 
+/*
 NOTE: Due to KO messiness, we can really only calculate a 2D distance/
 There are a lot of instances where the y (height level, in this case) coord isn't set,
 which understandably screws things up a lot.
 */
 // Calculate the distance between 2 2D points.
-float Unit::GetDistance(float fx, float fz)
-{
+float Unit::GetDistance(float fx, float fz) {
 	return GetDistance(GetX(), GetZ(), fx, fz);
 }
 
 // Calculate the 2D distance between Units.
-float Unit::GetDistance(Unit * pTarget)
-{
+float Unit::GetDistance(Unit * pTarget) {
 	if (pTarget == nullptr)
 		return false;
 
@@ -109,8 +105,7 @@ float Unit::GetDistance(Unit * pTarget)
 	return GetDistance(pTarget->GetX(), pTarget->GetZ());
 }
 
-float Unit::GetDistanceSqrt(Unit * pTarget)
-{
+float Unit::GetDistanceSqrt(Unit * pTarget) {
 	ASSERT(pTarget != nullptr);
 	if (GetZoneID() != pTarget->GetZoneID())
 		return -FLT_MAX;
@@ -120,64 +115,55 @@ float Unit::GetDistanceSqrt(Unit * pTarget)
 
 // Check to see if the Unit is in 2D range of another Unit.
 // Range MUST be squared already.
-bool Unit::isInRange(Unit * pTarget, float fSquaredRange)
-{
+bool Unit::isInRange(Unit * pTarget, float fSquaredRange) {
 	return (GetDistance(pTarget) <= fSquaredRange);
 }
 
 // Check to see if we're in the 2D range of the specified coordinates.
 // Range MUST be squared already.
-bool Unit::isInRange(float fx, float fz, float fSquaredRange)
-{
+bool Unit::isInRange(float fx, float fz, float fSquaredRange) {
 	return (GetDistance(fx, fz) <= fSquaredRange);
 }
 
 // Check to see if the Unit is in 2D range of another Unit.
 // Range must NOT be squared already.
 // This is less preferable to the more common precalculated range.
-bool Unit::isInRangeSlow(Unit * pTarget, float fNonSquaredRange)
-{
+bool Unit::isInRangeSlow(Unit * pTarget, float fNonSquaredRange) {
 	return isInRange(pTarget, pow(fNonSquaredRange, 2.0f));
 }
 
 // Check to see if the Unit is in 2D range of the specified coordinates.
 // Range must NOT be squared already.
 // This is less preferable to the more common precalculated range.
-bool Unit::isInRangeSlow(float fx, float fz, float fNonSquaredRange)
-{
+bool Unit::isInRangeSlow(float fx, float fz, float fNonSquaredRange) {
 	return isInRange(fx, fz, pow(fNonSquaredRange, 2.0f));
 }
 
-float Unit::GetDistance(float fStartX, float fStartZ, float fEndX, float fEndZ)
-{
+float Unit::GetDistance(float fStartX, float fStartZ, float fEndX, float fEndZ) {
 	return pow(fStartX - fEndX, 2.0f) + pow(fStartZ - fEndZ, 2.0f);
 }
 
-bool Unit::isInRange(float fStartX, float fStartZ, float fEndX, float fEndZ, float fSquaredRange)
-{
+bool Unit::isInRange(float fStartX, float fStartZ, float fEndX, float fEndZ, float fSquaredRange) {
 	return (GetDistance(fStartX, fStartZ, fEndX, fEndZ) <= fSquaredRange);
 }
 
-bool Unit::isInRangeSlow(float fStartX, float fStartZ, float fEndX, float fEndZ, float fNonSquaredRange)
-{
+bool Unit::isInRangeSlow(float fStartX, float fStartZ, float fEndX, float fEndZ, float fNonSquaredRange) {
 	return isInRange(fStartX, fStartZ, fEndX, fEndZ, pow(fNonSquaredRange, 2.0f));
 }
 
 #ifdef GAMESERVER
-void Unit::SetRegion(uint16 x /*= -1*/, uint16 z /*= -1*/) 
-{
-	m_sRegionX = x; m_sRegionZ = z; 
+void Unit::SetRegion(uint16 x /*= -1*/, uint16 z /*= -1*/) {
+	m_sRegionX = x; m_sRegionZ = z;
 	m_pRegion = m_pMap->GetRegion(x, z); // TODO: Clean this up
 }
 
-bool Unit::RegisterRegion()
-{
-	if(this == nullptr)
+bool Unit::RegisterRegion() {
+	if (this == nullptr)
 		return false;
 
-	uint16 
-		new_region_x = GetNewRegionX(), new_region_z = GetNewRegionZ(), 
-		old_region_x = GetRegionX(),	old_region_z = GetRegionZ();
+	uint16
+		new_region_x = GetNewRegionX(), new_region_z = GetNewRegionZ(),
+		old_region_x = GetRegionX(), old_region_z = GetRegionZ();
 
 	if (GetRegion() == nullptr || (old_region_x == new_region_x && old_region_z == new_region_z))
 		return false;
@@ -185,27 +171,25 @@ bool Unit::RegisterRegion()
 	AddToRegion(new_region_x, new_region_z);
 
 	RemoveRegion(old_region_x - new_region_x, old_region_z - new_region_z);
-	InsertRegion(new_region_x - old_region_x, new_region_z - old_region_z);	
+	InsertRegion(new_region_x - old_region_x, new_region_z - old_region_z);
 
 	return true;
 }
 
-void Unit::RemoveRegion(int16 del_x, int16 del_z)
-{
+void Unit::RemoveRegion(int16 del_x, int16 del_z) {
 	ASSERT(GetMap() != nullptr);
 
 	Packet result;
 	GetInOut(result, INOUT_OUT);
-	g_pMain->Send_OldRegions(&result, del_x, del_z, GetMap(), GetRegionX(), GetRegionZ(),nullptr,GetEventRoom());
+	g_pMain->Send_OldRegions(&result, del_x, del_z, GetMap(), GetRegionX(), GetRegionZ(), nullptr, GetEventRoom());
 }
 
-void Unit::InsertRegion(int16 insert_x, int16 insert_z)
-{
+void Unit::InsertRegion(int16 insert_x, int16 insert_z) {
 	ASSERT(GetMap() != nullptr);
 
 	Packet result;
 	GetInOut(result, INOUT_IN);
-	g_pMain->Send_NewRegions(&result, insert_x, insert_z, GetMap(), GetRegionX(), GetRegionZ(),nullptr,GetEventRoom());
+	g_pMain->Send_NewRegions(&result, insert_x, insert_z, GetMap(), GetRegionX(), GetRegionZ(), nullptr, GetEventRoom());
 }
 #endif
 
@@ -221,8 +205,7 @@ void Unit::InsertRegion(int16 insert_x, int16 insert_z)
 *
 * @return	The damage.
 */
-short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool bPreviewOnly /*= false*/)
-{
+short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool bPreviewOnly /*= false*/) {
 	/*
 	This seems identical to users attacking NPCs/monsters.
 	The only differences are:
@@ -239,8 +222,7 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 
 	// Trigger item procs
 	if (pTarget->isPlayer()
-		&& !bPreviewOnly)
-	{
+		&& !bPreviewOnly) {
 		OnAttack(pTarget, AttackTypePhysical);
 		pTarget->OnDefend(this, AttackTypePhysical);
 	}
@@ -260,13 +242,12 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 
 #ifdef GAMESERVER
 	// Apply player vs player AC/AP bonuses.
-	if (pTarget->isPlayer())
-	{
+	if (pTarget->isPlayer()) {
 		CUser * pTUser = TO_USER(pTarget);	// NOTE: using a = a*v instead of a *= v because the compiler assumes different 
 		// types being multiplied, which results in these calcs not behaving correctly.
 
 		// adjust player AP by percent, for skills like "Critical Point"
-		temp_ap = temp_ap * m_bPlayerAttackAmount / 100; 
+		temp_ap = temp_ap * m_bPlayerAttackAmount / 100;
 
 		// Now handle class-specific AC/AP bonuses.
 		temp_ac = temp_ac * (100 + pTUser->m_byAcClassBonusAmount[GetBaseClassType() - 1]) / 100;
@@ -280,84 +261,70 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 	if (pTarget->m_bBlockPhysical)
 		return 0;
 
-	temp_hit_B = (int)((temp_ap * 200 / 100) / (temp_ac + 240));
+	temp_hit_B = (int) ((temp_ap * 200 / 100) / (temp_ac + 240));
 
 	// Skill/arrow hit.    
-	if (pSkill != nullptr)
-	{
+	if (pSkill != nullptr) {
 		// SKILL HIT! YEAH!	                                
-		if (pSkill->bType[0] == 1)
-		{
+		if (pSkill->bType[0] == 1) {
 			_MAGIC_TYPE1 *pType1 = g_pMain->m_Magictype1Array.GetData(pSkill->iNum);
 			if (pType1 == nullptr)
-				return -1;     	                                
+				return -1;
 
 			// Non-relative hit.
-			if (pType1->bHitType)
-			{
+			if (pType1->bHitType) {
 				result = (pType1->sHitRate <= myrand(0, 100) ? FAIL : SUCCESS);
 			}
 			// Relative hit.
-			else 
-			{
-				result = GetHitRate((m_fTotalHitrate / pTarget->m_fTotalEvasionrate) * (pType1->sHitRate / 100.0f));			
+			else {
+				result = GetHitRate((m_fTotalHitrate / pTarget->m_fTotalEvasionrate) * (pType1->sHitRate / 100.0f));
 			}
 
-			temp_hit = (int32)(temp_hit_B * (pType1->sHit / 100.0f));
+			temp_hit = (int32) (temp_hit_B * (pType1->sHit / 100.0f));
 		}
 		// ARROW HIT! YEAH!
-		else if (pSkill->bType[0] == 2)
-		{
+		else if (pSkill->bType[0] == 2) {
 			_MAGIC_TYPE2 *pType2 = g_pMain->m_Magictype2Array.GetData(pSkill->iNum);
 			if (pType2 == nullptr)
-				return -1; 
+				return -1;
 
 			// Non-relative/Penetration hit.
-			if (pType2->bHitType == 1 || pType2->bHitType == 2)
-			{
+			if (pType2->bHitType == 1 || pType2->bHitType == 2) {
 				result = (pType2->sHitRate <= myrand(0, 100) ? FAIL : SUCCESS);
 			}
 			// Relative hit/Arc hit.
-			else   
-			{
+			else {
 				result = GetHitRate((m_fTotalHitrate / pTarget->m_fTotalEvasionrate) * (pType2->sHitRate / 100.0f));
 			}
 
-			if (pType2->bHitType == 1 /* || pType2->bHitType == 2 */) 
-				temp_hit = (int32)(m_sTotalHit * m_bAttackAmount * (pType2->sAddDamage / 100.0f) / 100);
+			if (pType2->bHitType == 1 /* || pType2->bHitType == 2 */)
+				temp_hit = (int32) (m_sTotalHit * m_bAttackAmount * (pType2->sAddDamage / 100.0f) / 100);
 			else
-				temp_hit = (int32)(temp_hit_B * (pType2->sAddDamage / 100.0f));
+				temp_hit = (int32) (temp_hit_B * (pType2->sAddDamage / 100.0f));
 		}
 	}
 	// Normal hit (R attack)     
-	else 
-	{
+	else {
 		temp_hit = temp_ap / 100;
 		result = GetHitRate(m_fTotalHitrate / pTarget->m_fTotalEvasionrate);
 	}
 
-	switch (result)
-	{						// 1. Magical item damage....
+	switch (result) {						// 1. Magical item damage....
 	case GREAT_SUCCESS:
 	case SUCCESS:
 	case NORMAL:
-		if (pSkill != nullptr)
-		{	 // Skill Hit.
+		if (pSkill != nullptr) {	 // Skill Hit.
 			damage = temp_hit;
 			random = myrand(0, damage);
 			if (pSkill->bType[0] == 1)
-				damage = (short)((temp_hit + 0.3f * random) + 0.99f);
+				damage = (short) ((temp_hit + 0.3f * random) + 0.99f);
 			else
-				damage = (short)(((temp_hit * 0.6f) + 1.0f * random) + 0.99f);
-		}
-		else
-		{	// Normal Hit.
+				damage = (short) (((temp_hit * 0.6f) + 1.0f * random) + 0.99f);
+		} else {	// Normal Hit.
 
 #ifdef GAMESERVER
-			if (isGM() && !pTarget->isPlayer())
-			{
-				if (g_pMain->m_nGameMasterRHitDamage != 0)
-				{
+			if (isGM() && !pTarget->isPlayer()) {
+				if (g_pMain->m_nGameMasterRHitDamage != 0) {
 					damage = g_pMain->m_nGameMasterRHitDamage;
 					return damage;
 				}
@@ -366,31 +333,28 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 
 			damage = temp_hit_B;
 			random = myrand(0, damage);
-			damage = (short)((0.85f * temp_hit_B) + 0.3f * random);
-		}		
+			damage = (short) ((0.85f * temp_hit_B) + 0.3f * random);
+		}
 
 		break;
 	case FAIL:
-		if (pSkill != nullptr)
-		{	 // Skill Hit.
+		if (pSkill != nullptr) {	 // Skill Hit.
 
 		} else { // Normal Hit.
 #ifdef GAMESERVER
-			if (isGM() && !pTarget->isPlayer())
-			{
+			if (isGM() && !pTarget->isPlayer()) {
 				damage = 30000;
 				return damage;
 			}
 #endif
 		}
-	}	
+	}
 
 	// Apply item bonuses
 	damage = GetMagicDamage(damage, pTarget, bPreviewOnly);
 
 	// These two only apply to players
-	if (pTarget->isPlayer())
-	{
+	if (pTarget->isPlayer()) {
 		damage = GetACDamage(damage, pTarget);		// 3. Additional AC calculation....	
 
 		// Give increased damage in war zones (as per official 1.298~1.325)
@@ -406,16 +370,14 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 	if (damage > MAX_DAMAGE)
 		damage = MAX_DAMAGE;
 
-	
-	if(pTarget->GetID() > NPC_BAND)
-	{
-		switch(TO_NPC(pTarget)->GetType())
-		{
-			case NPC_FOSSIL:
-				damage = 0;
+
+	if (pTarget->GetID() > NPC_BAND) {
+		switch (TO_NPC(pTarget)->GetType()) {
+		case NPC_FOSSIL:
+			damage = 0;
 			break;
-			case NPC_TREE:
-				damage = 0;
+		case NPC_TREE:
+			damage = 0;
 			break;
 		}
 	}
@@ -425,16 +387,14 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 }
 
 #if GAMESERVER
-void CUser::OnAttack(Unit * pTarget, AttackType attackType)
-{
+void CUser::OnAttack(Unit * pTarget, AttackType attackType) {
 	if (!pTarget->isPlayer()
 		|| attackType == AttackTypeMagic)
 		return;
 
 	// Trigger weapon procs for the attacker on attack
-	static const uint8 itemSlots[] = { RIGHTHAND, LEFTHAND };
-	foreach_array (i, itemSlots)
-	{
+	static const uint8 itemSlots[] = {RIGHTHAND, LEFTHAND};
+	foreach_array(i, itemSlots) {
 		// If we hit an applicable weapon, don't try proc'ing the other weapon. 
 		// It is only ever meant to proc on the dominant weapon.
 		if (TriggerProcItem(itemSlots[i], pTarget, TriggerTypeAttack))
@@ -442,14 +402,13 @@ void CUser::OnAttack(Unit * pTarget, AttackType attackType)
 	}
 }
 
-void CUser::OnDefend(Unit * pAttacker, AttackType attackType)
-{
+void CUser::OnDefend(Unit * pAttacker, AttackType attackType) {
 	if (!pAttacker->isPlayer())
 		return;
 
 	// Trigger defensive procs for the defender when being attacked
-	static const uint8 itemSlots[] = { LEFTHAND };
-	foreach_array (i, itemSlots)
+	static const uint8 itemSlots[] = {LEFTHAND};
+	foreach_array(i, itemSlots)
 		TriggerProcItem(itemSlots[i], pAttacker, TriggerTypeDefend);
 }
 
@@ -462,20 +421,19 @@ void CUser::OnDefend(Unit * pAttacker, AttackType attackType)
 *
 * @return	true if there's an applicable item to proc, false if not.
 */
-bool CUser::TriggerProcItem(uint8 bSlot, Unit * pTarget, ItemTriggerType triggerType)
-{
+bool CUser::TriggerProcItem(uint8 bSlot, Unit * pTarget, ItemTriggerType triggerType) {
 	// Don't proc weapon skills if our weapon is disabled.
-	if (triggerType == TriggerTypeAttack && isWeaponsDisabled()) 
+	if (triggerType == TriggerTypeAttack && isWeaponsDisabled())
 		return false;
 
 	// Ensure there's an item in this slot, 
 	_ITEM_DATA * pItem = GetItem(bSlot);
 	if (pItem == nullptr
 		// and that it doesn't need to be repaired.
-			|| pItem->sDuration == 0)
-			return false; // not an applicable item
+		|| pItem->sDuration == 0)
+		return false; // not an applicable item
 
-	// Ensure that this item has an attached proc skill in the table
+// Ensure that this item has an attached proc skill in the table
 	_ITEM_OP * pData = g_pMain->m_ItemOpArray.GetData(pItem->nNum);
 	if (pData == nullptr // no skill to proc
 		|| pData->bTriggerType != triggerType) // don't use an offensive proc when we're defending (or vice versa)
@@ -502,8 +460,7 @@ bool CUser::TriggerProcItem(uint8 bSlot, Unit * pTarget, ItemTriggerType trigger
 }
 #endif
 
-short CNpc::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool bPreviewOnly /*= false*/) 
-{
+short CNpc::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool bPreviewOnly /*= false*/) {
 	if (pTarget->isPlayer())
 		return GetDamage(TO_USER(pTarget), pSkill);
 
@@ -519,8 +476,7 @@ short CNpc::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool bP
 *
 * @return	The damage.
 */
-short CNpc::GetDamage(CUser *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool bPreviewOnly /*= false*/) 
-{
+short CNpc::GetDamage(CUser *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool bPreviewOnly /*= false*/) {
 	if (pTarget == nullptr)
 		return 0;
 
@@ -533,31 +489,30 @@ short CNpc::GetDamage(CUser *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 	else
 		Ac += pTarget->m_sACAmount;
 
-	Ac = TO_USER(pTarget)->m_sItemAc + pTarget->GetLevel() 
+	Ac = TO_USER(pTarget)->m_sItemAc + pTarget->GetLevel()
 		+ (Ac - pTarget->GetLevel() - TO_USER(pTarget)->m_sItemAc);
-	HitB = (int)((m_sTotalHit * m_bAttackAmount * 200 / 100) / (Ac + 240));
+	HitB = (int) ((m_sTotalHit * m_bAttackAmount * 200 / 100) / (Ac + 240));
 
 	if (HitB <= 0)
 		return 0;
 
-	uint8 result = GetHitRate(m_fTotalHitrate / pTarget->m_fTotalEvasionrate);	
-	switch (result)
-	{
+	uint8 result = GetHitRate(m_fTotalHitrate / pTarget->m_fTotalEvasionrate);
+	switch (result) {
 	case GREAT_SUCCESS:
-		damage = (int)(0.3f * myrand(0, HitB));
-		damage += (short)(0.85f * (float)HitB);
+		damage = (int) (0.3f * myrand(0, HitB));
+		damage += (short) (0.85f * (float) HitB);
 		damage = (damage * 3) / 2;
 		break;
 
 	case SUCCESS:
 	case NORMAL:
-		damage = (int)(0.3f * myrand(0, HitB));
-		damage += (short)(0.85f * (float)HitB);
+		damage = (int) (0.3f * myrand(0, HitB));
+		damage += (short) (0.85f * (float) HitB);
 		break;
 	}
 
-	int nMaxDamage = (int)(2.6 * m_sTotalHit);
-	if (damage > nMaxDamage)	
+	int nMaxDamage = (int) (2.6 * m_sTotalHit);
+	if (damage > nMaxDamage)
 		damage = nMaxDamage;
 
 	// Enforce overall damage cap
@@ -576,38 +531,33 @@ short CNpc::GetDamage(CUser *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 *
 * @return	The damage.
 */
-short CNpc::GetDamage(CNpc *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool bPreviewOnly /*= false*/) 
-{
+short CNpc::GetDamage(CNpc *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool bPreviewOnly /*= false*/) {
 	if (pTarget == nullptr)
 		return 0;
 
 	short damage = 0, Hit = m_sTotalHit, Ac = pTarget->m_sTotalAc;
 	uint8 result = GetHitRate(m_fTotalHitrate / pTarget->m_fTotalEvasionrate);
-	switch (result)
-	{
+	switch (result) {
 	case GREAT_SUCCESS:
-		damage = (short)(0.6 * Hit);
-		if (damage <= 0)
-		{
+		damage = (short) (0.6 * Hit);
+		if (damage <= 0) {
 			damage = 0;
 			break;
 		}
 		damage = myrand(0, damage);
-		damage += (short)(0.7 * Hit);
+		damage += (short) (0.7 * Hit);
 		break;
 
 	case SUCCESS:
 	case NORMAL:
-		if (Hit - Ac > 0)
-		{
-			damage = (short)(0.6 * (Hit - Ac));
-			if (damage <= 0)
-			{
+		if (Hit - Ac > 0) {
+			damage = (short) (0.6 * (Hit - Ac));
+			if (damage <= 0) {
 				damage = 0;
 				break;
 			}
 			damage = myrand(0, damage);
-			damage += (short)(0.7 * (Hit - Ac));
+			damage += (short) (0.7 * (Hit - Ac));
 		}
 		break;
 	}
@@ -616,39 +566,35 @@ short CNpc::GetDamage(CNpc *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool bP
 	if (damage > MAX_DAMAGE)
 		damage = MAX_DAMAGE;
 
-	return damage;	
+	return damage;
 }
 
-short Unit::GetMagicDamage(int damage, Unit *pTarget, bool bPreviewOnly /*= false*/)
-{
-	if (pTarget->isDead() || pTarget-> isBlinking())
+short Unit::GetMagicDamage(int damage, Unit *pTarget, bool bPreviewOnly /*= false*/) {
+	if (pTarget->isDead() || pTarget->isBlinking())
 		return 0;
-	
+
 	Guard lock(_unitlock);
 	int16 sReflectDamage = 0;
 	bool sKontrol = false;
 	// Check each item that has a bonus effect.
 	int aa = m_equippedItemBonuses.size();
 
-	foreach (itr, m_equippedItemBonuses)
-	{
+	foreach(itr, m_equippedItemBonuses) {
 		// Each item can support multiple bonuses.
 		// Thus, we must handle each bonus.
 		int ss = itr->second.size();
 
-		foreach (bonusItr, itr->second)
-		{
+		foreach(bonusItr, itr->second) {
 			short total_r = 0, temp_damage = 0;
 			uint8 bType = bonusItr->first;
 			int16 sAmount = bonusItr->second;
 
 			bool bIsDrain = (bType >= ITEM_TYPE_HP_DRAIN && bType <= ITEM_TYPE_MP_DRAIN);
 			if (bIsDrain)
-				temp_damage = damage * sAmount / 100;	
+				temp_damage = damage * sAmount / 100;
 
-			switch (bType)
-			{
-			case ITEM_TYPE_FIRE: 
+			switch (bType) {
+			case ITEM_TYPE_FIRE:
 				total_r = (pTarget->m_sFireR + pTarget->m_bAddFireR) * pTarget->m_bPctFireR / 100;
 				break;
 			case ITEM_TYPE_COLD:
@@ -657,12 +603,12 @@ short Unit::GetMagicDamage(int damage, Unit *pTarget, bool bPreviewOnly /*= fals
 			case ITEM_TYPE_LIGHTNING:
 				total_r = (pTarget->m_sLightningR + pTarget->m_bAddLightningR) * pTarget->m_bPctLightningR / 100;
 				break;
-			case ITEM_TYPE_HP_DRAIN:	
+			case ITEM_TYPE_HP_DRAIN:
 				pTarget->HpChange(temp_damage);
 				sKontrol = true;
 				break;
 			case ITEM_TYPE_MP_DAMAGE:
-				pTarget->MSpChange(-temp_damage); 
+				pTarget->MSpChange(-temp_damage);
 				sKontrol = true;
 				break;
 			case ITEM_TYPE_MP_DRAIN:
@@ -675,16 +621,13 @@ short Unit::GetMagicDamage(int damage, Unit *pTarget, bool bPreviewOnly /*= fals
 			}
 
 			total_r += pTarget->m_bResistanceBonus;
-			if (!bIsDrain)
-			{
-				if (total_r > 200) 
+			if (!bIsDrain) {
+				if (total_r > 200)
 					total_r = 200;
 
 				temp_damage = sAmount - sAmount * total_r / 200;
 				damage += temp_damage;
-			}
-			else if(bType == ITEM_TYPE_HP_DRAIN)
-			{
+			} else if (bType == ITEM_TYPE_HP_DRAIN) {
 				HpChange(temp_damage);
 				temp_damage = sAmount - sAmount * total_r / 200;
 				return damage += temp_damage;
@@ -695,21 +638,18 @@ short Unit::GetMagicDamage(int damage, Unit *pTarget, bool bPreviewOnly /*= fals
 	// If any items have have damage reflection enabled, we should reflect this back to the client.
 	// NOTE: This should only apply to shields, so it should only ever apply once.
 	// We do this here to ensure it's taking into account the total calculated damage.
-	if (sReflectDamage > 0 && !sKontrol)
-	{
+	if (sReflectDamage > 0 && !sKontrol) {
 		short temp_damage = damage * sReflectDamage / 100;
 		HpChange(-temp_damage);
 	}
 
-	if(pTarget->GetID() > NPC_BAND)
-	{
-		switch(TO_NPC(pTarget)->GetType())
-		{
-			case NPC_FOSSIL:
-				damage = 0;
+	if (pTarget->GetID() > NPC_BAND) {
+		switch (TO_NPC(pTarget)->GetType()) {
+		case NPC_FOSSIL:
+			damage = 0;
 			break;
-			case NPC_TREE:
-				damage = 0;
+		case NPC_TREE:
+			damage = 0;
 			break;
 		}
 	}
@@ -717,8 +657,7 @@ short Unit::GetMagicDamage(int damage, Unit *pTarget, bool bPreviewOnly /*= fals
 	return damage;
 }
 
-short Unit::GetACDamage(int damage, Unit *pTarget)
-{
+short Unit::GetACDamage(int damage, Unit *pTarget) {
 	// This isn't applicable to NPCs.
 	if (!isPlayer() || !pTarget->isPlayer())
 		return damage;
@@ -727,16 +666,15 @@ short Unit::GetACDamage(int damage, Unit *pTarget)
 	if (pTarget->isDead())
 		return 0;
 
-	CUser * pUser  = TO_USER(this);
+	CUser * pUser = TO_USER(this);
 	if (pUser->isWeaponsDisabled())
 		return damage;
 
-	uint8 weaponSlots[] = { LEFTHAND, RIGHTHAND };
+	uint8 weaponSlots[] = {LEFTHAND, RIGHTHAND};
 
 	int firstdamage = damage;
 
-	foreach_array (slot, weaponSlots)
-	{
+	foreach_array(slot, weaponSlots) {
 		_ITEM_TABLE * pWeapon = pUser->GetItemPrototype(weaponSlots[slot]);
 		if (pWeapon == nullptr)
 			continue;
@@ -761,83 +699,65 @@ short Unit::GetACDamage(int damage, Unit *pTarget)
 	return damage;
 }
 
-uint8 Unit::GetHitRate(float rate)
-{
+uint8 Unit::GetHitRate(float rate) {
 	int random = myrand(1, 10000);
-	if (rate >= 5.0f)
-	{
+	if (rate >= 5.0f) {
 		if (random >= 1 && random <= 3500)
 			return GREAT_SUCCESS;
 		else if (random >= 3501 && random <= 7500)
 			return SUCCESS;
 		else if (random >= 7501 && random <= 9800)
 			return NORMAL;
-	}
-	else if (rate < 5.0f && rate >= 3.0f)
-	{
+	} else if (rate < 5.0f && rate >= 3.0f) {
 		if (random >= 1 && random <= 2500)
 			return GREAT_SUCCESS;
 		else if (random >= 2501 && random <= 6000)
 			return SUCCESS;
 		else if (random >= 6001 && random <= 9600)
 			return NORMAL;
-	}
-	else if (rate < 3.0f && rate >= 2.0f)
-	{
+	} else if (rate < 3.0f && rate >= 2.0f) {
 		if (random >= 1 && random <= 2000)
 			return GREAT_SUCCESS;
 		else if (random >= 2001 && random <= 5000)
 			return SUCCESS;
 		else if (random >= 5001 && random <= 9400)
 			return NORMAL;
-	}
-	else if (rate < 2.0f && rate >= 1.25f)
-	{
+	} else if (rate < 2.0f && rate >= 1.25f) {
 		if (random >= 1 && random <= 1500)
 			return GREAT_SUCCESS;
 		else if (random >= 1501 && random <= 4000)
 			return SUCCESS;
 		else if (random >= 4001 && random <= 9200)
 			return NORMAL;
-	}
-	else if (rate < 1.25f && rate >= 0.8f)
-	{
+	} else if (rate < 1.25f && rate >= 0.8f) {
 		if (random >= 1 && random <= 1000)
 			return GREAT_SUCCESS;
 		else if (random >= 1001 && random <= 3000)
 			return SUCCESS;
 		else if (random >= 3001 && random <= 9000)
 			return NORMAL;
-	}	
-	else if (rate < 0.8f && rate >= 0.5f)
-	{
+	} else if (rate < 0.8f && rate >= 0.5f) {
 		if (random >= 1 && random <= 800)
 			return GREAT_SUCCESS;
 		else if (random >= 801 && random <= 2500)
 			return SUCCESS;
 		else if (random >= 2501 && random <= 8000)
 			return NORMAL;
-	}
-	else if (rate < 0.5f && rate >= 0.33f)
-	{
+	} else if (rate < 0.5f && rate >= 0.33f) {
 		if (random >= 1 && random <= 600)
 			return GREAT_SUCCESS;
 		else if (random >= 601 && random <= 2000)
 			return SUCCESS;
 		else if (random >= 2001 && random <= 7000)
 			return NORMAL;
-	}
-	else if (rate < 0.33f && rate >= 0.2f)
-	{
+	} else if (rate < 0.33f && rate >= 0.2f) {
 		if (random >= 1 && random <= 400)
 			return GREAT_SUCCESS;
 		else if (random >= 401 && random <= 1500)
 			return SUCCESS;
 		else if (random >= 1501 && random <= 6000)
 			return NORMAL;
-	}
-	else
-	{
+	} else {
 		if (random >= 1 && random <= 200)
 			return GREAT_SUCCESS;
 		else if (random >= 201 && random <= 1000)
@@ -850,34 +770,29 @@ uint8 Unit::GetHitRate(float rate)
 }
 
 #ifdef GAMESERVER
-void Unit::SendToRegion(Packet *result)
-{
+void Unit::SendToRegion(Packet *result) {
 	g_pMain->Send_Region(result, GetMap(), GetRegionX(), GetRegionZ(), nullptr, GetEventRoom());
 }
 
 // Handle it here so that we don't need to ref the class everywhere
-void Unit::Send_AIServer(Packet *result)
-{
+void Unit::Send_AIServer(Packet *result) {
 	g_pMain->Send_AIServer(result);
 }
 #endif
 
-void Unit::InitType3()
-{
+void Unit::InitType3() {
 	for (int i = 0; i < MAX_TYPE3_REPEAT; i++)
 		m_durationalSkills[i].Reset();
 
 	m_bType3Flag = false;
 }
 
-void Unit::InitType4(bool bRemoveSavedMagic /*= false*/, uint8 buffType /* = 0 */)
-{
+void Unit::InitType4(bool bRemoveSavedMagic /*= false*/, uint8 buffType /* = 0 */) {
 	// Remove all buffs that should not be recast.
 	Guard lock(_unitlock);
 	Type4BuffMap buffMap = m_buffMap; // copy the map
 
-	for (auto itr = buffMap.begin(); itr != buffMap.end(); itr++)
-	{
+	for (auto itr = buffMap.begin(); itr != buffMap.end(); itr++) {
 #ifdef GAMESERVER
 		if (buffType > 0 && itr->second.m_bBuffType != buffType)
 			continue;
@@ -890,16 +805,15 @@ void Unit::InitType4(bool bRemoveSavedMagic /*= false*/, uint8 buffType /* = 0 *
 /**
 * @brief	Determine if this unit is basically able to attack the specified unit.
 * 			This should only be called to handle the minimal shared logic between
-* 			NPCs and players. 
-* 			
+* 			NPCs and players.
+*
 * 			You should use the more appropriate CUser or CNpc specialization.
 *
 * @param	pTarget	Target for the attack.
 *
 * @return	true if we can attack, false if not.
 */
-bool Unit::CanAttack(Unit * pTarget)
-{
+bool Unit::CanAttack(Unit * pTarget) {
 	if (pTarget == nullptr)
 		return false;
 
@@ -912,9 +826,9 @@ bool Unit::CanAttack(Unit * pTarget)
 	if (isIncapacitated()
 		// or if our target is in a state in which
 			// they should not be allowed to be attacked
-				|| pTarget->isDead()
-				|| pTarget->isBlinking())
-				return false;
+		|| pTarget->isDead()
+		|| pTarget->isBlinking())
+		return false;
 
 	// Finally, we can only attack the target if we are hostile towards them.
 	return isHostileTo(pTarget);
@@ -923,46 +837,40 @@ bool Unit::CanAttack(Unit * pTarget)
 /**
 * @brief	Determine if this unit is basically able to attack the specified unit.
 * 			This should only be called to handle the minimal shared logic between
-* 			NPCs and players. 
-* 			
+* 			NPCs and players.
+*
 * 			You should use the more appropriate CUser or CNpc specialization.
 *
 * @param	pTarget	Target for the attack.
 *
 * @return	true if we attackable, false if not.
 */
-bool Unit::isAttackable(Unit * pTarget)
-{
+bool Unit::isAttackable(Unit * pTarget) {
 	if (pTarget == nullptr)
 		pTarget = this;
 
-	if (pTarget)
-	{
-		if (pTarget->isNPC())
-		{
+	if (pTarget) {
+		if (pTarget->isNPC()) {
 			CNpc * pNpc = TO_NPC(pTarget);
-			if (pNpc != nullptr)
-			{
+			if (pNpc != nullptr) {
 #if defined(GAMESERVER)
 				if (pNpc->GetType() == NPC_BIFROST_MONUMENT)
 					return (g_pMain->m_bAttackBifrostMonument);
-				else if (pNpc->GetType() == NPC_PVP_MONUMENT)
-				{
-					if(pNpc->GetSpid() == MONUMENT_ENEMY_SPID)
+				else if (pNpc->GetType() == NPC_PVP_MONUMENT) {
+					if (pNpc->GetSpid() == MONUMENT_ENEMY_SPID)
 						return true;
 
-					if ((GetNation() == KARUS && pNpc->GetSpid() == MONUMENT_KARUS_SPID) 
+					if ((GetNation() == KARUS && pNpc->GetSpid() == MONUMENT_KARUS_SPID)
 						|| (GetNation() == ELMORAD && pNpc->GetSpid() == MONUMENT_ELMORAD_SPID))
 						return false;
 					else
 						return true;
-				}
-				else if (pNpc->GetType() == NPC_GUARD_TOWER1 
-					|| pNpc->GetType() == NPC_GUARD_TOWER2 
-					|| pNpc->GetType() == NPC_GATE2 
+				} else if (pNpc->GetType() == NPC_GUARD_TOWER1
+					|| pNpc->GetType() == NPC_GUARD_TOWER2
+					|| pNpc->GetType() == NPC_GATE2
 					|| pNpc->GetType() == NPC_VICTORY_GATE
-					|| pNpc->GetType() == NPC_PHOENIX_GATE 
-					|| pNpc->GetType() == NPC_SPECIAL_GATE 
+					|| pNpc->GetType() == NPC_PHOENIX_GATE
+					|| pNpc->GetType() == NPC_SPECIAL_GATE
 					|| pNpc->GetType() == NPC_GATE_LEVER
 					|| pNpc->GetType() == NPC_BORDER_MONUMENT
 					|| pNpc->GetType() == NPC_BYGROUP3)
@@ -977,39 +885,34 @@ bool Unit::isAttackable(Unit * pTarget)
 	return true;
 }
 
-bool Unit::CanCastRHit(uint16 m_socketID)
-{
+bool Unit::CanCastRHit(uint16 m_socketID) {
 #if defined(GAMESERVER)
 	CUser *pUser = g_pMain->GetUserPtr(m_socketID);
 
 	if (pUser == nullptr)
 		return true;
 
-	if (pUser->m_RHitRepeatList.find(m_socketID) != pUser->m_RHitRepeatList.end())
-	{
+	if (pUser->m_RHitRepeatList.find(m_socketID) != pUser->m_RHitRepeatList.end()) {
 		RHitRepeatList::iterator itr = pUser->m_RHitRepeatList.find(m_socketID);
 		if (float(UNIXTIME - itr->second) < PLAYER_R_HIT_REQUEST_INTERVAL)
 			return false;
-		else
-		{
+		else {
 			pUser->m_RHitRepeatList.erase(m_socketID);
 			return true;
 		}
-	} 
+	}
 #endif
 	return true;
 }
 
-void Unit::OnDeath(Unit *pKiller)
-{
+void Unit::OnDeath(Unit *pKiller) {
 #ifdef GAMESERVER
-	
+
 	SendDeathAnimation(pKiller);
 #endif
 }
 
-void Unit::SendDeathAnimation(Unit * pKiller /*= nullptr*/)
-{
+void Unit::SendDeathAnimation(Unit * pKiller /*= nullptr*/) {
 #ifdef GAMESERVER
 	Packet result(WIZ_DEAD);
 	result << GetID();
@@ -1022,8 +925,7 @@ void Unit::SendDeathAnimation(Unit * pKiller /*= nullptr*/)
 #endif
 }
 
-void Unit::AddType4Buff(uint8 bBuffType, _BUFF_TYPE4_INFO & pBuffInfo)
-{
+void Unit::AddType4Buff(uint8 bBuffType, _BUFF_TYPE4_INFO & pBuffInfo) {
 	Guard lock(_unitlock);
 	m_buffMap.insert(std::make_pair(bBuffType, pBuffInfo));
 
@@ -1034,17 +936,16 @@ void Unit::AddType4Buff(uint8 bBuffType, _BUFF_TYPE4_INFO & pBuffInfo)
 /**************************************************************************
 * The following methods should not be here, but it's necessary to avoid
 * code duplication between AI and GameServer until they're better merged.
-**************************************************************************/ 
+**************************************************************************/
 
 /**
 * @brief	Sets zone attributes for the loaded zone.
 *
 * @param	zoneNumber	The zone number.
 */
-void KOMap::SetZoneAttributes(int zoneNumber)
-{
+void KOMap::SetZoneAttributes(int zoneNumber) {
 	m_zoneFlags = 0;
-	#if defined(GAMESERVER)
+#if defined(GAMESERVER)
 	m_byTariff = g_pMain->GetTariffByZone(zoneNumber); // defaults to 10 officially for zones that don't use it.
 #else
 	m_byTariff = 0; // defaults to 10 officially for zones that don't use it.
@@ -1052,9 +953,8 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 	m_byMinLevel = 1;
 	m_byMaxLevel = 83;
 
-	
-	switch (zoneNumber)
-	{
+
+	switch (zoneNumber) {
 	case ZONE_KARUS:
 	case ZONE_ELMORAD:
 		m_zoneType = ZoneAbilityPVP;
@@ -1176,7 +1076,7 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 		m_zoneFlags = ZF_ATTACK_OTHER_NATION;
 		m_byMinLevel = MIN_LEVEL_RONARK_LAND_BASE, m_byMaxLevel = MAX_LEVEL_RONARK_LAND_BASE;
 		break;
-	case ZONE_ARDREAM:	
+	case ZONE_ARDREAM:
 		m_zoneType = ZoneAbilityPVP;
 		m_zoneFlags = ZF_ATTACK_OTHER_NATION;
 		m_byMinLevel = MIN_LEVEL_ARDREAM, m_byMaxLevel = MAX_LEVEL_ARDREAM;
@@ -1240,8 +1140,7 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 *
 * @return	true if hostile to, false if not.
 */
-bool CNpc::isHostileTo(Unit * pTarget)
-{
+bool CNpc::isHostileTo(Unit * pTarget) {
 	if (pTarget == nullptr)
 		return false;
 
@@ -1250,33 +1149,31 @@ bool CNpc::isHostileTo(Unit * pTarget)
 
 	if (GetType() == NPC_GATE
 		&& (GetZoneID() == ZONE_BATTLE
-		|| GetZoneID() == ZONE_BATTLE2
-		|| GetZoneID() == ZONE_BATTLE3
-		|| GetZoneID() == ZONE_BATTLE4
-		|| GetZoneID() == ZONE_BATTLE5
-		|| GetZoneID() == ZONE_BATTLE6)
+			|| GetZoneID() == ZONE_BATTLE2
+			|| GetZoneID() == ZONE_BATTLE3
+			|| GetZoneID() == ZONE_BATTLE4
+			|| GetZoneID() == ZONE_BATTLE5
+			|| GetZoneID() == ZONE_BATTLE6)
 		&& GetNation() != pTarget->GetNation())
-	return true;
+		return true;
 
 
 	// Only players can attack these targets.
-	if (pTarget->isPlayer())
-	{
+	if (pTarget->isPlayer()) {
 		// Scarecrows are NPCs that the client allows us to attack
 		// however, since they're not a monster, and all NPCs in neutral zones
 		// are friendly, we need to override to ensure we can attack them server-side.
 #if defined(GAMESERVER)
 
-		if(GetType() == NPC_FOSSIL)
-		{
-		_ITEM_DATA * pItem;
-		_ITEM_TABLE * pTable = TO_USER(pTarget)->GetItemPrototype(RIGHTHAND, pItem);
-		if (pItem == nullptr || pTable == nullptr
-		|| pItem->sDuration <= 0 // are we supposed to wear the pickaxe on use? Need to verify.
-		|| !pTable->isPickaxe())
-			return false;
-		else
-			return true;
+		if (GetType() == NPC_FOSSIL) {
+			_ITEM_DATA * pItem;
+			_ITEM_TABLE * pTable = TO_USER(pTarget)->GetItemPrototype(RIGHTHAND, pItem);
+			if (pItem == nullptr || pTable == nullptr
+				|| pItem->sDuration <= 0 // are we supposed to wear the pickaxe on use? Need to verify.
+				|| !pTable->isPickaxe())
+				return false;
+			else
+				return true;
 		}
 
 		if (GetType() == NPC_SCARECROW || GetType() == NPC_BIFROST_MONUMENT && g_pMain->m_bAttackBifrostMonument)
@@ -1292,10 +1189,9 @@ bool CNpc::isHostileTo(Unit * pTarget)
 	if (g_pMain->m_byBattleSiegeWarOpen && !TO_USER(pTarget)->isInClan() && GetZoneID() == ZONE_DELOS)
 		return false;
 
-	CKnights * pKnights ;
-	_KNIGHTS_SIEGE_WARFARE * pSiegeWars ;
-	if (g_pMain->m_byBattleSiegeWarOpen && GetZoneID() == ZONE_DELOS && TO_USER(pTarget)->GetClanID() != 0)
-	{
+	CKnights * pKnights;
+	_KNIGHTS_SIEGE_WARFARE * pSiegeWars;
+	if (g_pMain->m_byBattleSiegeWarOpen && GetZoneID() == ZONE_DELOS && TO_USER(pTarget)->GetClanID() != 0) {
 		pKnights = g_pMain->GetClanPtr(TO_USER(pTarget)->GetClanID());
 		pSiegeWars = g_pMain->GetSiegeMasterKnightsPtr(1);
 	}
@@ -1304,20 +1200,20 @@ bool CNpc::isHostileTo(Unit * pTarget)
 
 	if (g_pMain->m_byBattleSiegeWarOpen && GetZoneID() == ZONE_DELOS && pKnights->GetID() != pSiegeWars->sMasterKnights && m_sSid == 541 && GetType() == NPC_DESTROYED_ARTIFACT)
 		return true;// CSW Açık Kale sahibi clanda değil atack yapabilir
-	else if(!g_pMain->m_byBattleSiegeWarOpen && GetZoneID() == ZONE_DELOS)
+	else if (!g_pMain->m_byBattleSiegeWarOpen && GetZoneID() == ZONE_DELOS)
 		return false;// CSW kapalı delosta atack yok
-	else if(g_pMain->m_byBattleSiegeWarOpen && GetZoneID() == ZONE_DELOS && (pKnights->GetID() == pSiegeWars->sMasterKnights || GetNation() == Nation::ALL))
+	else if (g_pMain->m_byBattleSiegeWarOpen && GetZoneID() == ZONE_DELOS && (pKnights->GetID() == pSiegeWars->sMasterKnights || GetNation() == Nation::ALL))
 		return false;// CSW açık ve kale sahibi clanda atack yok
-	
+
 	if (GetNation() == Nation::ALL
 		|| (!isMonster() && GetMap()->areNPCsFriendly() && GetNation() != Nation::NONE))
-			return false;
+		return false;
 #else
 	// A nation of 0 indicates friendliness to all
 	if (GetNation() == Nation::ALL
 		// Also allow for cases when all NPCs in this zone are inherently friendly.
-			|| (!isMonster() && GetMap()->areNPCsFriendly()))
-			return false;
+		|| (!isMonster() && GetMap()->areNPCsFriendly()))
+		return false;
 #endif
 	// A nation of 3 indicates hostility to all (or friendliness to none)
 	if (GetNation() == Nation::NONE)
@@ -1335,8 +1231,7 @@ bool CNpc::isHostileTo(Unit * pTarget)
 *
 * @return	true if hostile to, false if not.
 */
-bool CUser::isHostileTo(Unit * pTarget)
-{
+bool CUser::isHostileTo(Unit * pTarget) {
 	if (pTarget == nullptr)
 		return false;
 
@@ -1347,11 +1242,11 @@ bool CUser::isHostileTo(Unit * pTarget)
 		return pTarget->isHostileTo(this);
 
 	// Players can attack other players in the arena.
-	if ((isInArena() 
+	if ((isInArena()
 		&& TO_USER(pTarget)->isInArena())
-		|| (isInPartyArena() 
-		&& TO_USER(pTarget)->isInPartyArena() 
-		&& (GetPartyID() != TO_USER(pTarget)->GetPartyID() || GetPartyID() == uint16(-1) || TO_USER(pTarget)->GetPartyID() == uint16(-1))))
+		|| (isInPartyArena()
+			&& TO_USER(pTarget)->isInPartyArena()
+			&& (GetPartyID() != TO_USER(pTarget)->GetPartyID() || GetPartyID() == uint16(-1) || TO_USER(pTarget)->GetPartyID() == uint16(-1))))
 		return true;
 
 	// Players can attack other players in the safety area.
@@ -1360,41 +1255,40 @@ bool CUser::isHostileTo(Unit * pTarget)
 		|| TO_USER(pTarget)->isBlinking())
 		return false;
 
-	if(TO_USER(pTarget)->GetEventRoom() != GetEventRoom())
+	if (TO_USER(pTarget)->GetEventRoom() != GetEventRoom())
 		return false;
 
 	// Players can attack opposing nation players when they're in PVP zones.
-	if (GetNation() != pTarget->GetNation() 
+	if (GetNation() != pTarget->GetNation()
 		&& isInPVPZone())
 		return true;
 
-	if (GetNation() != pTarget->GetNation() 
+	if (GetNation() != pTarget->GetNation()
 		&& JuraidTempleEventZone())
 		return true;
 
-	if (GetNation() != pTarget->GetNation() 
+	if (GetNation() != pTarget->GetNation()
 		&& BorderTempleEventZone())
 		return true;
 
 	if (ChaosTempleEventZone())
 		return true;
 
-	#if GAMESERVER
-	if (g_pMain->m_byBattleSiegeWarOpen && GetZoneID() == ZONE_DELOS)
-	{
+#if GAMESERVER
+	if (g_pMain->m_byBattleSiegeWarOpen && GetZoneID() == ZONE_DELOS) {
 
 		CUser *pUser = g_pMain->GetUserPtr(GetName(), TYPE_CHARACTER);
 		CUser *pTargetUser = g_pMain->GetUserPtr(TO_USER(pTarget)->m_strUserID, TYPE_CHARACTER);
-		
-		if(pUser == nullptr 
-		|| pTargetUser == nullptr)
-		return false;
 
-		if (pUser->GetClanID() > 0 
+		if (pUser == nullptr
+			|| pTargetUser == nullptr)
+			return false;
+
+		if (pUser->GetClanID() > 0
 			&& pTargetUser->GetClanID() > 0)
-		return g_pMain->CastleSiegeWarAttack(pUser, pTargetUser);
+			return g_pMain->CastleSiegeWarAttack(pUser, pTargetUser);
 		else
-		return false;
+			return false;
 	}
 #endif
 
@@ -1408,10 +1302,9 @@ bool CUser::isHostileTo(Unit * pTarget)
 *
 * @return	true if in arena, false if not.
 */
-bool CUser::isInArena()
-{
+bool CUser::isInArena() {
 	/*
-	All of this needs to be handled more generically 
+	All of this needs to be handled more generically
 	(i.e. bounds loaded from the database, or their existing SMD method).
 	*/
 
@@ -1425,14 +1318,13 @@ bool CUser::isInArena()
 		return false;
 
 	// Moradon outside arena spawn bounds.
-	return ((GetX() < 735.0f && GetX() > 684.0f) 
+	return ((GetX() < 735.0f && GetX() > 684.0f)
 		&& (GetZ() < 491.0f && GetZ() > 440.0f)/* || (GetZ() < 411.0f && GetZ() > 360.0f))*/);
 }
 
-bool CUser::isInPartyArena()
-{
+bool CUser::isInPartyArena() {
 	/*
-	All of this needs to be handled more generically 
+	All of this needs to be handled more generically
 	(i.e. bounds loaded from the database, or their existing SMD method).
 	*/
 
@@ -1446,25 +1338,24 @@ bool CUser::isInPartyArena()
 		return false;
 
 	// Moradon outside arena spawn bounds.
-	return ((GetX() < 735.0f && GetX() > 684.0f) 
+	return ((GetX() < 735.0f && GetX() > 684.0f)
 		&& (GetZ() < 411.0f && GetZ() > 360.0f));
 
 }
 /**
 * @brief	Determine if this user is in a normal PVP zone.
-* 			That is, they're in an PK zone that allows combat 
+* 			That is, they're in an PK zone that allows combat
 * 			against the opposite nation.
 *
 * @return	true if in PVP zone, false if not.
 */
-bool CUser::isInPVPZone()
-{
+bool CUser::isInPVPZone() {
 	if (GetMap()->canAttackOtherNation())
 		return true;
 
 #if defined(GAMESERVER)
 	// Native/home zones are classed as PVP zones during invasions.
-	if ((GetZoneID() == KARUS && g_pMain->m_byKarusOpenFlag) 
+	if ((GetZoneID() == KARUS && g_pMain->m_byKarusOpenFlag)
 		|| (GetZoneID() == ELMORAD && g_pMain->m_byElmoradOpenFlag))
 		return true;
 #endif
@@ -1477,16 +1368,14 @@ bool CUser::isInPVPZone()
 *
 * @return	true if in safety area, false if not.
 */
-bool CUser::isInSafetyArea()
-{
-	switch (GetZoneID())
-	{
+bool CUser::isInSafetyArea() {
+	switch (GetZoneID()) {
 	case ZONE_BIFROST:
 		if (GetNation() == KARUS)
 			return ((GetX() < 124.0f && GetX() > 56.0f) && ((GetZ() < 840.0f && GetZ() > 700.0f)));
 		else
-		if (GetNation() == ELMORAD)
-			return ((GetX() < 270.0f && GetX() > 190.0f) && ((GetZ() < 970.0f && GetZ() > 870.0f)));
+			if (GetNation() == ELMORAD)
+				return ((GetX() < 270.0f && GetX() > 190.0f) && ((GetZ() < 970.0f && GetZ() > 870.0f)));
 
 	case ZONE_RONARK_LAND_BASE:
 		if (GetNation() == KARUS || GetNation() == ELMORAD)
@@ -1499,7 +1388,7 @@ bool CUser::isInSafetyArea()
 	case ZONE_ARENA:
 		if (GetNation() == KARUS || GetNation() == ELMORAD)
 			return ((GetX() < 148.0f && GetX() > 106.0f) && ((GetZ() < 149.0f && GetZ() > 50.0f)) || (GetX() < 169.0f && GetX() > 86.0f) && ((GetZ() < 127.0f && GetZ() > 100.0f)) || (GetX() < 150.0f && GetX() > 102.0f) && ((GetZ() < 144.0f && GetZ() > 82.0f)) || (GetX() < 157.0f && GetX() > 99.0f) && ((GetZ() < 139.0f && GetZ() > 88.0f)));
-		
+
 	case ZONE_ELMORAD:
 		if (GetNation() == KARUS)
 			return ((GetX() < 244.0f && GetX() > 176.0f) && ((GetZ() < 1880.0f && GetZ() > 1820.0f)));
@@ -1509,7 +1398,7 @@ bool CUser::isInSafetyArea()
 			return ((GetX() < 224.0f && GetX() > 179.0f) && ((GetZ() < 222.0f && GetZ() > 169.0f)));
 		else if (GetNation() == KARUS)
 			return ((GetX() < 74.0f && GetX() > 22.0f) && ((GetZ() < 96.0f && GetZ() > 36.0f)));
-		
+
 	case ZONE_KARUS:
 		if (GetNation() == ELMORAD)
 			return ((GetX() < 1876.0f && GetX() > 1820.0f) && ((GetZ() < 212.0f && GetZ() > 136.0f)));
@@ -1525,14 +1414,13 @@ bool CUser::isInSafetyArea()
 		else if (GetNation() == KARUS)
 			return ((GetX() < 80.0f && GetX() > 46.0f) && ((GetZ() < 174.0f && GetZ() > 142.0f)));
 	case ZONE_DELOS:
-			return ((GetX() > 411.0f && GetX() < 597.0f) && ((GetZ() < 296.0f && GetZ() > 113.0f)));
+		return ((GetX() > 411.0f && GetX() < 597.0f) && ((GetZ() < 296.0f && GetZ() > 113.0f)));
 	}
 
 	return false;
 }
 
-bool Unit::isSameEventRoom(Unit *pTarget)
-{
+bool Unit::isSameEventRoom(Unit *pTarget) {
 	if (pTarget == nullptr)
 		return false;
 

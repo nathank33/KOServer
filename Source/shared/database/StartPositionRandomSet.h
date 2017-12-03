@@ -1,16 +1,14 @@
- #pragma once
+#pragma once
 
-class CStartPositionRandomSet : public OdbcRecordset
-{
+class CStartPositionRandomSet : public OdbcRecordset {
 public:
-	CStartPositionRandomSet(OdbcConnection * dbConnection, StartPositionRandomArray * pMap) 
+	CStartPositionRandomSet(OdbcConnection * dbConnection, StartPositionRandomArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("START_POSITION_RANDOM"); }
 	virtual tstring GetColumns() { return _T("ZoneID, PosX, PosZ, Radius"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_START_POSITION_RANDOM * pData = new _START_POSITION_RANDOM;
 
 		int i = 1;

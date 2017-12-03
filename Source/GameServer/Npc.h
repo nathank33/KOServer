@@ -3,8 +3,7 @@
 #include "LuaEngine.h"
 #include "Unit.h"
 
-class CNpc : public Unit
-{
+class CNpc : public Unit {
 public:
 	virtual uint16 GetID() { return m_sNid; }
 	virtual std::string & GetName() { return m_strName; }
@@ -36,7 +35,7 @@ public:
 	bool	m_bIsEventNpc;
 	bool	nIsPet;
 	uint64	nSerial;
-	std::string	strUserName,strPetName;
+	std::string	strUserName, strPetName;
 	uint16	UserId;
 
 	uint8   m_byTrapNumber;
@@ -57,7 +56,7 @@ public:
 	void SendInOut(uint8 bType, float fx, float fz, float fy);
 	void GetNpcInfo(Packet & pkt, uint8 myNation = -1);
 	void SendGateFlag(uint8 bFlag = -1, bool bSendAI = true);
-	void HpChange(int amount, Unit *pAttacker = nullptr, bool bSendToAI = true); 
+	void HpChange(int amount, Unit *pAttacker = nullptr, bool bSendToAI = true);
 	void HpChangeMagic(int amount, Unit *pAttacker = nullptr, AttributeType attributeType = AttributeNone);
 	void HPTimeChangeType3();
 	typedef	std::map<uint32, time_t>			NpcSavedMagicMap;
@@ -81,7 +80,7 @@ public:
 
 	INLINE bool isMonster() { return m_bMonster; }
 	INLINE bool isGuard() { return GetType() == NPC_GUARD || GetType() == NPC_PATROL_GUARD || GetType() == NPC_STORE_GUARD; };
-	INLINE bool isGate() { return GetType() == NPC_GATE || GetType() == NPC_PHOENIX_GATE || GetType() == NPC_SPECIAL_GATE || GetType() == NPC_VICTORY_GATE || GetType() == NPC_GATE2 || GetType() == NPC_KJWAR || GetType() == NPC_BORDER_MONUMENT;};
+	INLINE bool isGate() { return GetType() == NPC_GATE || GetType() == NPC_PHOENIX_GATE || GetType() == NPC_SPECIAL_GATE || GetType() == NPC_VICTORY_GATE || GetType() == NPC_GATE2 || GetType() == NPC_KJWAR || GetType() == NPC_BORDER_MONUMENT; };
 	INLINE bool isGateOpen() { return m_byGateOpen; };
 	INLINE bool isGateClosed() { return !isGateOpen(); };
 
@@ -122,6 +121,6 @@ public:
 		LUA_RETURN(LUA_GET_INSTANCE()->CastSkill(
 			reinterpret_cast<Unit *>(LUA_ARG(CUser *, 2)),
 			LUA_ARG(uint32, 3)
-			));
+		));
 	}
 };

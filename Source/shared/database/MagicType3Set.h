@@ -1,16 +1,14 @@
 #pragma once
 
-class CMagicType3Set : public OdbcRecordset
-{
+class CMagicType3Set : public OdbcRecordset {
 public:
-	CMagicType3Set(OdbcConnection * dbConnection, Magictype3Array * pMap) 
+	CMagicType3Set(OdbcConnection * dbConnection, Magictype3Array * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("MAGIC_TYPE3"); }
 	virtual tstring GetColumns() { return _T("iNum,Radius, DirectType, FirstDamage, TimeDamage, Duration, Attribute"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_MAGIC_TYPE3 *pData = new _MAGIC_TYPE3;
 
 		_dbCommand->FetchUInt32(1, pData->iNum);

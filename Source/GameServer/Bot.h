@@ -12,10 +12,9 @@
 
 class CGameServerDlg;
 
-class CBot
-{
+class CBot {
 public:
-	
+
 
 	virtual uint16 GetID() { return m_sSid; }
 
@@ -40,12 +39,12 @@ public:
 	uint16	m_sSid;
 	uint8	m_bRank;
 	uint8	m_bTitle;
-	int64	m_iExp;	
-	uint32	m_iLoyalty,m_iLoyaltyMonthly;
+	int64	m_iExp;
+	uint32	m_iLoyalty, m_iLoyaltyMonthly;
 	uint32	m_iMannerPoint;
 	uint8	m_bFace;
 	uint8	m_bCity;
-	int16	m_bKnights;	
+	int16	m_bKnights;
 	uint8	m_bFame;
 	int16	m_sHp, m_sMp, m_sSp;
 	uint8	m_bStats[STAT_COUNT];
@@ -59,7 +58,7 @@ public:
 	int8	m_bMerchantState;
 	int8    m_bMerchantStatex;
 
-	uint8    m_bstrSkill[10];	
+	uint8    m_bstrSkill[10];
 
 	int16	m_sMerchantsSocketID;
 	std::list<uint16>	m_arMerchantLookers;
@@ -67,16 +66,14 @@ public:
 	_MERCH_DATA	m_arBuyMerchantItems[MAX_MERCH_ITEMS]; //What is this person selling? Stored in "_MERCH_DATA" structure.
 	bool	m_bPremiumMerchant;
 
-	INLINE _ITEM_DATA * GetItem(uint8 pos) 
-	{
-		return &m_sItemArray[pos]; 
+	INLINE _ITEM_DATA * GetItem(uint8 pos) {
+		return &m_sItemArray[pos];
 	}
 	INLINE uint8 GetNation() { return m_bNation; }
 	INLINE uint8 GetRace() { return m_bRace; }
 	INLINE uint8 GetLevel() { return m_bLevel; }
 	INLINE uint16 GetClass() { return m_sClass; }
-	INLINE uint8 GetStat(StatType type)
-	{
+	INLINE uint8 GetStat(StatType type) {
 		if (type >= STAT_COUNT)
 			return 0;
 
@@ -92,7 +89,7 @@ public:
 
 	bool	m_bInParty;
 	bool	m_bPartyLeader;
-	
+
 	bool	m_bIsChicken; // Is the character taking the beginner/chicken quest?
 	bool	m_bIsHidingHelmet;
 	bool	m_bIsHidingCospre;
@@ -100,17 +97,17 @@ public:
 	short	m_iMaxHp, m_iMaxMp;
 	uint8	m_iMaxSp;
 	uint8	m_bInvisibilityType;
-	
+
 	uint32	m_bAbnormalType;			// Is the player normal, a giant, or a dwarf?
 	uint32	m_nOldAbnormalType;
 	bool	m_bBlockPrivateChat;
 	short	m_sPrivateChatUser;
-	
+
 	uint16	m_sRegionX, m_sRegionZ; // this is probably redundant
 
 	TeamColour	m_teamColour;
 public:
-	INLINE uint8 GetUniqueLevel() { return m_bRebStats[STAT_STR];} // Char Rebirth mi 
+	INLINE uint8 GetUniqueLevel() { return m_bRebStats[STAT_STR]; } // Char Rebirth mi 
 	INLINE uint8 GetRebLevel() { return m_reblvl; }
 	INLINE uint16 GetSPosX() { return uint16(GetX() * 10); };
 	INLINE uint16 GetSPosY() { return uint16(GetY() * 10); };
@@ -120,8 +117,7 @@ public:
 	void StateChangeServerDirect(uint8 bType, uint32 nBuff);
 	INLINE KOMap * GetMap() { return m_pMap; }
 	INLINE float GetX() { return m_curx; }
-	INLINE void SetPosition(float fx, float fy, float fz)
-	{
+	INLINE void SetPosition(float fx, float fy, float fz) {
 		m_curx = fx;
 		m_curz = fz;
 		m_cury = fy;
@@ -131,9 +127,9 @@ public:
 	void AddToRegion(int16 new_region_x, int16 new_region_z);
 	void RemoveRegion(int16 del_x, int16 del_z);
 	void InsertRegion(int16 insert_x, int16 insert_z);
-	
-	INLINE uint16 GetNewRegionX() { return (uint16)(GetX()) / VIEW_DISTANCE; }
-	INLINE uint16 GetNewRegionZ() { return (uint16)(GetZ()) / VIEW_DISTANCE; }
+
+	INLINE uint16 GetNewRegionX() { return (uint16) (GetX()) / VIEW_DISTANCE; }
+	INLINE uint16 GetNewRegionZ() { return (uint16) (GetZ()) / VIEW_DISTANCE; }
 	INLINE float GetY() { return m_cury; }
 	INLINE float GetZ() { return m_curz; }
 	INLINE int16 GetClanID() { return m_bKnights; }
@@ -160,7 +156,7 @@ public:
 	void SetMaxSp();
 	void SetMaxHp(int iFlag = 0);
 	void LogOut();
-	
+
 	void SendToRegion(Packet *pkt);
 	virtual void GetInOut(Packet & result, uint8 bType);
 	void UserInOut(uint8 bType);

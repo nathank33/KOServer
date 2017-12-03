@@ -5,8 +5,7 @@
 typedef CSTLMap <int>			ZoneUserArray;
 typedef CSTLMap <int>			ZoneNpcArray;
 
-class CRegion  
-{
+class CRegion {
 public:
 	CRegion() : m_byMoving(0) {}
 	ZoneUserArray	m_RegionUserArray;

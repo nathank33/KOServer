@@ -1,18 +1,14 @@
 #pragma once
 
-class CNpcTableSet : public OdbcRecordset
-{
+class CNpcTableSet : public OdbcRecordset {
 public:
-	CNpcTableSet(OdbcConnection * dbConnection, NpcTableArray * pMap) 
-		: OdbcRecordset(dbConnection), m_pMap(pMap), m_bMonster(false)
-	{
-	}
+	CNpcTableSet(OdbcConnection * dbConnection, NpcTableArray * pMap)
+		: OdbcRecordset(dbConnection), m_pMap(pMap), m_bMonster(false) {}
 
 	virtual tstring GetTableName() { return _T("K_NPC"); }
 	virtual tstring GetColumns() { return _T("sSid, strName, sPid, sSize, isBoss, iWeapon1, iWeapon2, byGroup, byActType, byType, byFamily, iSellingGroup, sLevel, iExp, iLoyalty, iHpPoint, sAtk, sAc, sHitRate, sEvadeRate, sDamage, sAttackDelay, bySpeed1, bySpeed2, sStandtime, iMagic1, iMagic2, iMagic3, sFireR, sColdR, sLightningR, sMagicR, sDiseaseR, sPoisonR, sBulk, byAttackRange, bySearchRange, byTracingRange, iMoney, byDirectAttack, byMagicAttack, sItem, byMoneyType, xType, yType, zType, tType"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		CNpcTable *pData = new CNpcTable();
 		uint16 sBulk, isBoss;
 
@@ -59,7 +55,7 @@ public:
 		_dbCommand->FetchByte(i++, pData->m_byDirectAttack);
 		_dbCommand->FetchByte(i++, pData->m_byMagicAttack);
 		_dbCommand->FetchUInt16(i++, pData->m_iItem);
-		
+
 		pData->m_byGroupSpecial = 0; // Default value
 		pData->m_sSpeed = 1500;
 		// Certain NPCs are defined in the database with a type of 0, which is the monster type.
@@ -67,7 +63,7 @@ public:
 		if (!m_bMonster && pData->m_tNpcType == NPC_MONSTER)
 			pData->m_tNpcType = NPC_GENERAL;
 
-		pData->m_fBulk =  (float)(((double)sBulk / 100) * ((double)pData->m_sSize / 100));
+		pData->m_fBulk = (float) (((double) sBulk / 100) * ((double) pData->m_sSize / 100));
 
 		if (!m_pMap->PutData(pData->m_sSid, pData))
 			delete pData;
@@ -79,12 +75,10 @@ public:
 	bool m_bMonster;
 };
 
-class CMonTableSet : public CNpcTableSet
-{
+class CMonTableSet : public CNpcTableSet {
 public:
-	CMonTableSet(OdbcConnection * dbConnection, NpcTableArray * pMap) 
-		: CNpcTableSet(dbConnection, pMap)
-	{
+	CMonTableSet(OdbcConnection * dbConnection, NpcTableArray * pMap)
+		: CNpcTableSet(dbConnection, pMap) {
 		m_bMonster = true;
 	}
 

@@ -1,14 +1,12 @@
 #pragma once
 
-class CItemExchangeSet : public OdbcRecordset
-{
+class CItemExchangeSet : public OdbcRecordset {
 public:
-	CItemExchangeSet(OdbcConnection * dbConnection, ItemExchangeArray *pMap) 
+	CItemExchangeSet(OdbcConnection * dbConnection, ItemExchangeArray *pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("ITEM_EXCHANGE"); }
-	virtual tstring GetColumns() 
-	{
+	virtual tstring GetColumns() {
 		return _T("nIndex, bRandomFlag,Unk1, "
 			"nOriginItemNum1, nOriginItemCount1, nOriginItemNum2, nOriginItemCount2, "
 			"nOriginItemNum3, nOriginItemCount3, nOriginItemNum4, nOriginItemCount4, "
@@ -17,8 +15,7 @@ public:
 			"nExchangeItemNum4, nExchangeItemCount4, nExchangeItemNum5, nExchangeItemCount5,Unk2 , Unk3, Unk4, Unk5");
 	}
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_ITEM_EXCHANGE *pData = new _ITEM_EXCHANGE;
 
 		int i = 1;
@@ -26,17 +23,15 @@ public:
 		_dbCommand->FetchByte(i++, pData->bRandomFlag);
 		_dbCommand->FetchUInt32(i++, pData->Unk1);
 
-		for (int x = 0; x < ITEMS_IN_ORIGIN_GROUP; x++)
-		{
+		for (int x = 0; x < ITEMS_IN_ORIGIN_GROUP; x++) {
 			_dbCommand->FetchUInt32(i++, pData->nOriginItemNum[x]);
 			_dbCommand->FetchUInt32(i++, pData->sOriginItemCount[x]);
 		}
 
-		for (int j = 0; j < ITEMS_IN_EXCHANGE_GROUP; j++)
-		{
+		for (int j = 0; j < ITEMS_IN_EXCHANGE_GROUP; j++) {
 			_dbCommand->FetchUInt32(i++, pData->nExchangeItemNum[j]);
 			_dbCommand->FetchUInt32(i++, pData->sExchangeItemCount[j]);
-			
+
 		}
 		_dbCommand->FetchUInt32(i++, pData->Unk2);
 		_dbCommand->FetchUInt32(i++, pData->Unk3);

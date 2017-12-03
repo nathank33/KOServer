@@ -2,28 +2,26 @@
 #include "../shared/DateTime.h"
 
 LSPacketHandler PacketHandlers[NUM_LS_OPCODES];
-void InitPacketHandlers(void)
-{
+void InitPacketHandlers(void) {
 	memset(&PacketHandlers, 0, sizeof(LSPacketHandler) * NUM_LS_OPCODES);
-	PacketHandlers[LS_VERSION_REQ]			= &LoginSession::HandleVersion;
-	PacketHandlers[LS_DOWNLOADINFO_REQ]		= &LoginSession::HandlePatches;
-	PacketHandlers[LS_LOGIN_REQ]			= &LoginSession::HandleLogin;
-	PacketHandlers[LS_SERVERLIST]			= &LoginSession::HandleServerlist;
-	PacketHandlers[LS_NEWS]					= &LoginSession::HandleNews;
-	PacketHandlers[LS_CRYPTION]				= &LoginSession::HandleSetEncryptionPublicKey;
-	PacketHandlers[LS_UNKF7]				= &LoginSession::HandleUnkF7;
-	
+	PacketHandlers[LS_VERSION_REQ] = &LoginSession::HandleVersion;
+	PacketHandlers[LS_DOWNLOADINFO_REQ] = &LoginSession::HandlePatches;
+	PacketHandlers[LS_LOGIN_REQ] = &LoginSession::HandleLogin;
+	PacketHandlers[LS_SERVERLIST] = &LoginSession::HandleServerlist;
+	PacketHandlers[LS_NEWS] = &LoginSession::HandleNews;
+	PacketHandlers[LS_CRYPTION] = &LoginSession::HandleSetEncryptionPublicKey;
+	PacketHandlers[LS_UNKF7] = &LoginSession::HandleUnkF7;
+
 }
 
 LoginSession::LoginSession(uint16 socketID, SocketMgr *mgr) : KOSocket(socketID, mgr, -1, 2048, 64) {}
 
 
 
-bool LoginSession::HandlePacket(Packet & pkt)
-{
+bool LoginSession::HandlePacket(Packet & pkt) {
 	uint8 opcode = pkt.GetOpcode();
 
-	if (opcode >= NUM_LS_OPCODES 
+	if (opcode >= NUM_LS_OPCODES
 		|| PacketHandlers[opcode] == nullptr)
 		return false;
 
@@ -34,74 +32,66 @@ bool LoginSession::HandlePacket(Packet & pkt)
 
 	(this->*PacketHandlers[opcode])(pkt);
 	return true;
-	}
+}
 
-void LoginSession::HandleVersion(Packet & pkt)
-{
+void LoginSession::HandleVersion(Packet & pkt) {
 	Packet result(pkt.GetOpcode());
 	result << g_pMain->GetVersion();
 	Send(&result);
 }
 
-void LoginSession::HandlePatches(Packet & pkt)
-{
+void LoginSession::HandlePatches(Packet & pkt) {
 	Packet result(pkt.GetOpcode());
 	std::set<std::string> downloadset;
 	uint16 version;
 	string sonpec;
 	pkt >> version;
 
-	foreach (itr, (*g_pMain->GetPatchList())) 
-	{
+	foreach(itr, (*g_pMain->GetPatchList())) {
 		auto pInfo = itr->second;
 		if (pInfo->sVersion > version)
 			downloadset.insert(pInfo->strFilename);
 	}
 
-	result  << g_pMain->GetFTPUrl() << g_pMain->GetFTPPath() ;
-	result << uint16(downloadset.size())  ;
-	
-	foreach (itr, downloadset)
-	{
+	result << g_pMain->GetFTPUrl() << g_pMain->GetFTPPath();
+	result << uint16(downloadset.size());
+
+	foreach(itr, downloadset) {
 		result << (*itr);
-		sonpec= (*itr);
+		sonpec = (*itr);
 	}
-	
-	printf ("IP: %s Client Version: %d < Will download %d patch(es).>\n", GetRemoteIP().c_str(), version,uint8(downloadset.size()));
+
+	printf("IP: %s Client Version: %d < Will download %d patch(es).>\n", GetRemoteIP().c_str(), version, uint8(downloadset.size()));
 
 	Send(&result);
 }
 
-bool LoginSession::WordGuardSystem(std::string Word, uint8 WordStr)
-{
+bool LoginSession::WordGuardSystem(std::string Word, uint8 WordStr) {
 	char *pword = &Word[0];
 	bool bGuard[32] = {false};
 	std::string WordGuard = "qwertyuopadfhsgcijklzxvbnmQWERTYUOPSGICADFHJKLZXVBNM1234567890";
 	char *pWordGuard = &WordGuard[0];
-		for(uint8 i=0; i < WordStr; i++)
-		{
-			for(uint8 j=0; j < strlen(pWordGuard); j++)
-				if (pword[i] == pWordGuard[j])
-					bGuard[i] = true;
+	for (uint8 i = 0; i < WordStr; i++) {
+		for (uint8 j = 0; j < strlen(pWordGuard); j++)
+			if (pword[i] == pWordGuard[j])
+				bGuard[i] = true;
 
-			if (bGuard[i] == false)
-				return false;
-		}
+		if (bGuard[i] == false)
+			return false;
+	}
 	return true;
 }
 
-void LoginSession::HandleLogin(Packet & pkt)
-{
-	enum LoginErrorCode
-	{
-		AUTH_SUCCESS	= 0x01,
-		AUTH_NOT_FOUND	= 0x02,
-		AUTH_INVALID	= 0x03,
-		AUTH_BANNED		= 0x04,
-		AUTH_IN_GAME	= 0x05,
-		AUTH_ERROR		= 0x06,
-		AUTH_AGREEMENT	= 0x07,
-		AUTH_FAILED		= 0x08
+void LoginSession::HandleLogin(Packet & pkt) {
+	enum LoginErrorCode {
+		AUTH_SUCCESS = 0x01,
+		AUTH_NOT_FOUND = 0x02,
+		AUTH_INVALID = 0x03,
+		AUTH_BANNED = 0x04,
+		AUTH_IN_GAME = 0x05,
+		AUTH_ERROR = 0x06,
+		AUTH_AGREEMENT = 0x07,
+		AUTH_FAILED = 0x08
 	};
 
 	Packet result(pkt.GetOpcode());
@@ -112,19 +102,18 @@ void LoginSession::HandleLogin(Packet & pkt)
 
 	pkt >> account >> password;
 
-	if (account.size() == 0 
-		|| account.size() > MAX_ID_SIZE 
-		|| password.size() == 0 
+	if (account.size() == 0
+		|| account.size() > MAX_ID_SIZE
+		|| password.size() == 0
 		|| password.size() > MAX_PW_SIZE
 		|| !WordGuardSystem(account, account.length()))
-		resultCode = AUTH_NOT_FOUND; 
+		resultCode = AUTH_NOT_FOUND;
 	else
 		resultCode = g_pMain->m_DBProcess.AccountLogin(account, password);
-	
+
 	std::string sAuthMessage;
 
-	switch (resultCode)
-	{
+	switch (resultCode) {
 	case AUTH_SUCCESS:
 		sAuthMessage = "SUCCESS";
 		break;
@@ -150,34 +139,28 @@ void LoginSession::HandleLogin(Packet & pkt)
 		sAuthMessage = "FAILED";
 		break;
 	default:
-		sAuthMessage = string_format("UNKNOWN (%d)",resultCode);
+		sAuthMessage = string_format("UNKNOWN (%d)", resultCode);
 		break;
 	}
 
-	printf("[ LOGIN - %d:%d:%d ] ID=%s Authentication=%s\n", 
+	printf("[ LOGIN - %d:%d:%d ] ID=%s Authentication=%s\n",
 		time.GetHour(), time.GetMinute(), time.GetSecond(),
 		account.c_str(), sAuthMessage.c_str());
 
-	result <<uint16(0) <<int8(resultCode);
-	if (resultCode == AUTH_SUCCESS)
-	{
+	result << uint16(0) << int8(resultCode);
+	if (resultCode == AUTH_SUCCESS) {
 		result << g_pMain->m_DBProcess.AccountPremium(account);
 		result << account;
-	}
-	else if (resultCode == AUTH_IN_GAME)
-	{
-	}
-	else if (resultCode == AUTH_AGREEMENT)
-	{
+	} else if (resultCode == AUTH_IN_GAME) {
+	} else if (resultCode == AUTH_AGREEMENT) {
 	}
 
-	g_pMain->WriteUserLogFile(string_format("[ LOGIN - %d:%d:%d ] ID=%s Authentication=%s\n",time.GetHour(),time.GetMinute(),time.GetSecond(),account.c_str(),password.c_str(),sAuthMessage.c_str()));
+	g_pMain->WriteUserLogFile(string_format("[ LOGIN - %d:%d:%d ] ID=%s Authentication=%s\n", time.GetHour(), time.GetMinute(), time.GetSecond(), account.c_str(), password.c_str(), sAuthMessage.c_str()));
 
-	Send(&result);	
+	Send(&result);
 }
 
-void LoginSession::HandleServerlist(Packet & pkt)
-{
+void LoginSession::HandleServerlist(Packet & pkt) {
 	Packet result(pkt.GetOpcode());
 
 	uint16 echo;
@@ -188,33 +171,28 @@ void LoginSession::HandleServerlist(Packet & pkt)
 	Send(&result);
 }
 
-void LoginSession::HandleNews(Packet & pkt)
-{
+void LoginSession::HandleNews(Packet & pkt) {
 	Packet result(pkt.GetOpcode());
 	News *pNews = g_pMain->GetNews();
 
-	if (pNews->Size)
-	{
+	if (pNews->Size) {
 		result << "Login Notice" << uint16(pNews->Size);
 		result.append(pNews->Content, pNews->Size);
-	}
-	else // dummy news, will skip past it
+	} else // dummy news, will skip past it
 	{
 		result << "Login Notice" << "<empty>";
 	}
 	Send(&result);
 }
 
-void LoginSession::HandleSetEncryptionPublicKey(Packet & pkt)
-{
+void LoginSession::HandleSetEncryptionPublicKey(Packet & pkt) {
 	Packet result(pkt.GetOpcode());
 	result << m_crypto.GenerateKey();
 	Send(&result);
 	EnableCrypto();
 }
 
-void LoginSession::HandleUnkF7(Packet & pkt)
-{
+void LoginSession::HandleUnkF7(Packet & pkt) {
 	Packet result(pkt.GetOpcode());
 	result << uint16(0);
 	Send(&result);

@@ -14,7 +14,7 @@ typedef std::map<uint64, _USER_SEAL_ITEM*>	UserItemSealMap;
 typedef	std::list<_EXCHANGE_ITEM*>			ItemList;
 typedef	std::map<uint32, time_t>			SkillCooldownList;
 typedef std::map<uint8, time_t>				MagicTypeCooldownList;
-typedef	std::map<uint16, time_t>			RHitRepeatList; 
+typedef	std::map<uint16, time_t>			RHitRepeatList;
 typedef	std::map<uint32, time_t>			UserSavedMagicMap;
 
 // Time (in seconds) between each save request (3 min).
@@ -41,55 +41,50 @@ typedef	std::map<uint32, time_t>			UserSavedMagicMap;
 // time (in seconds) to verifi the User items 
 #define PLAYER_CONF_INTERVAL	(2 * 60)
 
-enum GameState
-{
+enum GameState {
 	GAME_STATE_CONNECTED,
 	GAME_STATE_INGAME
 };
 
-enum MerchantState
-{
-	MERCHANT_STATE_NONE		= -1,
-	MERCHANT_STATE_SELLING	= 0,
-	MERCHANT_STATE_BUYING	= 1
+enum MerchantState {
+	MERCHANT_STATE_NONE = -1,
+	MERCHANT_STATE_SELLING = 0,
+	MERCHANT_STATE_BUYING = 1
 };
 
-enum ClassType
-{
-	ClassWarrior		= 1,
-	ClassRogue			= 2,
-	ClassMage			= 3,
-	ClassPriest			= 4,
-	ClassWarriorNovice	= 5,
-	ClassWarriorMaster	= 6,
-	ClassRogueNovice	= 7,
-	ClassRogueMaster	= 8,
-	ClassMageNovice		= 9,
-	ClassMageMaster		= 10,
-	ClassPriestNovice	= 11,
-	ClassPriestMaster	= 12,
-	ClassPorutu			= 13,
-	ClassPorutuSkilled	= 14,
-	ClassPorutuMaster	= 15
+enum ClassType {
+	ClassWarrior = 1,
+	ClassRogue = 2,
+	ClassMage = 3,
+	ClassPriest = 4,
+	ClassWarriorNovice = 5,
+	ClassWarriorMaster = 6,
+	ClassRogueNovice = 7,
+	ClassRogueMaster = 8,
+	ClassMageNovice = 9,
+	ClassMageMaster = 10,
+	ClassPriestNovice = 11,
+	ClassPriestMaster = 12,
+	ClassPorutu = 13,
+	ClassPorutuSkilled = 14,
+	ClassPorutuMaster = 15
 };
 
-enum WarpListResponse
-{
-	WarpListGenericError		= 0,
-	WarpListSuccess				= 1,  // "You've arrived at."
-	WarpListMinLevel			= 2,  // "You need to be at least level <level>."
-	WarpListNotDuringCSW		= 3,  // "You cannot enter during the Castle Siege War."
-	WarpListNotDuringWar		= 4,  // "You cannot enter during the Lunar War."
-	WarpListNeedNP				= 5,  // "You cannot enter when you have 0 national points."
-	WarpListWrongLevelDLW		= 6,  // "Only characters with level 30~50 can enter." (dialog) 
-	WarpListDoNotQualify		= 7,  // "You can not enter because you do not qualify." (dialog) 
-	WarpListRecentlyTraded		= 8,  // "You can't teleport for 2 minutes after trading." (dialog) 
-	WarpListArenaFull			= 9,  // "Arena Server is full to capacity. Please try again later." (dialog) 
-	WarpListFinished7KeysQuest	= 10, // "You can't enter because you completed Guardian of 7 Keys quest." (dialog) 
+enum WarpListResponse {
+	WarpListGenericError = 0,
+	WarpListSuccess = 1,  // "You've arrived at."
+	WarpListMinLevel = 2,  // "You need to be at least level <level>."
+	WarpListNotDuringCSW = 3,  // "You cannot enter during the Castle Siege War."
+	WarpListNotDuringWar = 4,  // "You cannot enter during the Lunar War."
+	WarpListNeedNP = 5,  // "You cannot enter when you have 0 national points."
+	WarpListWrongLevelDLW = 6,  // "Only characters with level 30~50 can enter." (dialog) 
+	WarpListDoNotQualify = 7,  // "You can not enter because you do not qualify." (dialog) 
+	WarpListRecentlyTraded = 8,  // "You can't teleport for 2 minutes after trading." (dialog) 
+	WarpListArenaFull = 9,  // "Arena Server is full to capacity. Please try again later." (dialog) 
+	WarpListFinished7KeysQuest = 10, // "You can't enter because you completed Guardian of 7 Keys quest." (dialog) 
 };
 
-enum TransformationType
-{
+enum TransformationType {
 	TransformationNone,
 	TransformationMonster,
 	TransformationNPC,
@@ -97,8 +92,7 @@ enum TransformationType
 };
 
 
-enum TeamColour
-{
+enum TeamColour {
 	TeamColourNone = 0,
 	TeamColourBlue,
 	TeamColourRed
@@ -106,13 +100,11 @@ enum TeamColour
 
 #define ARROW_EXPIRATION_TIME (5) // seconds
 
-struct Arrow
-{
+struct Arrow {
 	uint32 nSkillID;
 	time_t tFlyingTime;
 
-	Arrow(uint32 nSkillID, time_t tFlyingTime) 
-	{
+	Arrow(uint32 nSkillID, time_t tFlyingTime) {
 		this->nSkillID = nSkillID;
 		this->tFlyingTime = tFlyingTime;
 	}
@@ -123,10 +115,9 @@ typedef std::vector<Arrow> ArrowList;
 #include "GameDefine.h"
 
 class CGameServerDlg;
-class CUser : public Unit, public KOSocket
-{
+class CUser : public Unit, public KOSocket {
 public:
-	
+
 
 	virtual uint16 GetID() { return GetSocketID(); }
 
@@ -137,8 +128,8 @@ public:
 	uint8 floodcounter;
 	DWORD m_lastflood;
 	DWORD m_mutetime;
-		uint64_t macadresi;
-	uint32 hddadresi,cpuadresi;
+	uint64_t macadresi;
+	uint32 hddadresi, cpuadresi;
 
 	DWORD lastshcheck;
 	uint8 shcheckcount;
@@ -156,7 +147,7 @@ public:
 	uint32	m_nHair;
 	time_t  m_tLastKillTime;
 	uint16	m_sChallangeAchieveID;
-	
+
 	time_t	m_LastCashTimeCheck;
 	time_t	m_LastCashTimeCheck2;
 	time_t	m_LastConferedTime;
@@ -166,12 +157,12 @@ public:
 
 	uint8	m_bRank;
 	uint8	m_bTitle;
-	int64	m_iExp;	
-	uint32	m_iLoyalty,m_iLoyaltyMonthly;
+	int64	m_iExp;
+	uint32	m_iLoyalty, m_iLoyaltyMonthly;
 	uint32	m_iMannerPoint;
 	uint8	m_bFace;
 	uint8	m_bCity;
-	int16	m_bKnights;	
+	int16	m_bKnights;
 	uint8	m_bFame;
 	int16	m_sHp, m_sMp, m_sSp;
 	uint8	m_bStats[STAT_COUNT];
@@ -182,11 +173,11 @@ public:
 	int16	m_sBind;
 	bool	NpExchangeAsk;
 	uint32	NpExchangeValue;
-	
+
 	bool	GoldExchangeAsk;
 	uint32	GoldExchangeValue;
 
-	uint8    m_bstrSkill[10];	
+	uint8    m_bstrSkill[10];
 	_ITEM_DATA m_sItemArray[INVENTORY_TOTAL];
 	_ITEM_DATA m_sVIPItemArray[MAX_SLOT_VIP_STORAGE];
 	_ITEM_DATA m_sWarehouseArray[WAREHOUSE_MAX];
@@ -211,15 +202,15 @@ public:
 	RepurchaseMap m_RepurchaseMap;
 
 	typedef CSTLMap<_ACHIEVE_QUEST> AchieveKillMap;
-	
+
 	AchieveKillMap  m_bAchieveKillCount;
-	
+
 
 
 
 
 	uint32	m_iMonsterDefeatedCount, m_iUserDefeatedCount, m_iUserDeathCount, m_iAchievementPoint;
-		
+
 	uint16	AchieveNormalCount, AchieveQuestCount, AchieveWarCount, AchieveAdventureCount,
 		AchieveChallengeCount, AchieveLast1, AchieveLast2, AchieveLast3;
 
@@ -308,7 +299,7 @@ public:
 
 	uint8	m_bPlayerAttackAmount;
 	uint8	m_bAddWeaponDamage;
-	uint16	m_sAddArmourAc; 
+	uint16	m_sAddArmourAc;
 	uint8	m_bPctArmourAc;
 
 	int16	m_sItemMaxHp;
@@ -331,7 +322,7 @@ public:
 	uint8	m_bNPGainAmount, m_bItemNPBonus, m_bSkillNPBonus;
 	uint8	m_bNoahGainAmount, m_bItemNoahGainAmount;
 	uint8	m_bMaxWeightAmount;
-		
+
 	uint8   m_FlashExpBonus;
 	uint8   m_FlashDcBonus;
 	uint8   m_FlashWarBonus;
@@ -342,7 +333,7 @@ public:
 	bool	m_bWarp;
 	uint8	m_bNeedParty;
 
-	uint16	m_sPartyIndex,m_sPartyRequest,m_sAllyRequest;
+	uint16	m_sPartyIndex, m_sPartyRequest, m_sAllyRequest;
 	bool	m_bInParty;
 	bool	m_bPartyLeader;
 
@@ -382,9 +373,9 @@ public:
 	bool	m_bZoneChangeFlag;
 
 	uint8	m_bRegeneType;				// Did you die and go home or did you type '/town'?
-	
+
 	bool	m_bIsDevil;
-	
+
 	uint32  m_LastOnline;
 	time_t	m_tLastRegeneTime;			// The last moment you got resurrected.
 
@@ -411,14 +402,14 @@ public:
 
 public:
 	INLINE bool isMeChatroom(uint16 Room) { return m_ChatRoomIndex == Room; };
-	INLINE bool  isGenieActive(){ return m_bGenieStatus;}
-	INLINE uint16 GetGenieTime(){ return m_GenieTime; }
+	INLINE bool  isGenieActive() { return m_bGenieStatus; }
+	INLINE uint16 GetGenieTime() { return m_GenieTime; }
 
 	INLINE uint16 GetCoverTitle() { return m_sAchieveCoverTitle; } // Achieve Title gönderilecek.
 	INLINE uint16 GetSkillTitle() { return m_sAchieveSkillTitle; } // Achieve Title gönderilecek.
-	
+
 	INLINE void SetSkillTitle(uint16 AchieveSkillTitleID) { m_sAchieveSkillTitle = AchieveSkillTitleID; }
-	INLINE void SetCoverTitle(uint16 AchieveCoverTitleID) { m_sAchieveCoverTitle = AchieveCoverTitleID; } 
+	INLINE void SetCoverTitle(uint16 AchieveCoverTitleID) { m_sAchieveCoverTitle = AchieveCoverTitleID; }
 
 	INLINE bool isBanned() { return GetAuthority() == AUTHORITY_BANNED; }
 	INLINE bool isMuted() { return GetAuthority() == AUTHORITY_MUTED; }
@@ -446,45 +437,42 @@ public:
 	INLINE bool isPriest() { return JobGroupCheck(ClassPriest); }
 	INLINE bool isKurianPortu() { return JobGroupCheck(ClassPorutu); }
 
-	INLINE bool isBeginner() 
-	{
+	INLINE bool isBeginner() {
 		uint16 sClass = GetClassType();
 		return (sClass == ClassWarrior || sClass == ClassRogue
-		|| sClass == ClassMage || sClass == ClassPriest 
-		|| sClass == ClassPorutu);
+			|| sClass == ClassMage || sClass == ClassPriest
+			|| sClass == ClassPorutu);
 	}
 
 	INLINE bool isBeginnerWarrior() { return GetClassType() == ClassWarrior; }
-	INLINE bool isBeginnerRogue()   { return GetClassType() == ClassRogue; }
-	INLINE bool isBeginnerMage()    { return GetClassType() == ClassMage; }
-	INLINE bool isBeginnerPriest()  { return GetClassType() == ClassPriest; }
-	INLINE bool isBeginnerPorutu()  { return GetClassType() == ClassPorutu; }
+	INLINE bool isBeginnerRogue() { return GetClassType() == ClassRogue; }
+	INLINE bool isBeginnerMage() { return GetClassType() == ClassMage; }
+	INLINE bool isBeginnerPriest() { return GetClassType() == ClassPriest; }
+	INLINE bool isBeginnerPorutu() { return GetClassType() == ClassPorutu; }
 
-	INLINE bool isNovice() 
-	{
+	INLINE bool isNovice() {
 		uint16 sClass = GetClassType();
 		return (sClass == ClassWarriorNovice || sClass == ClassRogueNovice
-			|| sClass == ClassMageNovice || sClass == ClassPriestNovice || sClass == ClassPorutuSkilled); 
+			|| sClass == ClassMageNovice || sClass == ClassPriestNovice || sClass == ClassPorutuSkilled);
 	}
 
 	INLINE bool isNoviceWarrior() { return GetClassType() == ClassWarriorNovice; }
-	INLINE bool isNoviceRogue()   { return GetClassType() == ClassRogueNovice; }
-	INLINE bool isNoviceMage()    { return GetClassType() == ClassMageNovice; }
-	INLINE bool isNovicePriest()  { return GetClassType() == ClassPriestNovice; }
-	INLINE bool isNovicePorutu()  { return GetClassType() == ClassPorutuSkilled; }
+	INLINE bool isNoviceRogue() { return GetClassType() == ClassRogueNovice; }
+	INLINE bool isNoviceMage() { return GetClassType() == ClassMageNovice; }
+	INLINE bool isNovicePriest() { return GetClassType() == ClassPriestNovice; }
+	INLINE bool isNovicePorutu() { return GetClassType() == ClassPorutuSkilled; }
 
-	INLINE bool isMastered() 
-	{
+	INLINE bool isMastered() {
 		uint16 sClass = GetClassType();
-		return (sClass == ClassWarriorMaster || sClass == ClassRogueMaster 
-			|| sClass == ClassMageMaster || sClass == ClassPriestMaster || sClass == ClassPorutuMaster); 
+		return (sClass == ClassWarriorMaster || sClass == ClassRogueMaster
+			|| sClass == ClassMageMaster || sClass == ClassPriestMaster || sClass == ClassPorutuMaster);
 	}
 
 	INLINE bool isMasteredWarrior() { return GetClassType() == ClassWarriorMaster; }
-	INLINE bool isMasteredRogue()   { return GetClassType() == ClassRogueMaster; }
-	INLINE bool isMasteredMage()    { return GetClassType() == ClassMageMaster; }
-	INLINE bool isMasteredPriest()  { return GetClassType() == ClassPriestMaster; }
-	INLINE bool isMasteredPorutu()  { return GetClassType() == ClassPorutuMaster; }
+	INLINE bool isMasteredRogue() { return GetClassType() == ClassRogueMaster; }
+	INLINE bool isMasteredMage() { return GetClassType() == ClassMageMaster; }
+	INLINE bool isMasteredPriest() { return GetClassType() == ClassPriestMaster; }
+	INLINE bool isMasteredPorutu() { return GetClassType() == ClassPorutuMaster; }
 
 	INLINE bool isTrading() { return m_sExchangeUser != -1; }
 	INLINE bool isStoreOpen() { return m_bStoreOpen; }
@@ -493,7 +481,7 @@ public:
 	INLINE bool isBuyingMerchant() { return GetMerchantState() == MERCHANT_STATE_BUYING; }
 	INLINE bool isMining() { return m_bMining; }
 
-	INLINE bool isBlockingPrivateChat() { return m_bBlockPrivateChat ; }
+	INLINE bool isBlockingPrivateChat() { return m_bBlockPrivateChat; }
 
 	INLINE bool isTransformed() { return m_transformationType != TransformationNone; }
 	INLINE bool isNPCTransformation() { return m_transformationType == TransformationNPC; }
@@ -502,8 +490,8 @@ public:
 
 	INLINE bool isWeaponsDisabled() { return m_bWeaponsDisabled; }
 
-	INLINE bool isInPKZone() {  return GetZoneID() == ZONE_ARDREAM || GetZoneID() == ZONE_RONARK_LAND || GetZoneID() == ZONE_RONARK_LAND_BASE || GetZoneID() == ZONE_PVP_EVENT || GetZoneID() == ZONE_CLAN_EVENT; }
-	INLINE bool isInEventZone() {  return GetZoneID() == ZONE_BORDER_DEFENSE_WAR || GetZoneID() == ZONE_JURAD_MOUNTAIN || GetZoneID() == ZONE_DARK_LAND || GetZoneID() == ZONE_BIFROST; }
+	INLINE bool isInPKZone() { return GetZoneID() == ZONE_ARDREAM || GetZoneID() == ZONE_RONARK_LAND || GetZoneID() == ZONE_RONARK_LAND_BASE || GetZoneID() == ZONE_PVP_EVENT || GetZoneID() == ZONE_CLAN_EVENT; }
+	INLINE bool isInEventZone() { return GetZoneID() == ZONE_BORDER_DEFENSE_WAR || GetZoneID() == ZONE_JURAD_MOUNTAIN || GetZoneID() == ZONE_DARK_LAND || GetZoneID() == ZONE_BIFROST; }
 
 	INLINE int8 GetMerchantState() { return m_bMerchantState; }
 
@@ -519,9 +507,8 @@ public:
 	*
 	* @return	The class type.
 	*/
-	INLINE ClassType GetBaseClassType()
-	{
-		static const ClassType classTypes[] = 
+	INLINE ClassType GetBaseClassType() {
+		static const ClassType classTypes[] =
 		{
 			ClassWarrior, ClassRogue, ClassMage, ClassPriest, ClassPorutu,
 			ClassWarrior, ClassWarrior,	// job changed / mastered
@@ -529,7 +516,7 @@ public:
 			ClassMage, ClassMage,		// job changed / mastered
 			ClassPriest, ClassPriest,	// job changed / mastered
 			ClassPorutu,ClassPorutu
-		}; 
+		};
 
 		uint8 classType = GetClassType();
 		ASSERT(classType >= 1 && classType <= 18);
@@ -541,8 +528,7 @@ public:
 	*
 	* @return	The class type.
 	*/
-	INLINE uint8 GetClassType()
-	{
+	INLINE uint8 GetClassType() {
 		return GetClass() % 100;
 	}
 
@@ -603,28 +589,24 @@ public:
 	uint8 GetEventZoneTime();
 	uint8 GetEventZoneUserCount();
 
-	INLINE uint8 GetStat(StatType type)
-	{
+	INLINE uint8 GetStat(StatType type) {
 		if (type >= STAT_COUNT)
 			return 0;
 
 		return m_bStats[type];
 	}
 
-	INLINE uint8 GetRebStatBuff(StatType type)
-	{
+	INLINE uint8 GetRebStatBuff(StatType type) {
 		ASSERT(type < STAT_COUNT);
 		return m_bRebStatBuffs[type];
 	}
 
-	INLINE void SetRebStatBuff(StatType type, int8 val)
-	{
+	INLINE void SetRebStatBuff(StatType type, int8 val) {
 		ASSERT(type < STAT_COUNT);
 		m_bRebStatBuffs[type] = val;
 	}
 
-	INLINE void SetStat(StatType type, uint8 val)
-	{
+	INLINE void SetStat(StatType type, uint8 val) {
 		ASSERT(type < STAT_COUNT);
 		m_bStats[type] = val;
 	}
@@ -632,122 +614,104 @@ public:
 	INLINE int32 GetStatTotal() // NOTE: Shares name with another, but lack-of args should be self-explanatory
 	{
 		int32 total = 0; // NOTE: this loop should be unrolled by the compiler
-		foreach_array (i, m_bStats)
+		foreach_array(i, m_bStats)
 			total += m_bStats[i];
 		return total;
 	}
 
-	INLINE int16 GetStatItemBonus(StatType type)
-	{
+	INLINE int16 GetStatItemBonus(StatType type) {
 		ASSERT(type < STAT_COUNT);
 		return m_sStatItemBonuses[type];
 	}
 
-	INLINE int16 GetStatWithItemBonus(StatType type)
-	{
+	INLINE int16 GetStatWithItemBonus(StatType type) {
 		return GetStat(type) + GetStatItemBonus(type) + GetRebStatBuff(type);
 	}
 
-	INLINE int32 GetStatItemBonusTotal()
-	{
+	INLINE int32 GetStatItemBonusTotal() {
 		int32 total = 0; // NOTE: this loop should be unrolled by the compiler
-		foreach_array (i, m_sStatItemBonuses)
+		foreach_array(i, m_sStatItemBonuses)
 			total += m_sStatItemBonuses[i];
 		return total;
 	}
 
-	INLINE int16 GetStatBonusTotal(StatType type)
-	{
+	INLINE int16 GetStatBonusTotal(StatType type) {
 		return GetStatBuff(type) + GetStatItemBonus(type) + GetRebStatBuff(type);
 	}
 
-	INLINE int8 GetStatBuff(StatType type)
-	{
+	INLINE int8 GetStatBuff(StatType type) {
 		ASSERT(type < STAT_COUNT);
 		return m_bStatBuffs[type];
 	}
 
-	INLINE void SetStatBuff(StatType type, int8 val)
-	{
+	INLINE void SetStatBuff(StatType type, int8 val) {
 		ASSERT(type < STAT_COUNT);
 
-			m_bStatBuffs[type] += val;
+		m_bStatBuffs[type] += val;
 	}
 
-	INLINE void RemoveStatBuff(StatType type, int8 val)
-	{
+	INLINE void RemoveStatBuff(StatType type, int8 val) {
 		ASSERT(type < STAT_COUNT);
 
-			m_bStatBuffs[type] -= val;
+		m_bStatBuffs[type] -= val;
 	}
 
-	INLINE uint32 GetStatBuffTotal()
-	{
+	INLINE uint32 GetStatBuffTotal() {
 		uint32 total = 0; // NOTE: this loop should be unrolled by the compiler
-		foreach_array (i, m_bStatBuffs)
+		foreach_array(i, m_bStatBuffs)
 			total += m_bStatBuffs[i];
 		return total;
 	}
 
-	INLINE uint16 getStatTotal(StatType type)
-	{
+	INLINE uint16 getStatTotal(StatType type) {
 		return GetStat(type) + GetStatItemBonus(type) + GetStatBuff(type) + GetRebStatBuff(type);
 	}
 
-	INLINE uint16 GetTotalSkillPoints()
-	{
-		return m_bstrSkill[SkillPointFree] + m_bstrSkill[SkillPointCat1] 
-		+ m_bstrSkill[SkillPointCat2] + m_bstrSkill[SkillPointCat3] 
-		+ m_bstrSkill[SkillPointMaster];
+	INLINE uint16 GetTotalSkillPoints() {
+		return m_bstrSkill[SkillPointFree] + m_bstrSkill[SkillPointCat1]
+			+ m_bstrSkill[SkillPointCat2] + m_bstrSkill[SkillPointCat3]
+			+ m_bstrSkill[SkillPointMaster];
 	}
 
-	INLINE uint8 GetSkillPoints(SkillPointCategory category)
-	{
+	INLINE uint8 GetSkillPoints(SkillPointCategory category) {
 		if (category < SkillPointFree || category > SkillPointMaster)
 			return 0;
 
 		return m_bstrSkill[category];
 	}
 
-	INLINE _ITEM_DATA * GetItem(uint8 pos) 
-	{
-		return &m_sItemArray[pos]; 
+	INLINE _ITEM_DATA * GetItem(uint8 pos) {
+		return &m_sItemArray[pos];
 	}
 
 
-	INLINE _ITEM_DATA * GetItembySerial(uint64 nSerial) 
-	{
-		for (int pos = SLOT_MAX; pos < (SLOT_MAX + HAVE_MAX); pos++)
-		{
+	INLINE _ITEM_DATA * GetItembySerial(uint64 nSerial) {
+		for (int pos = SLOT_MAX; pos < (SLOT_MAX + HAVE_MAX); pos++) {
 			_ITEM_DATA * pItem = &m_sItemArray[pos];
 
-			if(pItem->nSerialNum == nSerial)
-			return &m_sItemArray[pos]; 
+			if (pItem->nSerialNum == nSerial)
+				return &m_sItemArray[pos];
 			else
-			continue;
+				continue;
 		}
 	}
 
-	INLINE uint8 GetItemSlotbySerial(uint64 nSerial) 
-	{
-		for (int pos = SLOT_MAX; pos < (SLOT_MAX + HAVE_MAX); pos++)
-		{
+	INLINE uint8 GetItemSlotbySerial(uint64 nSerial) {
+		for (int pos = SLOT_MAX; pos < (SLOT_MAX + HAVE_MAX); pos++) {
 			_ITEM_DATA * pItem = &m_sItemArray[pos];
 
-			if(pItem->nSerialNum == nSerial)
-			return pos; 
+			if (pItem->nSerialNum == nSerial)
+				return pos;
 			else
-			continue;
+				continue;
 		}
 	}
 
-	INLINE _ITEM_DATA * GetVipStorageSlot(uint8 pos) 
-	{
-		return &m_sVIPItemArray[pos]; 
+	INLINE _ITEM_DATA * GetVipStorageSlot(uint8 pos) {
+		return &m_sVIPItemArray[pos];
 	}
 
-	INLINE _ITEM_TABLE * GetItemPrototype(uint8 pos) 
-	{
+	INLINE _ITEM_TABLE * GetItemPrototype(uint8 pos) {
 		_ITEM_DATA * pItem;
 		ASSERT(pos < INVENTORY_TOTAL);
 		return GetItemPrototype(pos, pItem);
@@ -757,12 +721,12 @@ public:
 
 	INLINE KOMap * GetMap() { return m_pMap; }
 
-	CUser(uint16 socketID, SocketMgr *mgr); 
+	CUser(uint16 socketID, SocketMgr *mgr);
 
 	virtual void OnConnect();
 	virtual void OnDisconnect();
 	virtual bool HandlePacket(Packet & pktx);
-	
+
 	void Update();
 
 	virtual void AddToRegion(int16 new_region_x, int16 new_region_z);
@@ -784,7 +748,7 @@ public:
 	void RemoveRival();
 	void SendLoyaltyChange(int32 nChangeAmount = 0, bool bIsKillReward = false, bool bIsBonusTime = false, bool bIsAddLoyaltyMonthly = true);
 	void SendKnightCash(int32 nCashPoint = 0);
-	
+
 	void ReportedUsers();
 
 	void HandleAchieve(Packet & pkt);
@@ -807,7 +771,7 @@ public:
 	void TrapProcess();
 	bool JobGroupCheck(short jobgroupid);
 	void SendSay(int32 nTextID[8]);
-	void SelectMsg(uint8 bFlag, int32 nQuestID, int32 menuHeaderText, 
+	void SelectMsg(uint8 bFlag, int32 nQuestID, int32 menuHeaderText,
 		int32 menuButtonText[MAX_MESSAGE_EVENT], int32 menuButtonEvents[MAX_MESSAGE_EVENT]);
 	bool CheckClass(short class1, short class2 = -1, short class3 = -1, short class4 = -1, short class5 = -1, short class6 = -1);
 	bool GiveItem(uint32 nItemID, uint32 sCount = 1, bool send_packet = true, uint32 Time = 0);
@@ -855,13 +819,13 @@ public:
 
 	void SendDurability(uint8 slot, uint16 durability);
 	void SendItemMove(uint8 subcommand);
-	void ItemWoreOut( int type, int damage );
+	void ItemWoreOut(int type, int damage);
 	void Dead();
 	void GetUserInfoForAI(Packet & result);
-	bool ItemEquipAvailable( _ITEM_TABLE* pTable );
+	bool ItemEquipAvailable(_ITEM_TABLE* pTable);
 	virtual void HpChange(int amount, Unit *pAttacker = nullptr, bool bSendToAI = true);
 	virtual void MSpChange(int amount);
-		virtual void ySpChange(int amount);
+	virtual void ySpChange(int amount);
 	void SendPartyHPUpdate();
 	void ShowEffect(uint32 nSkillID);
 	void ShowNpcEffect(uint32 nEffectID, bool bSendToRegion = false);
@@ -877,7 +841,7 @@ public:
 	void Login(Packet & pkt);
 	bool WordGuardSystem(std::string Word, uint8 WordStr);
 	void SelNationToAgent(Packet & pkt);
-	
+
 	// Character Location
 	void AllCharInfo(Packet & pkt);
 	void AllCharInfoToAgent();
@@ -893,7 +857,7 @@ public:
 	void RecvLoginInfo(Packet & pkt); // from the database
 
 	void SpeedHackTime(Packet & pkt);
-	void TempleProcess(Packet & pkt );
+	void TempleProcess(Packet & pkt);
 	void TempleOperations(uint8 bType = 0);
 
 	void MonsterStoneProcess();
@@ -912,7 +876,7 @@ public:
 
 	void Chat(Packet & pkt);
 	void ChatTargetSelect(Packet & pkt);
-	void SendDeathNotice(Unit * pKiller, DeathNoticeType noticeType); 
+	void SendDeathNotice(Unit * pKiller, DeathNoticeType noticeType);
 
 	bool ProcessChatCommand(std::string & message);
 
@@ -983,11 +947,11 @@ public:
 	void ItemTrade(Packet & pkt);
 	void ShopHackerBan();
 	void ItemRepurchase(Packet & pkt);
-	
+
 	void DupeItemsDelete();
 	void IllegalItemsBanned();
 
-	INLINE void SetUserEventRoom(uint16 nEventRoom) { m_bEventRoom = nEventRoom;}
+	INLINE void SetUserEventRoom(uint16 nEventRoom) { m_bEventRoom = nEventRoom; }
 
 	void BundleOpenReq(Packet & pkt);
 	void ItemGet(Packet & pkt);
@@ -1002,10 +966,10 @@ public:
 	void PartyProcess(Packet & pkt);
 	void PartyDelete();
 	void PartyPromote(uint16 sMemberID);
-	void PartyRemove( int memberid );
+	void PartyRemove(int memberid);
 	void PartyInsert();
 	void PartyCancel();
-	void PartyRequest( int memberid, bool bCreate );
+	void PartyRequest(int memberid, bool bCreate);
 
 	// Trade system
 	void ExchangeProcess(Packet & pkt);
@@ -1081,7 +1045,7 @@ public:
 	uint8 GetFriendStatus(std::string & charName, int16 & sid);
 
 	void SelectWarpList(Packet & pkt);
-	bool GetWarpList( int warp_group );
+	bool GetWarpList(int warp_group);
 
 	void ServerChangeOk(Packet & pkt);
 
@@ -1156,7 +1120,7 @@ public:
 	void HandleUserInfoNick(Packet & pkt);
 	void HandleUserInfoShow(Packet & pkt);
 	void HandleUserInfoDetail(Packet & pkt);
-	
+
 	void HandleChallenge(Packet & pkt);
 	void HandleChallengeRequestPVP(Packet & pkt);
 	void HandleChallengeRequestCVC(Packet & pkt);
@@ -1184,7 +1148,7 @@ public:
 	void AppendNoticeEntry(Packet & pkt, uint8 & elementCount, const char * message, const char * title);
 	void AppendNoticeEntryOld(Packet & pkt, uint8 & elementCount, const char * message);
 	void AppendExtraNoticeData(Packet & pkt, uint8 & elementCount);
-	void UserLookChange( int pos, int itemid, int durability );
+	void UserLookChange(int pos, int itemid, int durability);
 	void SpeedHackUser();
 	void LoyaltyChange(int16 tid, uint16 bonusNP = 0);
 	void LoyaltyDivide(int16 tid, uint16 bonusNP = 0);
@@ -1205,8 +1169,8 @@ public:
 
 	bool isEventUser();
 
-	void SendTargetHP( uint8 echo, int tid, int damage = 0 );
-	bool IsValidSlotPos( _ITEM_TABLE* pTable, int destpos );
+	void SendTargetHP(uint8 echo, int tid, int damage = 0);
+	bool IsValidSlotPos(_ITEM_TABLE* pTable, int destpos);
 	void SetUserAbility(bool bSendPacket = true);
 	void LevelChange(uint8 level, bool bLevelUp = true);
 	void SetSlotItemValue();
@@ -1233,7 +1197,7 @@ public:
 	void CastleSiegeWarProcess(CUser * pUser);
 	void SiegeWarFareNpc(Packet & pkt);
 	void LogosShout(Packet & pkt);
-	
+
 	void RemoveRegionChat();
 
 	virtual void GetInOut(Packet & result, uint8 bType);
@@ -1255,11 +1219,11 @@ public:
 
 	// Premium Switching
 
-	
+
 	typedef	CSTLMap	<_PREMIUM_TYPE>			PremiumArray;
 	PremiumArray		PremiumList;
 
-	
+
 	void PremiumSwitchHandle(Packet & pkt);
 
 	uint8	PremiumID;
@@ -1270,7 +1234,7 @@ public:
 
 	void GivePremium(uint8 bPremiumType, uint16 sPremiumTime);
 	void SendPremiumInfo();
-	
+
 	// Type | Time
 
 	INLINE uint8 GetPremium() { return PremiumID; }
@@ -1278,9 +1242,9 @@ public:
 	// Exchange system
 	bool CheckExchange(int nExchangeID);
 	bool RunExchange(int nExchangeID, uint16 count = 0 /* No random flag */);
-	bool RunSelectExchange(int nExchangeID, uint32 Count = 0 );
-	uint32 GetMaxExchange(int nExchangeID);	
-	
+	bool RunSelectExchange(int nExchangeID, uint32 Count = 0);
+	uint32 GetMaxExchange(int nExchangeID);
+
 	int8 bySelectedReward;
 	uint8 bMenuID;
 
@@ -1299,7 +1263,7 @@ public:
 
 	//Quest System
 	void SendSkillQuestFinish();
-	
+
 	void V3_QuestDataRequest();
 	void V3_QuestProcess(Packet & pkt);
 	void V3_QuestEvent(uint16 sQuestID, uint8 bQuestState);
@@ -1314,13 +1278,13 @@ public:
 	bool V3_QuestRunEvent(_QUEST_HELPER * pQuestHelper, uint32 nEventID, int8 bSelectedReward = 0);
 	void V3_QuestUpdateEvent(uint16 sQuestID);
 	void V3_QuestSendNpcMsg(uint32 nQuestID, uint16 sNpcID);
-	void V3_QuestShowGiveItem(uint32 nUnk1, uint32 sUnk1, 
+	void V3_QuestShowGiveItem(uint32 nUnk1, uint32 sUnk1,
 		uint32 nUnk2, uint32 sUnk2,
 		uint32 nUnk3, uint32 sUnk3,
 		uint32 nUnk4, uint32 sUnk4,
 		uint32 nUnk5 = 0, uint32 sUnk5 = 0);
 	void V3_QuestShowMap(uint32 nQuestHelperID);
-	uint16 V3_QuestCheckMonsterCount(uint16 sQuestID,uint8 Slot);
+	uint16 V3_QuestCheckMonsterCount(uint16 sQuestID, uint8 Slot);
 	uint16 V3_QuestSearchEligibleQuest(uint16 sNpcID);
 	uint16 V3_CheckMonsterCount(uint16 bQuest, uint8 bGroup);
 	// Quest Monster | Kills
@@ -1463,16 +1427,16 @@ public:
 	DECLARE_LUA_GETTER(GetRace)
 
 	// Shortcuts for lazy people
-	DECLARE_LUA_FUNCTION(hasCoins)  {
-		LUA_RETURN(LUA_GET_INSTANCE()->hasCoins(LUA_ARG(uint32, 2))); 
+	DECLARE_LUA_FUNCTION(hasCoins) {
+		LUA_RETURN(LUA_GET_INSTANCE()->hasCoins(LUA_ARG(uint32, 2)));
 	}
 
 	DECLARE_LUA_FUNCTION(hasInnCoins) {
-		LUA_RETURN(LUA_GET_INSTANCE()->hasInnCoins(LUA_ARG(uint32, 2))); 
+		LUA_RETURN(LUA_GET_INSTANCE()->hasInnCoins(LUA_ARG(uint32, 2)));
 	}
 
 	DECLARE_LUA_FUNCTION(hasLoyalty) {
-		LUA_RETURN(LUA_GET_INSTANCE()->hasLoyalty(LUA_ARG(uint32, 2))); 
+		LUA_RETURN(LUA_GET_INSTANCE()->hasLoyalty(LUA_ARG(uint32, 2)));
 	}
 
 	DECLARE_LUA_FUNCTION(hasMonthlyLoyalty) {
@@ -1480,54 +1444,54 @@ public:
 	}
 
 	DECLARE_LUA_FUNCTION(hasManner) {
-		LUA_RETURN(LUA_GET_INSTANCE()->hasManner(LUA_ARG(uint32, 2))); 
+		LUA_RETURN(LUA_GET_INSTANCE()->hasManner(LUA_ARG(uint32, 2)));
 	}
 
 	DECLARE_LUA_FUNCTION(SendBoard) {
-		LUA_NO_RETURN(LUA_GET_INSTANCE()->SendBoard(LUA_ARG(uint16, 2))); 
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->SendBoard(LUA_ARG(uint16, 2)));
 	}
 
 	DECLARE_LUA_FUNCTION(SendReported) {
-		LUA_NO_RETURN(LUA_GET_INSTANCE()->ReportedUsers()); 
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->ReportedUsers());
 	}
 
 	// The useful method wrappers
 	DECLARE_LUA_FUNCTION(GiveItem) {
 		LUA_RETURN(LUA_GET_INSTANCE()->GiveItem(
-			LUA_ARG(uint32, 2), 
-			LUA_ARG_OPTIONAL(uint32, 1, 3), 
+			LUA_ARG(uint32, 2),
+			LUA_ARG_OPTIONAL(uint32, 1, 3),
 			true,
 			LUA_ARG_OPTIONAL(uint32, 0, 4)));
 	}
 
 	DECLARE_LUA_FUNCTION(RobItem) {
 		LUA_RETURN(LUA_GET_INSTANCE()->RobItem(
-			LUA_ARG(uint32, 2), 
+			LUA_ARG(uint32, 2),
 			LUA_ARG_OPTIONAL(uint16, 1, 3)));
 	}
 
 	DECLARE_LUA_FUNCTION(RobAllItemParty) {
 		LUA_RETURN(LUA_GET_INSTANCE()->RobItem(
-			LUA_ARG(uint32, 2), 
+			LUA_ARG(uint32, 2),
 			LUA_ARG_OPTIONAL(uint16, 1, 3)));
 	}
 
 	DECLARE_LUA_FUNCTION(CheckExistItem) {
 		LUA_RETURN(LUA_GET_INSTANCE()->CheckExistItem(
-			LUA_ARG(uint32, 2), 
+			LUA_ARG(uint32, 2),
 			LUA_ARG_OPTIONAL(uint16, 1, 3)));
 	}
 
 	DECLARE_LUA_FUNCTION(GoldGain) {
-		LUA_NO_RETURN(LUA_GET_INSTANCE()->GoldGain(LUA_ARG(int32, 2)));	
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->GoldGain(LUA_ARG(int32, 2)));
 	}
 
 	DECLARE_LUA_FUNCTION(GoldLose) {
-		LUA_NO_RETURN(LUA_GET_INSTANCE()->GoldLose(LUA_ARG(uint32, 2)));	
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->GoldLose(LUA_ARG(uint32, 2)));
 	}
 
 	DECLARE_LUA_FUNCTION(ExpChange) {
-		LUA_NO_RETURN(LUA_GET_INSTANCE()->ExpChange(LUA_ARG(int32, 2),true));	
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->ExpChange(LUA_ARG(int32, 2), true));
 	}
 
 	DECLARE_LUA_FUNCTION(SaveEvent) {
@@ -1537,12 +1501,9 @@ public:
 
 	DECLARE_LUA_FUNCTION(SearchQuest) {
 		CUser * pUser = LUA_GET_INSTANCE();
-		if(pUser != nullptr)
-		{
-		LUA_RETURN(pUser->V3_QuestSearchEligibleQuest(LUA_ARG_OPTIONAL(uint16, pUser->m_sEventSid, 2))); // NPC ID
-		}
-		else
-		{
+		if (pUser != nullptr) {
+			LUA_RETURN(pUser->V3_QuestSearchEligibleQuest(LUA_ARG_OPTIONAL(uint16, pUser->m_sEventSid, 2))); // NPC ID
+		} else {
 			printf("Sikkinti vermeye caliisiyorlar searchquest\n");
 			return 1;
 		}
@@ -1550,18 +1511,15 @@ public:
 
 	DECLARE_LUA_FUNCTION(ShowMap) {
 		CUser * pUser = LUA_GET_INSTANCE();
-		if(pUser != nullptr)
-		{
-		LUA_NO_RETURN(pUser->V3_QuestShowMap(LUA_ARG_OPTIONAL(uint32, pUser->m_nQuestHelperID, 2))); // quest helper ID
-		}
-		else
-		{
-			
+		if (pUser != nullptr) {
+			LUA_NO_RETURN(pUser->V3_QuestShowMap(LUA_ARG_OPTIONAL(uint32, pUser->m_nQuestHelperID, 2))); // quest helper ID
+		} else {
+
 			printf("Sikkinti vermeye caliisiyorlar showmap\n");
 			return 1;
 		}
 	}
-	
+
 
 	DECLARE_LUA_FUNCTION(CountMonsterQuestSub) {
 		LUA_RETURN(LUA_GET_INSTANCE()->V3_QuestCheckMonsterCount(LUA_ARG(uint16, 2), LUA_ARG_OPTIONAL(uint8, 1, 3)));
@@ -1569,23 +1527,20 @@ public:
 
 	DECLARE_LUA_FUNCTION(CountMonsterQuestMain) {
 		LUA_NO_RETURN(LUA_GET_INSTANCE()->V3_MonsterCount((LUA_ARG(uint16, 2))));
-	} 
+	}
 
 	DECLARE_LUA_FUNCTION(NpcSay) {
 		CUser * pUser = LUA_GET_INSTANCE();
 		uint32 arg = 2; // start from after the user instance.
-		int32 nTextID[8]; 
+		int32 nTextID[8];
 
-		if(pUser != nullptr)
-		{
+		if (pUser != nullptr) {
 
-		foreach_array(i, nTextID)
-			nTextID[i] = LUA_ARG_OPTIONAL(int32, -1, arg++);
+			foreach_array(i, nTextID)
+				nTextID[i] = LUA_ARG_OPTIONAL(int32, -1, arg++);
 
-		LUA_NO_RETURN(pUser->SendSay(nTextID));
-		}
-		else
-		{
+			LUA_NO_RETURN(pUser->SendSay(nTextID));
+		} else {
 			printf("Sikkinti vermeye caliisiyorlar npcsay\n");
 			return 1;
 		}
@@ -1595,25 +1550,21 @@ public:
 	// For now, we'll just copy existing behaviour: that is, pass along a set of text IDs & button IDs.
 	DECLARE_LUA_FUNCTION(SelectMsg) {
 		CUser * pUser = LUA_GET_INSTANCE();
-		if (pUser != nullptr)
-		{
-		uint32 arg = 2; // start from after the user instance.
-		int32 menuButtonText[MAX_MESSAGE_EVENT], 
-			menuButtonEvents[MAX_MESSAGE_EVENT];
-		uint8 bFlag = LUA_ARG(uint8, arg++);
-		int32 nQuestID = LUA_ARG_OPTIONAL(int32, -1, arg++);
-		int32 menuHeaderText = LUA_ARG(int32, arg++);
+		if (pUser != nullptr) {
+			uint32 arg = 2; // start from after the user instance.
+			int32 menuButtonText[MAX_MESSAGE_EVENT],
+				menuButtonEvents[MAX_MESSAGE_EVENT];
+			uint8 bFlag = LUA_ARG(uint8, arg++);
+			int32 nQuestID = LUA_ARG_OPTIONAL(int32, -1, arg++);
+			int32 menuHeaderText = LUA_ARG(int32, arg++);
 
-		foreach_array(i, menuButtonText)
-		{
-			menuButtonText[i] = LUA_ARG_OPTIONAL(int32, -1, arg++);
-			menuButtonEvents[i] = LUA_ARG_OPTIONAL(int32, -1, arg++);
-		}
+			foreach_array(i, menuButtonText) {
+				menuButtonText[i] = LUA_ARG_OPTIONAL(int32, -1, arg++);
+				menuButtonEvents[i] = LUA_ARG_OPTIONAL(int32, -1, arg++);
+			}
 
-		LUA_NO_RETURN(pUser->SelectMsg(bFlag, nQuestID, menuHeaderText, menuButtonText, menuButtonEvents));
-		}
-		else
-		{
+			LUA_NO_RETURN(pUser->SelectMsg(bFlag, nQuestID, menuHeaderText, menuButtonText, menuButtonEvents));
+		} else {
 			printf("Sikkinti vermeye caliisiyorlar slectmsg\n");
 			return 1;
 		}
@@ -1743,48 +1694,48 @@ public:
 	}
 
 	DECLARE_LUA_FUNCTION(GiveLoyalty) {
-		LUA_NO_RETURN(LUA_GET_INSTANCE()->SendLoyaltyChange(LUA_ARG(int32, 2), false, false, false));	
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->SendLoyaltyChange(LUA_ARG(int32, 2), false, false, false));
 	}
 
 	DECLARE_LUA_FUNCTION(GiveCash) {
-		LUA_NO_RETURN(LUA_GET_INSTANCE()->SendKnightCash(LUA_ARG(int32, 2)));	
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->SendKnightCash(LUA_ARG(int32, 2)));
 	}
 
 	DECLARE_LUA_FUNCTION(TempleEventJoin) {
-		LUA_NO_RETURN(LUA_GET_INSTANCE()->TempleEventJoin());	
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->TempleEventJoin());
 	}
 
 	DECLARE_LUA_FUNCTION(RobLoyalty) {
-		LUA_NO_RETURN(LUA_GET_INSTANCE()->SendLoyaltyChange(-(LUA_ARG(int32, 2)),false , false, false));	
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->SendLoyaltyChange(-(LUA_ARG(int32, 2)), false, false, false));
 	}
 
 	DECLARE_LUA_FUNCTION(ChangeManner) {
-		LUA_NO_RETURN(LUA_GET_INSTANCE()->SendMannerChange(LUA_ARG(int32, 2)));	
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->SendMannerChange(LUA_ARG(int32, 2)));
 	}
 
 	DECLARE_LUA_FUNCTION(PromoteClan) {
-		LUA_NO_RETURN(LUA_GET_INSTANCE()->PromoteClan((ClanTypeFlag) LUA_ARG_OPTIONAL(uint8, ClanTypePromoted, 2)));	
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->PromoteClan((ClanTypeFlag) LUA_ARG_OPTIONAL(uint8, ClanTypePromoted, 2)));
 	}
 
 	DECLARE_LUA_FUNCTION(GetStat) {
-		LUA_RETURN(LUA_GET_INSTANCE()->GetStat((StatType)(LUA_ARG(uint8, 2) + 1)));	
+		LUA_RETURN(LUA_GET_INSTANCE()->GetStat((StatType) (LUA_ARG(uint8, 2) + 1)));
 	}
 
 	DECLARE_LUA_FUNCTION(RobClanPoint) {
-		LUA_NO_RETURN(LUA_GET_INSTANCE()->SendClanPointChange(-(LUA_ARG(int32, 2))));	
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->SendClanPointChange(-(LUA_ARG(int32, 2))));
 	}
 
 	DECLARE_LUA_FUNCTION(RequestPersonalRankReward) {
-		LUA_RETURN(LUA_GET_INSTANCE()->GetRankReward(true));	
+		LUA_RETURN(LUA_GET_INSTANCE()->GetRankReward(true));
 	}
 
 	DECLARE_LUA_FUNCTION(RequestReward) {
-		LUA_RETURN(LUA_GET_INSTANCE()->GetRankReward(false));	
+		LUA_RETURN(LUA_GET_INSTANCE()->GetRankReward(false));
 	}
 
 	DECLARE_LUA_FUNCTION(RunCountExchange) {
 		LUA_NO_RETURN(LUA_GET_INSTANCE()->RunExchange(
-			LUA_ARG(int, 2),		
+			LUA_ARG(int, 2),
 			LUA_ARG(uint16, 3)));
 	}
 
@@ -1816,8 +1767,8 @@ public:
 		LUA_NO_RETURN(LUA_GET_INSTANCE()->GivePremium(LUA_ARG(uint8, 2), LUA_ARG_OPTIONAL(uint8, 1, 3)));
 	}
 
-	DECLARE_LUA_FUNCTION(GiveKnightCash){
-		LUA_NO_RETURN(LUA_GET_INSTANCE()->GiveKnightCash(LUA_ARG(uint32,2)));
+	DECLARE_LUA_FUNCTION(GiveKnightCash) {
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->GiveKnightCash(LUA_ARG(uint32, 2)));
 	}
 
 	DECLARE_LUA_FUNCTION(GetPVPMonumentNation) {

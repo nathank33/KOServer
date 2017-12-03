@@ -2,8 +2,7 @@
 
 #include "../shared/database/OdbcConnection.h"
 
-class CDBProcess  
-{
+class CDBProcess {
 public:
 	bool Connect(std::string & szDSN, std::string & szUser, std::string & szPass);
 

@@ -1,9 +1,8 @@
 #pragma once
 
-class CNpcPosSet : public OdbcRecordset
-{
+class CNpcPosSet : public OdbcRecordset {
 public:
-	CNpcPosSet(OdbcConnection * dbConnection, void * dummy) 
+	CNpcPosSet(OdbcConnection * dbConnection, void * dummy)
 		: OdbcRecordset(dbConnection) {}
 
 	virtual tstring GetTableName() { return _T("K_NPCPOS"); }

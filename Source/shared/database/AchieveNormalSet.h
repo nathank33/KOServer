@@ -1,15 +1,13 @@
 #pragma once
 
-class CAchieveNormalSet : public OdbcRecordset
-{
+class CAchieveNormalSet : public OdbcRecordset {
 public:
 	CAchieveNormalSet(OdbcConnection * dbConnection, AchieveNormalArray * pMap) : OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("ACHIEVE_NORMAL"); }
 	virtual tstring GetColumns() { return _T("ID, UnKnow1, UnKnow2"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		auto pData = new _ACHIEVE_NORMAL;
 
 		auto i = 1;

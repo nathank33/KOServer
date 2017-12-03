@@ -1,19 +1,16 @@
 #pragma once
 
-class CCypherTableSet : public OdbcRecordset
-{
+class CCypherTableSet : public OdbcRecordset {
 public:
-	CCypherTableSet(OdbcConnection * dbConnection, CypherRingArray *pMap) 
+	CCypherTableSet(OdbcConnection * dbConnection, CypherRingArray *pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("USERDATA_CYPHER"); }
-	virtual tstring GetColumns() 
-	{
+	virtual tstring GetColumns() {
 		return _T("id, strUserId, strSerial, sClass, bLevel, iExp, bRace");
 	}
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		int i = 1;
 		_CYPHERRING_DATA * pData = new _CYPHERRING_DATA;
 		_dbCommand->FetchUInt32(i++, pData->ID);
@@ -26,7 +23,7 @@ public:
 
 		if (pData->ID > g_pMain->LastPetID)
 			g_pMain->LastPetID = pData->ID;
-		
+
 		if (pData == nullptr)
 			delete pData;
 		else

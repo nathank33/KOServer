@@ -2,10 +2,9 @@
 
 typedef std::map<uint16, _ZONE_INFO *> ZoneInfoMap;
 
-class CZoneInfoSet : public OdbcRecordset
-{
+class CZoneInfoSet : public OdbcRecordset {
 public:
-	CZoneInfoSet(OdbcConnection * dbConnection, ZoneInfoMap * pMap) 
+	CZoneInfoSet(OdbcConnection * dbConnection, ZoneInfoMap * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("ZONE_INFO"); }
@@ -16,8 +15,7 @@ public:
 	virtual tstring GetColumns() { return _T("ServerNo, ZoneNo, strZoneName, InitX, InitZ, InitY"); }
 #endif
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_ZONE_INFO * pData = new _ZONE_INFO;
 
 		int i = 1;
@@ -33,13 +31,12 @@ public:
 		_dbCommand->FetchUInt32(i++, iZ);
 		_dbCommand->FetchUInt32(i++, iY);
 
-		pData->m_fInitX = (float)(iX / 100.0f);
-		pData->m_fInitY = (float)(iY / 100.0f);
-		pData->m_fInitZ = (float)(iZ / 100.0f);
+		pData->m_fInitX = (float) (iX / 100.0f);
+		pData->m_fInitY = (float) (iY / 100.0f);
+		pData->m_fInitZ = (float) (iZ / 100.0f);
 #endif
 
-		if (pData->m_nZoneNumber > MAX_ZONE_ID)
-		{
+		if (pData->m_nZoneNumber > MAX_ZONE_ID) {
 			printf("ERROR: Zone ID %d is too large. Highest zone ID can be %d.\n", pData->m_nZoneNumber, MAX_ZONE_ID);
 			delete pData;
 			return false;

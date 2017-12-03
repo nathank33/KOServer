@@ -1,15 +1,13 @@
 #pragma once
 
-class CAchieveWarSet : public OdbcRecordset
-{
+class CAchieveWarSet : public OdbcRecordset {
 public:
 	CAchieveWarSet(OdbcConnection * dbConnection, AchieveWarArray * pMap) : OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("ACHIEVE_WAR"); }
 	virtual tstring GetColumns() { return _T("ID, Type, UnKnow2, Data, UnKnow4"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		auto pData = new _ACHIEVE_WAR;
 
 		auto i = 1;

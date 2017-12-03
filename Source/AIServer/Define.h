@@ -23,8 +23,7 @@
 
 #define COMPARE(x,min,max) ((x>=min)&&(x<max))
 
-struct _NpcPosition
-{
+struct _NpcPosition {
 	typedef struct { long x; long y; } Point;
 
 	uint8	byType;			// type
@@ -102,4 +101,4 @@ struct _NpcPosition
 #define DECLARE_WINNER          0x02
 
 
-const int TYPE_MONEY_SID		=	900000000;
+const int TYPE_MONEY_SID = 900000000;

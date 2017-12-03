@@ -5,8 +5,7 @@ class Unit;
 struct _MAGIC_TABLE;
 struct _MAGIC_TYPE4;
 
-class CMagicProcess  
-{
+class CMagicProcess {
 public:
 	static void MagicPacket(Packet & pkt, Unit * pCaster = nullptr);
 	static void UpdateAIServer(uint32 nSkillID, AISkillOpcode opcode, Unit * pTarget, Unit * pCaster = nullptr, bool bIsRecastingSavedMagic = false);

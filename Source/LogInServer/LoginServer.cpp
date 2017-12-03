@@ -6,46 +6,39 @@
 extern bool g_bRunning;
 std::vector<Thread *> g_timerThreads;
 
-LoginServer::LoginServer() : m_sLastVersion(__VERSION), m_fpLoginServer(nullptr)
-{
-}
+LoginServer::LoginServer() : m_sLastVersion(__VERSION), m_fpLoginServer(nullptr) {}
 
-bool LoginServer::Startup()
-{
+bool LoginServer::Startup() {
 	GetInfoFromIni();
-	
+
 
 	DateTime time;
 	printf("SrGame LoginServer started in %02d-%02d-%04d at %02d:%02d\n\n", time.GetDay(), time.GetMonth(), time.GetYear(), time.GetHour(), time.GetMinute());
 	printf("Project 2125\n");
 	printf("Edited by NxWiLe - Srgame\n\n");
-	
-	CreateDirectory("Logs",NULL);
+
+	CreateDirectory("Logs", NULL);
 
 	m_fpLoginServer = fopen("./Logs/LoginServer.log", "a");
-	if (m_fpLoginServer == nullptr)
-	{
+	if (m_fpLoginServer == nullptr) {
 		printf("ERROR: Unable to open log file.\n");
 		return false;
 	}
 
-	m_fpUser = fopen(string_format("./Logs/Login_%d_%d_%d.log",time.GetDay(),time.GetMonth(),time.GetYear()).c_str(), "a");
-	if (m_fpUser == nullptr)
-	{
+	m_fpUser = fopen(string_format("./Logs/Login_%d_%d_%d.log", time.GetDay(), time.GetMonth(), time.GetYear()).c_str(), "a");
+	if (m_fpUser == nullptr) {
 		printf("ERROR: Unable to open user log file.\n");
 		return false;
 	}
 
-	if (!m_DBProcess.Connect(m_ODBCName, m_ODBCLogin, m_ODBCPwd)) 
-	{
+	if (!m_DBProcess.Connect(m_ODBCName, m_ODBCLogin, m_ODBCPwd)) {
 		printf("ERROR: Unable to connect to the database using the details configured.\n");
 		return false;
 	}
 
 	printf("Databaseye Basarili Sekilde Baglanildi.\n");
 
-	if (!m_DBProcess.LoadVersionList())
-	{
+	if (!m_DBProcess.LoadVersionList()) {
 		printf("ERROR: Unable to load the version list.\n");
 		return false;
 	}
@@ -53,38 +46,33 @@ bool LoginServer::Startup()
 	printf("Srgame Server Versionu: %d\n", GetVersion());
 	InitPacketHandlers();
 
-	for(int i=0; i<10 ; i++)
-		if (!m_socketMgr[i].Listen(m_LoginServerPort+i, MAX_USER))
-		{
+	for (int i = 0; i < 10; i++)
+		if (!m_socketMgr[i].Listen(m_LoginServerPort + i, MAX_USER)) {
 			printf("ERROR: Failed to listen on server port.\n");
 			return false;
 		}
 
-	for(int i=0; i<10 ; i++)
+	for (int i = 0; i < 10; i++)
 		m_socketMgr[i].RunServer();
 
 	g_timerThreads.push_back(new Thread(Timer_UpdateUserCount));
 	return true;
 }
 
-uint32 LoginServer::Timer_UpdateUserCount(void * lpParam)
-{
-	while (g_bRunning)
-	{
+uint32 LoginServer::Timer_UpdateUserCount(void * lpParam) {
+	while (g_bRunning) {
 		g_pMain->UpdateServerList();
 		sleep(60 * SECOND);
 	}
 	return 0;
 }
 
-void LoginServer::GetServerList(Packet & result)
-{
+void LoginServer::GetServerList(Packet & result) {
 	Guard lock(m_serverListLock);
 	result.append(m_serverListPacket.contents(), m_serverListPacket.size());
 }
 
-void LoginServer::UpdateServerList()
-{
+void LoginServer::UpdateServerList() {
 	// Update the user counts first
 	m_DBProcess.LoadUserCountList();
 
@@ -93,8 +81,7 @@ void LoginServer::UpdateServerList()
 
 	result.clear();
 	result << uint8(m_ServerList.size());
-	foreach (itr, m_ServerList) 
-	{		
+	foreach(itr, m_ServerList) {
 		_SERVER_INFO *pServer = *itr;
 
 		result << pServer->strServerIP;
@@ -111,16 +98,15 @@ void LoginServer::UpdateServerList()
 		result << pServer->sServerID << pServer->sGroupID;
 		result << pServer->sPlayerCap << pServer->sFreePlayerCap;
 
-		result << uint8(0); 
+		result << uint8(0);
 
 		// we read all this stuff from ini, TODO: make this more versatile.
-		result	<< pServer->strKarusKingName << pServer->strKarusNotice 
+		result << pServer->strKarusKingName << pServer->strKarusNotice
 			<< pServer->strElMoradKingName << pServer->strElMoradNotice;
 	}
 }
 
-void LoginServer::GetInfoFromIni()
-{
+void LoginServer::GetInfoFromIni() {
 	CIni ini(CONF_LOGIN_SERVER);
 
 	ini.GetString("DOWNLOAD", "URL", "ftp.yoursite.net", m_strFtpUrl, false);
@@ -130,20 +116,19 @@ void LoginServer::GetInfoFromIni()
 	ini.GetString("ODBC", "UID", "username", m_ODBCLogin, false);
 	ini.GetString("ODBC", "PWD", "password", m_ODBCPwd, false);
 
-	m_LoginServerPort = ini.GetInt("SETTINGS","PORT", 15100);
+	m_LoginServerPort = ini.GetInt("SETTINGS", "PORT", 15100);
 
 	int nServerCount = ini.GetInt("SERVER_LIST", "COUNT", 1);
-	if (nServerCount <= 0) 
+	if (nServerCount <= 0)
 		nServerCount = 1;
 
-	char key[20]; 
+	char key[20];
 	_SERVER_INFO* pInfo = nullptr;
 
 	m_ServerList.reserve(nServerCount);
 
 	// TODO: Replace this nonsense with something a little more versatile
-	for (int i = 0; i < nServerCount; i++)
-	{
+	for (int i = 0; i < nServerCount; i++) {
 		pInfo = new _SERVER_INFO;
 
 		_snprintf(key, sizeof(key), "SERVER_%02d", i);
@@ -189,8 +174,7 @@ void LoginServer::GetInfoFromIni()
 
 	m_news.Size = 0;
 	std::stringstream ss;
-	for (int i = 0; i < 3; i++)
-	{
+	for (int i = 0; i < 3; i++) {
 		string title, message;
 
 		_snprintf(key, sizeof(key), "TITLE_%02d", i);
@@ -223,22 +207,19 @@ void LoginServer::GetInfoFromIni()
 }
 
 
-void LoginServer::WriteLogFile(string & logMessage)
-{
+void LoginServer::WriteLogFile(string & logMessage) {
 	Guard lock(m_lock);
 	fwrite(logMessage.c_str(), logMessage.length(), 1, m_fpLoginServer);
 	fflush(m_fpLoginServer);
 }
 
-void LoginServer::WriteUserLogFile(string & logMessage)
-{
+void LoginServer::WriteUserLogFile(string & logMessage) {
 	Guard lock(m_lock);
 	fwrite(logMessage.c_str(), logMessage.length(), 1, m_fpUser);
 	fflush(m_fpUser);
 }
 
-void LoginServer::ReportSQLError(OdbcError *pError)
-{
+void LoginServer::ReportSQLError(OdbcError *pError) {
 	if (pError == nullptr)
 		return;
 
@@ -251,21 +232,19 @@ void LoginServer::ReportSQLError(OdbcError *pError)
 	delete pError;
 }
 
-LoginServer::~LoginServer() 
-{
+LoginServer::~LoginServer() {
 	printf("Waiting for timer threads to exit...");
-	foreach (itr, g_timerThreads)
-	{
+	foreach(itr, g_timerThreads) {
 		(*itr)->waitForExit();
 		delete (*itr);
 	}
 	printf(" exited.\n");
 
-	foreach (itr, m_ServerList)
+	foreach(itr, m_ServerList)
 		delete *itr;
 	m_ServerList.clear();
 
-	foreach (itr, m_VersionList)
+	foreach(itr, m_VersionList)
 		delete itr->second;
 	m_VersionList.clear();
 
@@ -277,7 +256,7 @@ LoginServer::~LoginServer()
 
 	printf("Shutting down socket system...");
 
-	for(int i=0; i<10 ; i++)
+	for (int i = 0; i < 10; i++)
 		m_socketMgr[i].Shutdown();
 
 	printf(" done.\n");

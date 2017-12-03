@@ -1,16 +1,14 @@
 #pragma once
 
-class CItemDuper : public OdbcRecordset
-{
+class CItemDuper : public OdbcRecordset {
 public:
-	CItemDuper(OdbcConnection * dbConnection, ItemDupersArray * pMap) 
+	CItemDuper(OdbcConnection * dbConnection, ItemDupersArray * pMap)
 		: OdbcRecordset(dbConnection), m_pMap(pMap) {}
 
 	virtual tstring GetTableName() { return _T("ITEM_DUPERS"); }
 	virtual tstring GetColumns() { return _T("nIndex, nItemID, nSerial"); }
 
-	virtual bool Fetch()
-	{
+	virtual bool Fetch() {
 		_ITEM_DUPER * pData = new _ITEM_DUPER;
 
 		_dbCommand->FetchUInt32(1, pData->n_Index);

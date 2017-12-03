@@ -7,16 +7,14 @@
 
 class MAP;
 
-enum TransformationType
-{
+enum TransformationType {
 	TransformationNone,
 	TransformationMonster,
 	TransformationNPC,
 	TransformationSiege
 };
 
-class CUser : public Unit
-{
+class CUser : public Unit {
 public:
 	INLINE bool isGM() { return m_byIsOP == AUTHORITY_GAME_MASTER; }
 
@@ -98,7 +96,7 @@ public:
 	INLINE uint8 GetStat(StatType type) { return 0; }
 	INLINE void SetStatBuff(StatType type, int8 val) {}
 	INLINE void RemoveStatBuff(StatType type, int8 val) {}
-	INLINE void SetUserEventRoom(uint16 nEventRoom) {m_bEventRoom = nEventRoom;}
+	INLINE void SetUserEventRoom(uint16 nEventRoom) { m_bEventRoom = nEventRoom; }
 	void RemoveSavedMagic(uint32 nSkillID) {}
 	void SendUserStatusUpdate(UserStatus type, UserStatusBehaviour status) {}
 	void SetUserAbility(bool bSendPacket = true) {}
@@ -107,7 +105,7 @@ public:
 	time_t	m_tLastRegeneTime;
 	uint32	m_nOldAbnormalType;
 	uint8	m_sExpGainAmount;
-	uint8	m_bMaxWeightAmount, m_bNPGainAmount, m_bNoahGainAmount, 
+	uint8	m_bMaxWeightAmount, m_bNPGainAmount, m_bNoahGainAmount,
 		m_bPlayerAttackAmount, m_bSkillNPBonus,
 		m_bAddWeaponDamage;
 	uint16	m_sAddArmourAc;
@@ -122,4 +120,3 @@ public:
 
 };
 
-	
