@@ -389,7 +389,8 @@ end
 
 if (EVENT == 8077) then
 	MonsterCount = CountMonsterQuestSub(UID, 209, 1);
-	if (MonsterCount < 40) then
+	print(MonsterCount);
+	if (MonsterCount < 20) then
 		SelectMsg(UID, 2, 209, 8409, NPC, 18, 8078);
 	else
 		SelectMsg(UID, 4, 209, 8216, NPC, 41, 8079, 27, 153);

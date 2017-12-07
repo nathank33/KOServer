@@ -515,7 +515,9 @@ end
 
 if (EVENT == 9067) then
 	MonsterCount = CountMonsterQuestSub(UID, 874, 1);
-	if (MonsterCount < 40) then
+	print(MonsterCount);
+	if (MonsterCount < 20) then
+		--SelectMsg(UID, 4, 266, 8431, NPC, 41, 9069, 27, 163);
 		SelectMsg(UID, 2, 266, 8430, NPC, 18, 9068);
 	else
 		SelectMsg(UID, 4, 266, 8431, NPC, 41, 9069, 27, 163);

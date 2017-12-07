@@ -251,26 +251,29 @@ if (EVENT == 297) then
 	SaveEvent(UID, 9916);
 end
 
-local savenum7 = 148;
+local savenum7 = 148; --sEventDataIndex of Oath of Darkness Quest
 
-if (EVENT == 302) then -- 42 Level
+if (EVENT == 302) then -- 42 Level Oath of Darkness Quest --bEventStatus 0
 	SelectMsg(UID, 4, savenum7, 4932, NPC, 22, 303, 23, 158);
 end
 
-if (EVENT == 303) then
-	SaveEvent(UID, 9927);
-end
+if (EVENT == 303) then 
+	SaveEvent(UID, 9927); -- 9927 = nIndex for next event, nEventTriggerIndex = 306 nEventCompleteIndex = 305
+end -- bEventStatus 1
 
-if (EVENT == 305) then
-	SaveEvent(UID, 9929);
+if (EVENT == 305) then --nEventCompleteIndex (when you have all the items) it runs this event
+	SaveEvent(UID, 9929); --bEventStatus 3
 end
 
 if (EVENT == 306) then
 	OATH = HowmuchItem(UID, 379276000);
 	if (OATH < 3) then
-		SelectMsg(UID, 2, savenum7, 4932, NPC, 19, 308);
+		SelectMsg(UID, 2, savenum7, 4932, --QUEST TALK iNum 4932 --
+		NPC, 19, 308);
 	else
-		SelectMsg(UID, 4, savenum7, 4934, NPC, 22, 307, 23, 158);
+		SelectMsg(UID, 4, savenum7, 4934, NPC, 22 -- 22 Accepted
+		, 307, 23 -- 23 Rejected
+		, 158);
 	end
 end
 
@@ -282,7 +285,7 @@ if (EVENT == 307) then
 	RobItem(UID, 379276000, 3)
 	ExpChange(UID, 900000)
 	GoldGain(UID, 100000)
-	SaveEvent(UID, 9928);
+	SaveEvent(UID, 9928); -- bEventStatus 2
 end
 
 local savenum8 = 151;
@@ -317,4 +320,57 @@ if (EVENT == 317) then
 	ExpChange(UID, 950000)
 	GoldGain(UID, 100000)
 	SaveEvent(UID, 9940);
+end
+
+
+	--SelectMsg(UID, 4, savenum7(aka 148)(sEventDataIndex), 4932(nEventTalkIndex), NPC, (22(1st Button), which leads to 303(Next Event)), 23(2nd Button), 158(To Exit));
+
+
+local savenum9 = 1373;
+if (EVENT == 500) then -- Collection of magic materials
+	SelectMsg(UID, 2, savenum9, 44200, NPC, 4440, 503);
+end
+
+if (EVENT == 503) then
+	SelectMsg(UID, 4, savenum9, 44201, NPC, 22, 505, 23, 158);
+end
+
+if (EVENT == 505) then
+	SaveEvent(UID, 3964);
+end
+
+if (EVENT == 506) then
+	SaveEvent(UID, 3966);
+end
+
+if (EVENT == 507) then
+		Skull = HowmuchItem(UID, 810494000);
+	if (Skull < 5) then
+		SelectMsg(UID, 2, savenum9, 6002, NPC, 19, 508);
+	else
+		SelectMsg(UID, 4, savenum9, 6196, NPC, 22, 509, 23, 158);
+	end
+end
+
+if (EVENT == 508) then
+	ShowMap(UID, 112); --not proper id
+end
+
+if (EVENT == 509) then
+	RobItem(UID, 810494000, 5) -- take 5 of item id 810494000
+	ExpChange(UID, 25000000) -- Give Exp
+	--GoldGain(UID, 100000) --Give Gold N/A for this quest
+	--SaveEvent(UID, 3968);
+end
+
+if (EVENT == 510) then -- Collection of weapon materials
+	SelectMsg(UID, 4, savenum7, 4932, NPC, 22, 303, 23, 158);
+end
+
+if (EVENT == 520) then -- Ecosystem Research 1
+	SelectMsg(UID, 4, savenum7, 4932, NPC, 22, 303, 23, 158);
+end
+
+if (EVENT == 530) then -- Ecosystem Research 2
+	SelectMsg(UID, 4, savenum7, 4932, NPC, 22, 303, 23, 158);
 end

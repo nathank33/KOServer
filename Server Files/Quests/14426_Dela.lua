@@ -42,7 +42,7 @@ end
 
 if (EVENT == 175) then
 	MonsterCount = CountMonsterQuestSub(UID, 280, 1);
-	if (MonsterCount < 120) then
+	if (MonsterCount < 20) then
 		SelectMsg(UID, 2, savenum, 244, NPC, 18, 177);
 	else
 		SelectMsg(UID, 4, savenum, 244, NPC, 41, 176, 27, 193);
@@ -56,10 +56,10 @@ end
 if (EVENT == 176) then
 	Prem = GetPremium(UID);
 	if (Prem > 0) then
-		ExpChange(UID, 1200000)
+		ExpChange(UID, 3000000)
 		SaveEvent(UID, 210);  
 	else
-		ExpChange(UID, 500000)
+		ExpChange(UID, 1250000)
 		SaveEvent(UID, 210); 
 	end   
 end
@@ -90,7 +90,7 @@ end
 
 if (EVENT == 185) then
 	MonsterCount = CountMonsterQuestSub(UID, 281, 1);
-	if (MonsterCount < 100) then
+	if (MonsterCount < 20) then
 		SelectMsg(UID, 2, savenum, 244, NPC, 18, 187);
 	else
 		SelectMsg(UID, 4, savenum, 244, NPC, 41, 186, 27, 193);
@@ -104,10 +104,10 @@ end
 if (EVENT == 186) then
 	Prem = GetPremium(UID);
 	if (Prem > 0) then
-		ExpChange(UID, 2200000)
+		ExpChange(UID, 5500000)
 		SaveEvent(UID, 220);  
 	else
-		ExpChange(UID, 1000000)
+		ExpChange(UID, 2500000)
 		SaveEvent(UID, 220); 
 	end   
 end
@@ -138,7 +138,7 @@ end
 
 if (EVENT == 205) then
 	MonsterCount = CountMonsterQuestSub(UID, 282, 1);
-	if (MonsterCount < 250) then
+	if (MonsterCount < 20) then
 		SelectMsg(UID, 2, savenum, 270, NPC, 18, 207);
 	else
 		SelectMsg(UID, 4, savenum, 270, NPC, 41, 206, 27, 193);
@@ -152,10 +152,10 @@ end
 if (EVENT == 206) then
 	Prem = GetPremium(UID);
 	if (Prem > 0) then
-		ExpChange(UID, 2000000)
+		ExpChange(UID, 5000000)
 		SaveEvent(UID, 230);  
 	else
-		ExpChange(UID, 1000000)
+		ExpChange(UID, 2500000)
 		SaveEvent(UID, 230); 
 	end   
 end
@@ -186,7 +186,7 @@ end
 
 if (EVENT == 215) then
 	MonsterCount = CountMonsterQuestSub(UID, 283, 1);
-	if (MonsterCount < 120) then
+	if (MonsterCount < 20) then
 		SelectMsg(UID, 2, savenum, 280, NPC, 18, 217);
 	else
 		SelectMsg(UID, 4, savenum, 280, NPC, 41, 216, 27, 193);
@@ -234,7 +234,7 @@ end
 
 if (EVENT == 225) then
 	MonsterCount = CountMonsterQuestSub(UID, 284, 1);
-	if (MonsterCount < 120) then
+	if (MonsterCount < 20) then
 		SelectMsg(UID, 2, savenum, 8650, NPC, 18, 227);
 	else
 		SelectMsg(UID, 4, savenum, 8650, NPC, 41, 226, 27, 193);
@@ -248,10 +248,10 @@ end
 if (EVENT == 226) then
 	Prem = GetPremium(UID);
 	if (Prem > 0) then
-		ExpChange(UID, 1400000)
+		ExpChange(UID, 3500000)
 		SaveEvent(UID, 250);  
 	else
-		ExpChange(UID, 600000)
+		ExpChange(UID, 1300000)
 		SaveEvent(UID, 250); 
 	end   
 end
@@ -282,7 +282,7 @@ end
 
 if (EVENT == 165) then
 	MonsterCount = CountMonsterQuestSub(UID, 279, 1);
-	if (MonsterCount < 200) then
+	if (MonsterCount < 20) then
 		SelectMsg(UID, 2, savenum, 224, NPC, 18, 167);
 	else
 		SelectMsg(UID, 4, savenum, 224, NPC, 41, 166, 27, 193);
@@ -296,10 +296,10 @@ end
 if (EVENT == 166) then
 	Prem = GetPremium(UID);
 	if (Prem > 0) then
-		ExpChange(UID, 1400000)
+		ExpChange(UID, 3500000)
 		SaveEvent(UID, 266);
 	else
-		ExpChange(UID, 600000)
+		ExpChange(UID, 1500000)
 		SaveEvent(UID, 266); 
 	end   
 end
@@ -347,7 +347,7 @@ if (EVENT == 538) then
 end
 
 if (EVENT == 537) then
-	ExpChange(UID, 20000000)
+	ExpChange(UID, 50000000)
 	SaveEvent(UID, 834);   
 end
 
@@ -379,7 +379,7 @@ if (EVENT == 324) then
 	SelectMsg(UID, 2, savenum, 391, NPC, 14, 193);
 end
 
-if (EVENT == 325) then
+if (EVENT == 325) then --Evil Wizard turn in
 	MonsterCount = CountMonsterQuestSub(UID, 342, 1);
 	if (MonsterCount < 250) then
 		SelectMsg(UID, 2, savenum, 391, NPC, 18, 327);
@@ -392,8 +392,8 @@ if (EVENT == 327) then
 	ShowMap(UID, 169);
 end
 
-if (EVENT == 326) then
-	ExpChange(UID, 46000000)
+if (EVENT == 326) then -- Evil Wizard turn in
+	ExpChange(UID, 115000000)
 	SaveEvent(UID, 913);   
 end
 
@@ -426,14 +426,14 @@ if (EVENT == 314) then
 end
 
 if (EVENT == 315) then
-	MonsterCount1 = CountMonsterQuestSub(UID, 356, 1);
-	MonsterCount2 = CountMonsterQuestSub(UID, 342, 1);
-	MonsterCount3 = CountMonsterQuestSub(UID, 342, 1);
+	MonsterCount1 = CountMonsterQuestSub(UID, 356, 1); -- Keramash
+	MonsterCount2 = CountMonsterQuestSub(UID, 356, 2); -- Nigmash
+	MonsterCount3 = CountMonsterQuestSub(UID, 356, 3); -- Manicmash
 	if (MonsterCount1 < 60) then
 		SelectMsg(UID, 2, savenum, 371, NPC, 18, 317);
 	elseif (MonsterCount2 < 60) then
 		SelectMsg(UID, 2, savenum, 371, NPC, 18, 318);
-	elseif (MonsterCount3 < 60) then
+	elseif (MonsterCount3 < 60) then 
 		SelectMsg(UID, 2, savenum, 371, NPC, 18, 319);
 	else
 		SelectMsg(UID, 4, savenum, 371, NPC, 41, 316, 27, 193);
@@ -453,7 +453,7 @@ if (EVENT == 319) then
 end
 
 if (EVENT == 316) then
-	ExpChange(UID, 100000000)
+	ExpChange(UID, 250000000)
 	SaveEvent(UID, 901);   
 end
 
