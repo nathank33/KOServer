@@ -1,9 +1,12 @@
 ﻿#include "stdafx.h"
 #include "DBAgent.h"
 #include "../shared/DateTime.h"
+#include "../shared/packets.h"
 #include <boost\foreach.hpp>
+#include <chrono>
 
 using std::string;
+using namespace std::chrono;
 
 ServerCommandTable CGameServerDlg::s_commandTable;
 ChatCommandTable CUser::s_commandTable;
@@ -58,6 +61,9 @@ void CGameServerDlg::InitServerCommands() {
 		{ "tp_all",				&CGameServerDlg::HandleTeleportAllCommand,			"Players send to home zone." },
 		{ "warresult",			&CGameServerDlg::HandleWarResultCommand,			"Set result for War" },
 		{ "summonmonster",		&CGameServerDlg::HandleMonSummonCommand,			"Sets the server-wide coin event. If bonusPercent is set to 0, the event is ended. Arguments: bonusPercent" },
+		{ "help",				&CGameServerDlg::HandleHelpCommand,					"Displays information about all of the other commands" },
+		{ "open_bdw",			&CGameServerDlg::HandleBorderDefenseWarOpenCommand, "Open border defense war" },
+		{ "close_bdw",			&CGameServerDlg::HandleBorderDefenseWarCloseCommand,"Close border defense war" },
 	};
 
 	init_command_table(CGameServerDlg, commandTable, s_commandTable);
@@ -104,6 +110,9 @@ void CUser::InitChatCommands() {
 		{ "resetranking",		&CUser::HandleResetPlayerRankingCommand,		"Reset player ranking. Arguments : Zone ID"},
 		{ "nptokc",				&CUser::HandleNPtoKCCommand,				    "NP ile KC alabileceginiz sistem kullanim: +nptokc npmiktari"},
 		{ "goldtokc",			&CUser::HandleGoldtoKCCommand,				    "Gold ile KC alabileceginiz sistem kullanim: +nptokc npmiktari"},
+		{ "help",				&CUser::HandleHelpCommand,						"Displays information about all of the other commands" },
+		{"open_bdw",			&CUser::HandleBorderDefenseWarOpenCommand, "Open border defense war"},
+		{"close_bdw",			&CUser::HandleBorderDefenseWarCloseCommand,"Close border defense war"},
 
 	};
 
@@ -871,9 +880,6 @@ COMMAND_HANDLER(CUser::HandleSiegeWarOpenCommand) {
 	return !isGM() ? false : g_pMain->HandleSiegeWarOpenCommand(vargs, args, description);
 }
 COMMAND_HANDLER(CGameServerDlg::HandleSiegeWarOpenCommand) {
-
-
-
 	uint8 Time = atoi(vargs.front().c_str());
 	CastleSiegeWarZoneOpen(CLAN_BATTLE, Time);
 	return true;
@@ -882,6 +888,69 @@ COMMAND_HANDLER(CGameServerDlg::HandleSiegeWarOpenCommand) {
 COMMAND_HANDLER(CUser::HandleWarCloseCommand) { return !isGM() ? false : g_pMain->HandleWarCloseCommand(vargs, args, description); }
 COMMAND_HANDLER(CGameServerDlg::HandleWarCloseCommand) {
 	BattleZoneClose();
+	return true;
+}
+
+COMMAND_HANDLER(CUser::HandleHelpCommand) {
+	if (!isGM()) {
+		return false;
+	}
+	for (const auto &command : s_commandTable) {
+		std::string name = command.second->Name;
+		std::string help = command.second->Help;
+		g_pMain->SendHelpDescription(this, name + ": " + help);
+	}
+	return true;
+}
+
+COMMAND_HANDLER(CGameServerDlg::HandleHelpCommand) {
+	for (const auto &command : s_commandTable) {
+		printf("%s: %s\n", command.second->Name, command.second->Help);
+	}
+	return true;
+}
+
+COMMAND_HANDLER(CUser::HandleBorderDefenseWarOpenCommand) {
+	if (!isGM()) {
+		return false;
+	// Time until start (seconds)
+	} else if (vargs.size() < 1) {
+		g_pMain->SendHelpDescription(this, "/open_bdw <seconds> Example: /open_bdw 600");
+		return true;
+	}
+	return g_pMain->HandleBorderDefenseWarOpenCommand(vargs, args, description);
+}
+
+COMMAND_HANDLER(CGameServerDlg::HandleBorderDefenseWarOpenCommand) {
+	// Time until start (seconds)
+	if (vargs.size() < 1) {
+		printf("/open_bdw <seconds> Example: /open_bdw 600\n");
+		return true;
+	}
+
+	int userSeconds;
+	try {
+		userSeconds = std::stoi(vargs.front());
+	} catch (std::invalid_argument&) {
+		printf("/open_bdw <seconds> Example: /open_bdw 600\n");
+		return false;
+	} catch (std::out_of_range&) {
+		printf("/open_bdw <seconds> Example: /open_bdw 600\n");
+		return false;
+	}
+
+	g_pMain->m_nextEvent = TEMPLE_EVENT_BORDER_DEFENCE_WAR;
+	g_pMain->m_eventStartTime = system_clock::now() + seconds(userSeconds);
+	return true;
+}
+
+COMMAND_HANDLER(CUser::HandleBorderDefenseWarCloseCommand) { return !isGM() ? false : g_pMain->HandleBorderDefenseWarCloseCommand(vargs, args, description); }
+COMMAND_HANDLER(CGameServerDlg::HandleBorderDefenseWarCloseCommand) {
+	g_pMain->TerminationFinish();
+	g_pMain->pTempleEvent.isAttackable = false;
+	g_pMain->TempleEventFinish(0, 0);
+	pTempleEvent.ActiveEvent = -1;
+	m_eventStartTime = system_clock::now() - hours(1);
 	return true;
 }
 

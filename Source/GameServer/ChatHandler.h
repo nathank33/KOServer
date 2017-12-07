@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../shared/packets.h"
+
 class ChatPacket {
 public:
 	// Construct a chat packet from the data provided

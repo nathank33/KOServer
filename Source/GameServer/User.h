@@ -935,6 +935,9 @@ public:
 	COMMAND_HANDLER(HandleSnowWarCloseCommand);
 	COMMAND_HANDLER(HandleNPtoKCCommand);
 	COMMAND_HANDLER(HandleGoldtoKCCommand);
+	COMMAND_HANDLER(HandleHelpCommand);
+	COMMAND_HANDLER(HandleBorderDefenseWarOpenCommand);
+	COMMAND_HANDLER(HandleBorderDefenseWarCloseCommand);
 
 	void Regene(uint8 regene_type, uint32 magicid = 0);
 	void RequestUserIn(Packet & pkt);

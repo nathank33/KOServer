@@ -18,6 +18,7 @@
 #include <boost\foreach.hpp>
 
 using namespace std;
+using namespace std::chrono;
 
 #define NUM_FLAG_VICTORY  4
 #define AWARD_GOLD	100000
@@ -67,6 +68,8 @@ CGameServerDlg::CGameServerDlg() {
 
 	m_bPermanentChatMode = false;
 	m_bSantaOrAngel = FLYING_NONE;
+
+	m_nextEvent = -1;
 }
 
 
@@ -3466,95 +3469,116 @@ void CGameServerDlg::EventZoneTimer() {
 }
 
 void CGameServerDlg::TempleEventTimer() {
-	uint32 nHour = g_localTime.tm_hour;
-	uint32 nMinute = g_localTime.tm_min;
-	uint32 nSeconds = g_localTime.tm_sec;
-
-	if (m_nTempleEventRemainSeconds > 0)
-		m_nTempleEventRemainSeconds--;
-
-	if (pTempleEvent.ActiveEvent == -1) {
-		for (int i = 0; i < BORDER_DEFENSE_WAR_EVENT_COUNT; i++) {
-			if (nHour == m_nBorderDefenseWarTime[i] && nMinute == 0) {
-				pTempleEvent.ActiveEvent = TEMPLE_EVENT_BORDER_DEFENCE_WAR;
-				pTempleEvent.ZoneID = ZONE_BORDER_DEFENSE_WAR;
-
-				pTempleEvent.m_nBorderDefenseWarPrizeWonItemNo1 = m_nBorderDefenseWarPrizeWonItemNo1[i];
-				pTempleEvent.m_nBorderDefenseWarPrizeWonItemNo2 = m_nBorderDefenseWarPrizeWonItemNo2[i];
-				pTempleEvent.m_nBorderDefenseWarPrizeWonItemNo3 = m_nBorderDefenseWarPrizeWonItemNo3[i];
-				pTempleEvent.m_nBorderDefenseWarPrizeWonItemNo4_K = m_nBorderDefenseWarPrizeWonItemNo4_K[i];
-				pTempleEvent.m_nBorderDefenseWarPrizeWonItemNo4_H = m_nBorderDefenseWarPrizeWonItemNo4_H[i];
-				pTempleEvent.m_nBorderDefenseWarPrizeWonLoyalty = m_nBorderDefenseWarPrizeWonLoyalty[i];
-				pTempleEvent.m_nBorderDefenseWarPrizeWonKnightCash = m_nBorderDefenseWarPrizeWonKnightCash[i];
-				pTempleEvent.m_nBorderDefenseWarPrizeLoserKnightCash = m_nBorderDefenseWarPrizeLoserKnightCash[i];
-				pTempleEvent.m_nBorderDefenseWarPrizeLoserLoyalty = m_nBorderDefenseWarPrizeLoserLoyalty[i];
-				pTempleEvent.m_nBorderDefenseWarPrizeLoserItem = m_nBorderDefenseWarPrizeLoserItem[i];
-				pTempleEvent.m_nBorderDefenseWarMAXLEVEL = m_nBorderDefenseWarMAXLEVEL[i];
-				pTempleEvent.m_nBorderDefenseWarMINLEVEL = m_nBorderDefenseWarMINLEVEL[i];
-
-
-
-				m_nTempleEventRemainSeconds = 600; // 10 minutes
-				TempleEventStart();
+	// Check if we are ready to start a new event.
+	if (m_nextEvent == -1 && pTempleEvent.ActiveEvent == -1 && m_eventStartTime < system_clock::now()) {
+		uint32 nHour = g_localTime.tm_hour;
+		uint32 nMinute = g_localTime.tm_min;
+		uint32 nSeconds = g_localTime.tm_sec;
+		for (const auto eventTime : m_nBorderDefenseWarTime) {
+			if (nHour == eventTime && nMinute == 0) {
+				m_nextEvent = TEMPLE_EVENT_BORDER_DEFENCE_WAR;
+				m_eventStartTime = system_clock::now() + minutes(10);
 				break;
 			}
 		}
-
-		for (int i = 0; i < CHAOS_EVENT_COUNT; i++) {
-			if (nHour == m_nChaosTime[i] && nMinute == 0) {
-				pTempleEvent.ActiveEvent = TEMPLE_EVENT_CHAOS;
-				pTempleEvent.ZoneID = ZONE_CHAOS_DUNGEON;
-
-				pTempleEvent.m_nChaosPrizeWonItemNo1 = m_nChaosPrizeWonItemNo1[i];
-				pTempleEvent.m_nChaosPrizeWonItemNo2 = m_nChaosPrizeWonItemNo2[i];
-				pTempleEvent.m_nChaosPrizeWonItemNo3 = m_nChaosPrizeWonItemNo3[i];
-				pTempleEvent.m_nChaosPrizeWonItemNo4_K = m_nChaosPrizeWonItemNo4_K[i];
-				pTempleEvent.m_nChaosPrizeWonItemNo4_H = m_nChaosPrizeWonItemNo4_H[i];
-				pTempleEvent.m_nChaosPrizeWonLoyalty = m_nChaosPrizeWonLoyalty[i];
-				pTempleEvent.m_nChaosPrizeWonExp = m_nChaosPrizeWonExp[i];
-				pTempleEvent.m_nChaosPrizeWonKnightCash = m_nChaosPrizeWonKnightCash[i];
-
-				pTempleEvent.m_nChaosPrizeLoserKnightCash = m_nChaosPrizeLoserKnightCash[i];
-				pTempleEvent.m_nChaosPrizeLoserLoyalty = m_nChaosPrizeLoserLoyalty[i];
-				pTempleEvent.m_nChaosPrizeLoserItem = m_nChaosPrizeLoserItem[i];
-				pTempleEvent.m_nChaosPrizeLoserExp = m_nChaosPrizeLoserExp[i];
-
-				m_nTempleEventRemainSeconds = 600; // 10 minutes
-				TempleEventStart();
+		for (const auto eventTime : m_nChaosTime) {
+			if (nHour == eventTime && nMinute == 0) {
+				m_nextEvent = TEMPLE_EVENT_CHAOS;
+				m_eventStartTime = system_clock::now() + minutes(10);
 				break;
 			}
 		}
-
-		for (int i = 0; i < JURAD_MOUNTAIN_EVENT_COUNT; i++) {
-			if (nHour == m_nJuraidTime[i] && nMinute == 0) {
-				pTempleEvent.ActiveEvent = TEMPLE_EVENT_JURAD_MOUNTAIN;
-				pTempleEvent.ZoneID = ZONE_JURAD_MOUNTAIN;
-
-
-				pTempleEvent.m_nJuraidMountainOdulTipi = m_nJuraidMountainOdulTipi[i];
-				pTempleEvent.m_nJuraidMountainPrizeWonItemNo1 = m_nJuraidMountainPrizeWonItemNo1[i];
-				pTempleEvent.m_nJuraidMountainPrizeWonItemNo2 = m_nJuraidMountainPrizeWonItemNo2[i];
-				pTempleEvent.m_nJuraidMountainPrizeWonItemNo3 = m_nJuraidMountainPrizeWonItemNo3[i];
-				pTempleEvent.m_nJuraidMountainPrizeWonItemNo4_K = m_nJuraidMountainPrizeWonItemNo4_K[i];
-				pTempleEvent.m_nJuraidMountainPrizeWonItemNo4_H = m_nJuraidMountainPrizeWonItemNo4_H[i];
-				pTempleEvent.m_nJuraidMountainPrizeWonLoyalty = m_nJuraidMountainPrizeWonLoyalty[i];
-				pTempleEvent.m_nJuraidMountainPrizeWonExp = m_nJuraidMountainPrizeWonExp[i];
-				pTempleEvent.m_nJuraidMountainPrizeWonKnightCash = m_nJuraidMountainPrizeWonKnightCash[i];
-
-				pTempleEvent.m_nJuraidMountainPrizeLoserKnightCash = m_nJuraidMountainPrizeLoserKnightCash[i];
-				pTempleEvent.m_nJuraidMountainPrizeLoserLoyalty = m_nJuraidMountainPrizeLoserLoyalty[i];
-				pTempleEvent.m_nJuraidMountainPrizeLoserItem = m_nJuraidMountainPrizeLoserItem[i];
-				pTempleEvent.m_nJuraidMountainPrizeLoserExp = m_nJuraidMountainPrizeLoserExp[i];
-				pTempleEvent.m_nJuraidMountainMAXLEVEL = m_nJuraidMountainMAXLEVEL[i];
-				pTempleEvent.m_nJuraidMountainMINLEVEL = m_nJuraidMountainMINLEVEL[i];
-
-
-				m_nTempleEventRemainSeconds = 600; // 10 minutes
-				JuraidTempleEventStart();
+		for (const auto eventTime : m_nJuraidTime) {
+			if (nHour == eventTime && nMinute == 0) {
+				m_nextEvent = TEMPLE_EVENT_JURAD_MOUNTAIN;
+				m_eventStartTime = system_clock::now() + minutes(10);
 				break;
 			}
 		}
-	} else if (pTempleEvent.ActiveEvent != -1) {
+	}
+
+	// m_nTempleEventRemainSeconds keeps track of the seconds until
+	// the event starts. This value is sent in a packet to the client.
+	// This needs to go after setting the event otherwise we'll send 0 seconds
+	// and the client will bug out.
+	if (pTempleEvent.ActiveEvent != -1 ||
+		m_eventStartTime > system_clock::now()) {
+		auto timeDiff = m_eventStartTime - system_clock::now();
+		auto timeDiffSec = duration_cast<seconds>(timeDiff).count();
+		m_nTempleEventRemainSeconds = (uint16) max((int) timeDiffSec, 0);
+	} else {
+		m_nTempleEventRemainSeconds = 0;
+	}
+
+	// Initialize a new event
+	if (pTempleEvent.ActiveEvent == -1 && m_nextEvent != -1) {
+		if (m_nextEvent == TEMPLE_EVENT_BORDER_DEFENCE_WAR) {
+			pTempleEvent.ActiveEvent = TEMPLE_EVENT_BORDER_DEFENCE_WAR;
+			pTempleEvent.ZoneID = ZONE_BORDER_DEFENSE_WAR;
+
+			pTempleEvent.m_nBorderDefenseWarPrizeWonItemNo1 = m_nBorderDefenseWarPrizeWonItemNo1[0];
+			pTempleEvent.m_nBorderDefenseWarPrizeWonItemNo2 = m_nBorderDefenseWarPrizeWonItemNo2[0];
+			pTempleEvent.m_nBorderDefenseWarPrizeWonItemNo3 = m_nBorderDefenseWarPrizeWonItemNo3[0];
+			pTempleEvent.m_nBorderDefenseWarPrizeWonItemNo4_K = m_nBorderDefenseWarPrizeWonItemNo4_K[0];
+			pTempleEvent.m_nBorderDefenseWarPrizeWonItemNo4_H = m_nBorderDefenseWarPrizeWonItemNo4_H[0];
+			pTempleEvent.m_nBorderDefenseWarPrizeWonLoyalty = m_nBorderDefenseWarPrizeWonLoyalty[0];
+			pTempleEvent.m_nBorderDefenseWarPrizeWonKnightCash = m_nBorderDefenseWarPrizeWonKnightCash[0];
+			pTempleEvent.m_nBorderDefenseWarPrizeLoserKnightCash = m_nBorderDefenseWarPrizeLoserKnightCash[0];
+			pTempleEvent.m_nBorderDefenseWarPrizeLoserLoyalty = m_nBorderDefenseWarPrizeLoserLoyalty[0];
+			pTempleEvent.m_nBorderDefenseWarPrizeLoserItem = m_nBorderDefenseWarPrizeLoserItem[0];
+			pTempleEvent.m_nBorderDefenseWarMAXLEVEL = m_nBorderDefenseWarMAXLEVEL[0];
+			pTempleEvent.m_nBorderDefenseWarMINLEVEL = m_nBorderDefenseWarMINLEVEL[0];
+
+			TempleEventStart();
+		} else if (m_nextEvent == TEMPLE_EVENT_CHAOS) {
+			pTempleEvent.ActiveEvent = TEMPLE_EVENT_CHAOS;
+			pTempleEvent.ZoneID = ZONE_CHAOS_DUNGEON;
+
+			pTempleEvent.m_nChaosPrizeWonItemNo1 = m_nChaosPrizeWonItemNo1[0];
+			pTempleEvent.m_nChaosPrizeWonItemNo2 = m_nChaosPrizeWonItemNo2[0];
+			pTempleEvent.m_nChaosPrizeWonItemNo3 = m_nChaosPrizeWonItemNo3[0];
+			pTempleEvent.m_nChaosPrizeWonItemNo4_K = m_nChaosPrizeWonItemNo4_K[0];
+			pTempleEvent.m_nChaosPrizeWonItemNo4_H = m_nChaosPrizeWonItemNo4_H[0];
+			pTempleEvent.m_nChaosPrizeWonLoyalty = m_nChaosPrizeWonLoyalty[0];
+			pTempleEvent.m_nChaosPrizeWonExp = m_nChaosPrizeWonExp[0];
+			pTempleEvent.m_nChaosPrizeWonKnightCash = m_nChaosPrizeWonKnightCash[0];
+
+			pTempleEvent.m_nChaosPrizeLoserKnightCash = m_nChaosPrizeLoserKnightCash[0];
+			pTempleEvent.m_nChaosPrizeLoserLoyalty = m_nChaosPrizeLoserLoyalty[0];
+			pTempleEvent.m_nChaosPrizeLoserItem = m_nChaosPrizeLoserItem[0];
+			pTempleEvent.m_nChaosPrizeLoserExp = m_nChaosPrizeLoserExp[0];
+
+			TempleEventStart();
+		} else if (m_nextEvent == TEMPLE_EVENT_BORDER_DEFENCE_WAR) {
+			pTempleEvent.ActiveEvent = TEMPLE_EVENT_JURAD_MOUNTAIN;
+			pTempleEvent.ZoneID = ZONE_JURAD_MOUNTAIN;
+
+			pTempleEvent.m_nJuraidMountainOdulTipi = m_nJuraidMountainOdulTipi[0];
+			pTempleEvent.m_nJuraidMountainPrizeWonItemNo1 = m_nJuraidMountainPrizeWonItemNo1[0];
+			pTempleEvent.m_nJuraidMountainPrizeWonItemNo2 = m_nJuraidMountainPrizeWonItemNo2[0];
+			pTempleEvent.m_nJuraidMountainPrizeWonItemNo3 = m_nJuraidMountainPrizeWonItemNo3[0];
+			pTempleEvent.m_nJuraidMountainPrizeWonItemNo4_K = m_nJuraidMountainPrizeWonItemNo4_K[0];
+			pTempleEvent.m_nJuraidMountainPrizeWonItemNo4_H = m_nJuraidMountainPrizeWonItemNo4_H[0];
+			pTempleEvent.m_nJuraidMountainPrizeWonLoyalty = m_nJuraidMountainPrizeWonLoyalty[0];
+			pTempleEvent.m_nJuraidMountainPrizeWonExp = m_nJuraidMountainPrizeWonExp[0];
+			pTempleEvent.m_nJuraidMountainPrizeWonKnightCash = m_nJuraidMountainPrizeWonKnightCash[0];
+
+			pTempleEvent.m_nJuraidMountainPrizeLoserKnightCash = m_nJuraidMountainPrizeLoserKnightCash[0];
+			pTempleEvent.m_nJuraidMountainPrizeLoserLoyalty = m_nJuraidMountainPrizeLoserLoyalty[0];
+			pTempleEvent.m_nJuraidMountainPrizeLoserItem = m_nJuraidMountainPrizeLoserItem[0];
+			pTempleEvent.m_nJuraidMountainPrizeLoserExp = m_nJuraidMountainPrizeLoserExp[0];
+			pTempleEvent.m_nJuraidMountainMAXLEVEL = m_nJuraidMountainMAXLEVEL[0];
+			pTempleEvent.m_nJuraidMountainMINLEVEL = m_nJuraidMountainMINLEVEL[0];
+			JuraidTempleEventStart();
+		}
+		m_nextEvent = -1;
+		return;
+	} 
+	
+	/* Update an event that was previously started. For some events an update can
+	   consist of making the arena attackable, non-attackable, or shutting down the
+	   event and teleporting everybody out. */
+	if (pTempleEvent.ActiveEvent != -1) {
 		if (pTempleEvent.ActiveEvent == TEMPLE_EVENT_BORDER_DEFENCE_WAR) {
 			for (int i = 1; i < MAX_TEMPLE_EVENT_ROOM; i++) {
 				if (pTempleEvent.m_sMiniTimerNation[i] == 0)
@@ -3565,69 +3589,70 @@ void CGameServerDlg::TempleEventTimer() {
 
 				TempleEventFinish(i, pTempleEvent.m_sMiniTimerNation[i]);
 			}
-			for (int i = 0; i < BORDER_DEFENSE_WAR_EVENT_COUNT; i++) {
-				if (nHour == m_nBorderDefenseWarTime[i] && nMinute == 10 && !pTempleEvent.isActive) {
-					m_nTempleEventRemainSeconds = 0;
-					pTempleEvent.LastEventRoom = 1;
-					pTempleEvent.isActive = true;
-					TempleEventStart();
-					TempleEventTeleportUsers();
-					TempleEventSummon();
-					break;
-				} else if (nHour == m_nBorderDefenseWarTime[i] && nMinute == 40 && pTempleEvent.isAttackable) {
-					TerminationFinish();
-					pTempleEvent.isAttackable = false;
-					break;
-				} else if (nHour == m_nBorderDefenseWarTime[i] && nMinute == 40 && nSeconds == 20 && pTempleEvent.isActive) {
-					TempleEventFinish(0, 0);
-					break;
-				}
+
+			if (system_clock::now() >= m_eventStartTime
+					&& !pTempleEvent.isActive) {
+				m_nTempleEventRemainSeconds = 0;
+				pTempleEvent.LastEventRoom = 1;
+				pTempleEvent.isActive = true;
+				TempleEventStart();
+				TempleEventTeleportUsers();
+				TempleEventSummon();
+			} else if (system_clock::now() >= m_eventStartTime + minutes(30)
+					&& pTempleEvent.isAttackable) {
+				TerminationFinish();
+				pTempleEvent.isAttackable = false;
+			} else if (system_clock::now() >= m_eventStartTime + minutes(30) + seconds(20)
+					&& pTempleEvent.isActive) {
+				TempleEventFinish(0, 0);
+				pTempleEvent.ActiveEvent = -1;
 			}
-		}
-		if (pTempleEvent.ActiveEvent == TEMPLE_EVENT_CHAOS) {
-			for (int i = 0; i < CHAOS_EVENT_COUNT; i++) {
-				if (nHour == m_nChaosTime[i] && nMinute == 10 && nSeconds == 0 && !pTempleEvent.isActive) {
-					m_nTempleEventRemainSeconds = 0;
-					pTempleEvent.LastEventRoom = 1;
-					pTempleEvent.isActive = true;
-					TempleEventStart(); // Set RemainSeconds to zero
-					TempleEventTeleportUsers();
-					TempleEventSummon();
-					break;
-				} else if (nHour == m_nChaosTime[i] && nMinute == 11 && !pTempleEvent.isAttackable) {
-					pTempleEvent.isAttackable = true;
-					break;
-				} else if (nHour == m_nChaosTime[i] && nMinute == 30 && pTempleEvent.isAttackable) {
-					TerminationFinish();
-					pTempleEvent.isAttackable = false;
-					break;
-				} else if (nHour == m_nChaosTime[i] && nMinute == 30 && nSeconds == 20 && pTempleEvent.isActive) {
-					TempleEventFinish(0, 0);
-					break;
-				}
+		} else if (pTempleEvent.ActiveEvent == TEMPLE_EVENT_CHAOS) {
+			if (system_clock::now() >= m_eventStartTime
+					&& !pTempleEvent.isActive) {
+				m_nTempleEventRemainSeconds = 0;
+				pTempleEvent.LastEventRoom = 1;
+				pTempleEvent.isActive = true;
+				TempleEventStart(); // Set RemainSeconds to zero
+				TempleEventTeleportUsers();
+				TempleEventSummon();
+			// Enable Attacking for 19 minutes
+			} else if (system_clock::now() >= m_eventStartTime + minutes(1)
+					&& system_clock::now() < m_eventStartTime + minutes(20)
+					&& !pTempleEvent.isAttackable) {
+				pTempleEvent.isAttackable = true;
+			// Finish the event and allow 20 seconds until TP
+			} else if (system_clock::now() >= m_eventStartTime + minutes(20)
+					&& pTempleEvent.isAttackable) {
+				TerminationFinish();
+				pTempleEvent.isAttackable = false;
+			// Tp and close the event
+			} else if (system_clock::now() >= m_eventStartTime + minutes(20) + seconds(20)
+					&& pTempleEvent.isActive) {
+				TempleEventFinish(0, 0);
+				pTempleEvent.ActiveEvent = -1;
 			}
-		}
-		if (pTempleEvent.ActiveEvent == TEMPLE_EVENT_JURAD_MOUNTAIN) {
-			for (int i = 0; i < JURAD_MOUNTAIN_EVENT_COUNT; i++) {
-				if (nHour == m_nJuraidTime[i] && nMinute == 10 && !pTempleEvent.isActive) {
-					m_nTempleEventRemainSeconds = 0;
-					pTempleEvent.LastEventRoom = 1;
-					pTempleEvent.isActive = true;
-					JuraidTempleEventStart(); // Set RemainSeconds to zero
-					TempleEventTeleportUsers();
-					TempleEventSummon();
-					break;
-				} else if (nHour == m_nJuraidTime[i] && nMinute == 11 && !pTempleEvent.isAttackable) {
-					pTempleEvent.isAttackable = true;
-					break;
-				} else if (nHour == m_nJuraidTime[i] && nMinute == 50 && pTempleEvent.isAttackable) {
-					TerminationFinish();
-					pTempleEvent.isAttackable = false;
-					break;
-				} else if (nHour == m_nJuraidTime[i] && nMinute == 50 && nSeconds == 20 && pTempleEvent.isActive) {
-					TempleEventFinish(0, 0);
-					break;
-				}
+		} else if (pTempleEvent.ActiveEvent == TEMPLE_EVENT_JURAD_MOUNTAIN) {
+			if (system_clock::now() >= m_eventStartTime
+					&& !pTempleEvent.isActive) {
+				m_nTempleEventRemainSeconds = 0;
+				pTempleEvent.LastEventRoom = 1;
+				pTempleEvent.isActive = true;
+				JuraidTempleEventStart(); // Set RemainSeconds to zero
+				TempleEventTeleportUsers();
+				TempleEventSummon();
+			} else if (system_clock::now() + minutes(1) >= m_eventStartTime
+					&& system_clock::now() + minutes(40) < m_eventStartTime
+					&& !pTempleEvent.isAttackable) {
+				pTempleEvent.isAttackable = true;
+			} else if (system_clock::now() + minutes(40) >= m_eventStartTime
+					&& pTempleEvent.isAttackable) {
+				TerminationFinish();
+				pTempleEvent.isAttackable = false;
+			} else if (system_clock::now() + minutes(40) + seconds(20) >= m_eventStartTime
+					&& pTempleEvent.isActive) {
+				TempleEventFinish(0, 0);
+				pTempleEvent.ActiveEvent = -1;
 			}
 		}
 	}

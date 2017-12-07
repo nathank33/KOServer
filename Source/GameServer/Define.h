@@ -92,6 +92,9 @@ enum InOutType {
 #define BORDER_DEFENSE_WAR_EVENT_COUNT	5
 #define JURAD_MOUNTAIN_EVENT_COUNT		3
 
+// Max Temple Announcements
+#define MAX_TEMPLE_EVENT_ANNOUNCEMENTS 10
+
 // Users under level 35 require 3,000 coins to shout.
 #define SHOUT_COIN_REQUIREMENT 3000
 

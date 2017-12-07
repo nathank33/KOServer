@@ -7,6 +7,7 @@
 
 #include "Define.h"
 #include "ChatHandler.h"
+#include <chrono>
 
 class C3DMap;
 class CUser;
@@ -551,6 +552,9 @@ public:
 
 	std::string m_strKarusCaptain, m_strElmoradCaptain;
 
+	uint16 m_nextEvent; // EventOpCode
+	std::chrono::system_clock::time_point m_eventStartTime;
+
 	uint8   m_nBorderDefenseWarTime[BORDER_DEFENSE_WAR_EVENT_COUNT], m_nChaosTime[CHAOS_EVENT_COUNT], m_nJuraidTime[JURAD_MOUNTAIN_EVENT_COUNT];
 	uint32	m_nBorderDefenseWarPrizeWonItemNo1[BORDER_DEFENSE_WAR_EVENT_COUNT];
 	uint32	m_nBorderDefenseWarPrizeWonItemNo2[BORDER_DEFENSE_WAR_EVENT_COUNT];
@@ -565,6 +569,7 @@ public:
 	uint8	m_nBorderDefenseWarMAXLEVEL[BORDER_DEFENSE_WAR_EVENT_COUNT];
 	uint8	m_nBorderDefenseWarMINLEVEL[BORDER_DEFENSE_WAR_EVENT_COUNT];
 
+	bool	m_forceStartJuraidMountain;
 	bool	m_nJuraidMountainOdulTipi[JURAD_MOUNTAIN_EVENT_COUNT];
 	uint32	m_nJuraidMountainPrizeWonItemNo1[JURAD_MOUNTAIN_EVENT_COUNT];
 	uint32	m_nJuraidMountainPrizeWonItemNo2[JURAD_MOUNTAIN_EVENT_COUNT];
@@ -811,6 +816,9 @@ public:
 	COMMAND_HANDLER(HandleWarResultCommand);
 	COMMAND_HANDLER(HandleMonSummonCommand);
 	COMMAND_HANDLER(HandleSnowWarCloseCommand);
+	COMMAND_HANDLER(HandleHelpCommand);
+	COMMAND_HANDLER(HandleBorderDefenseWarOpenCommand);
+	COMMAND_HANDLER(HandleBorderDefenseWarCloseCommand);
 };
 
 extern CGameServerDlg * g_pMain;
