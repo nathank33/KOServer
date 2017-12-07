@@ -819,6 +819,10 @@ public:
 	COMMAND_HANDLER(HandleHelpCommand);
 	COMMAND_HANDLER(HandleBorderDefenseWarOpenCommand);
 	COMMAND_HANDLER(HandleBorderDefenseWarCloseCommand);
+	COMMAND_HANDLER(HandleChaosOpenCommand);
+	COMMAND_HANDLER(HandleChaosCloseCommand);
+	COMMAND_HANDLER(HandleJuraidOpenCommand);
+	COMMAND_HANDLER(HandleJuraidCloseCommand);
 };
 
 extern CGameServerDlg * g_pMain;

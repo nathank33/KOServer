@@ -938,6 +938,10 @@ public:
 	COMMAND_HANDLER(HandleHelpCommand);
 	COMMAND_HANDLER(HandleBorderDefenseWarOpenCommand);
 	COMMAND_HANDLER(HandleBorderDefenseWarCloseCommand);
+	COMMAND_HANDLER(HandleChaosOpenCommand);
+	COMMAND_HANDLER(HandleChaosCloseCommand);
+	COMMAND_HANDLER(HandleJuraidOpenCommand);
+	COMMAND_HANDLER(HandleJuraidCloseCommand);
 
 	void Regene(uint8 regene_type, uint32 magicid = 0);
 	void RequestUserIn(Packet & pkt);

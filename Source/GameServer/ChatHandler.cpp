@@ -954,6 +954,94 @@ COMMAND_HANDLER(CGameServerDlg::HandleBorderDefenseWarCloseCommand) {
 	return true;
 }
 
+COMMAND_HANDLER(CUser::HandleChaosOpenCommand) {
+	if (!isGM()) {
+		return false;
+		// Time until start (seconds)
+	} else if (vargs.size() < 1) {
+		g_pMain->SendHelpDescription(this, "/open_chaos <seconds> Example: /open_chaos 600");
+		return true;
+	}
+	return g_pMain->HandleChaosOpenCommand(vargs, args, description);
+}
+
+COMMAND_HANDLER(CGameServerDlg::HandleChaosOpenCommand) {
+	// Time until start (seconds)
+	if (vargs.size() < 1) {
+		printf("/open_chaos <seconds> Example: /open_chaos 600\n");
+		return true;
+	}
+
+	int userSeconds;
+	try {
+		userSeconds = std::stoi(vargs.front());
+	} catch (std::invalid_argument&) {
+		printf("/open_chaos <seconds> Example: /open_chaos 600\n");
+		return false;
+	} catch (std::out_of_range&) {
+		printf("/open_chaos <seconds> Example: /open_chaos 600\n");
+		return false;
+	}
+
+	g_pMain->m_nextEvent = TEMPLE_EVENT_CHAOS;
+	g_pMain->m_eventStartTime = system_clock::now() + seconds(userSeconds);
+	return true;
+}
+
+COMMAND_HANDLER(CUser::HandleChaosCloseCommand) { return !isGM() ? false : g_pMain->HandleChaosCloseCommand(vargs, args, description); }
+COMMAND_HANDLER(CGameServerDlg::HandleChaosCloseCommand) {
+	g_pMain->TerminationFinish();
+	g_pMain->pTempleEvent.isAttackable = false;
+	g_pMain->TempleEventFinish(0, 0);
+	pTempleEvent.ActiveEvent = -1;
+	m_eventStartTime = system_clock::now() - hours(1);
+	return true;
+}
+
+COMMAND_HANDLER(CUser::HandleJuraidOpenCommand) {
+	if (!isGM()) {
+		return false;
+		// Time until start (seconds)
+	} else if (vargs.size() < 1) {
+		g_pMain->SendHelpDescription(this, "/open_juraid <seconds> Example: /open_juraid 600");
+		return true;
+	}
+	return g_pMain->HandleJuraidOpenCommand(vargs, args, description);
+}
+
+COMMAND_HANDLER(CGameServerDlg::HandleJuraidOpenCommand) {
+	// Time until start (seconds)
+	if (vargs.size() < 1) {
+		printf("/open_juraid <seconds> Example: /open_juraid 600\n");
+		return true;
+	}
+
+	int userSeconds;
+	try {
+		userSeconds = std::stoi(vargs.front());
+	} catch (std::invalid_argument&) {
+		printf("/open_juraid <seconds> Example: /open_juraid 600\n");
+		return false;
+	} catch (std::out_of_range&) {
+		printf("/open_juraid <seconds> Example: /open_juraid 600\n");
+		return false;
+	}
+
+	g_pMain->m_nextEvent = TEMPLE_EVENT_JURAID_MOUNTAIN;
+	g_pMain->m_eventStartTime = system_clock::now() + seconds(userSeconds);
+	return true;
+}
+
+COMMAND_HANDLER(CUser::HandleJuraidCloseCommand) { return !isGM() ? false : g_pMain->HandleJuraidCloseCommand(vargs, args, description); }
+COMMAND_HANDLER(CGameServerDlg::HandleJuraidCloseCommand) {
+	g_pMain->TerminationFinish();
+	g_pMain->pTempleEvent.isAttackable = false;
+	g_pMain->TempleEventFinish(0, 0);
+	pTempleEvent.ActiveEvent = -1;
+	m_eventStartTime = system_clock::now() - hours(1);
+	return true;
+}
+
 COMMAND_HANDLER(CUser::HandleLoyaltyChangeCommand) {
 	if (!isGM())
 		return false;
