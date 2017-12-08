@@ -1,0 +1,53 @@
+/*
+ALL QUERIES DONE MUST HAVE LUA FILES TO MATCH
+YOU CAN COPY PASTE THIS ENTIRE FILE AND RUN IT
+NOTE ALL QUESTS ARE SET TO CLIENT SIDE VALUES. ANY REWARD TWEAKING NEEDS TO BE DONE INSIDE LUA FILES
+AND ALSO CLIENT TBLS
+*/
+
+
+/*
+EL MORAD CASTLE
+Moradon Merchant Queries
+*/
+
+--For Lvl 60 quest Collection of Magic materials
+UPDATE [kn_online].[dbo].[QUEST_HELPER]
+SET nEventTriggerIndex = '507', nEventCompleteIndex = '506'
+WHERE strLuaFilename = '14435_Moradon.lua' AND nIndex = '3966'
+
+UPDATE [kn_online].[dbo].[QUEST_HELPER]
+SET nEventTriggerIndex = '507'
+WHERE strLuaFilename = '14435_Moradon.lua' AND nIndex = '3964'
+
+--For lvl 60 quest Collection of Weapon materials
+UPDATE [kn_online].[dbo].[QUEST_HELPER]
+SET nEventTriggerIndex = '517', nEventCompleteIndex = '516'
+WHERE strLuaFilename = '14435_Moradon.lua' AND nIndex = '3974'
+
+UPDATE [kn_online].[dbo].[QUEST_HELPER]
+SET nEventTriggerIndex = '517'
+WHERE strLuaFilename = '14435_Moradon.lua' AND nIndex = '3976'
+
+
+--For lvl 60 quest Ecosystem Research 1
+UPDATE [kn_online].[dbo].[QUEST_HELPER]
+SET nEventTriggerIndex = '527', nEventCompleteIndex = '526'
+WHERE strLuaFilename = '14435_Moradon.lua' AND nIndex = '3984'
+
+UPDATE [kn_online].[dbo].[QUEST_HELPER]
+SET nEventTriggerIndex = '527'
+WHERE strLuaFilename = '14435_Moradon.lua' AND nIndex = '3986'
+
+--For Lvl 60 quest Ecosystem Research 2
+UPDATE [kn_online].[dbo].[QUEST_HELPER]
+SET nEventTriggerIndex = '537', nEventCompleteIndex = '536'
+WHERE strLuaFilename = '14435_Moradon.lua' AND nIndex = '3994'
+
+UPDATE [kn_online].[dbo].[QUEST_HELPER]
+SET nEventTriggerIndex = '537'
+WHERE strLuaFilename = '14435_Moradon.lua' AND nIndex = '3996'
+
+UPDATE [kn_online].[dbo].[QUEST_TALK]
+SET strTalk = 'You can do this, right?'
+WHERE iNum = '44214'
