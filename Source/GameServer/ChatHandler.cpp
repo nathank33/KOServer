@@ -64,6 +64,10 @@ void CGameServerDlg::InitServerCommands() {
 		{ "help",				&CGameServerDlg::HandleHelpCommand,					"Displays information about all of the other commands" },
 		{ "open_bdw",			&CGameServerDlg::HandleBorderDefenseWarOpenCommand, "Open border defense war" },
 		{ "close_bdw",			&CGameServerDlg::HandleBorderDefenseWarCloseCommand,"Close border defense war" },
+		{ "open_chaos",			&CGameServerDlg::HandleChaosOpenCommand,			"Open chaos"},
+		{ "close_chaos",		&CGameServerDlg::HandleChaosCloseCommand,			"Close chaos"},
+		{ "open_juraid",		&CGameServerDlg::HandleJuraidOpenCommand,			"Open juraid"},
+		{ "close_juraid",		&CGameServerDlg::HandleJuraidCloseCommand,			"Close juraid"},
 	};
 
 	init_command_table(CGameServerDlg, commandTable, s_commandTable);
@@ -111,9 +115,12 @@ void CUser::InitChatCommands() {
 		{ "nptokc",				&CUser::HandleNPtoKCCommand,				    "NP ile KC alabileceginiz sistem kullanim: +nptokc npmiktari"},
 		{ "goldtokc",			&CUser::HandleGoldtoKCCommand,				    "Gold ile KC alabileceginiz sistem kullanim: +nptokc npmiktari"},
 		{ "help",				&CUser::HandleHelpCommand,						"Displays information about all of the other commands" },
-		{"open_bdw",			&CUser::HandleBorderDefenseWarOpenCommand, "Open border defense war"},
-		{"close_bdw",			&CUser::HandleBorderDefenseWarCloseCommand,"Close border defense war"},
-
+		{ "open_bdw",			&CUser::HandleBorderDefenseWarOpenCommand,		"Open border defense war"},
+		{ "close_bdw",			&CUser::HandleBorderDefenseWarCloseCommand,		"Close border defense war"},
+		{ "open_chaos",			&CUser::HandleChaosOpenCommand,					"Open chaos"},
+		{ "close_chaos",		&CUser::HandleChaosCloseCommand,				"Close chaos"},
+		{ "open_juraid",		&CUser::HandleJuraidOpenCommand,				"Open juraid"},
+		{ "close_juraid",		&CUser::HandleJuraidCloseCommand,				"Close juraid"},
 	};
 
 	init_command_table(CUser, commandTable, s_commandTable);
@@ -1027,7 +1034,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleJuraidOpenCommand) {
 		return false;
 	}
 
-	g_pMain->m_nextEvent = TEMPLE_EVENT_JURAID_MOUNTAIN;
+	g_pMain->m_nextEvent = TEMPLE_EVENT_JURAD_MOUNTAIN;
 	g_pMain->m_eventStartTime = system_clock::now() + seconds(userSeconds);
 	return true;
 }
