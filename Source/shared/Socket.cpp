@@ -1,5 +1,5 @@
-#include "stdafx.h"
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include "stdafx.h"
 #include "SocketMgr.h"
 
 Socket::Socket(SOCKET fd, uint32 sendbuffersize, uint32 recvbuffersize) 

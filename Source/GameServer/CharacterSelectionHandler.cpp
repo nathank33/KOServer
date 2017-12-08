@@ -261,7 +261,7 @@ void CUser::NewCharToAgent(Packet & pkt) {
 		errorCode = NEWCHAR_INVALID_DETAILS;
 	else if (str < 50 || sta < 50 || dex < 50 || intel < 50 || cha < 50)
 		errorCode = NEWCHAR_STAT_TOO_LOW;
-	else if (!g_pMain->WordGuardSystem(strUserID, strUserID.length()))
+	else if (!g_pMain->WordGuardSystem(strUserID, (uint8) strUserID.length()))
 		errorCode = NEWCHAR_BAD_NAME;
 
 	if (errorCode != 0) {

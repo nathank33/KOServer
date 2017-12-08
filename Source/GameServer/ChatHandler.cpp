@@ -147,7 +147,7 @@ void CUser::Chat(Packet & pkt) {
 			floodcounter++;
 			if (floodcounter >= 5) {
 				floodcounter = 0;
-				std::string buffer = string_format("[ PBACS ] Oyunda flood yapmak yasaktır! 20 saniyeliğine mutelendiniz");
+				std::string buffer = string_format("[ Chat Flood Detector ] Chat has been muted for 20 seconds.");
 				//adama mute yazısı gönderiyoz
 				m_mutetime = (checknow + 20000);
 				ChatPacket::Construct(&result, PUBLIC_CHAT, &buffer);
@@ -1359,7 +1359,7 @@ COMMAND_HANDLER(CUser::HandleKnightsSummonCommand) {
 }
 
 COMMAND_HANDLER(CUser::HandleNPtoKCCommand) {
-	if (!g_pMain->KCaktifmi
+	if (!g_pMain->NpToKcSystem
 		|| isMerchanting()
 		|| isStoreOpen()
 		|| isTrading()
@@ -1402,7 +1402,7 @@ COMMAND_HANDLER(CUser::HandleNPtoKCCommand) {
 	}
 
 
-	int32 ExchangeKC = (CLoyalty / 1000) * (g_pMain->KCmiktari);
+	int32 ExchangeKC = (CLoyalty / 1000) * (g_pMain->KcToThousandNp);
 
 	if (NpExchangeAsk && NpExchangeValue == CLoyalty) {
 		g_pMain->SendHelpDescription(this, string_format("You earned [%d] Knight Cash!", ExchangeKC));
@@ -1421,7 +1421,7 @@ COMMAND_HANDLER(CUser::HandleNPtoKCCommand) {
 }
 
 COMMAND_HANDLER(CUser::HandleGoldtoKCCommand) {
-	if (!g_pMain->KCaktifmi2
+	if (!g_pMain->GoldToKcSystem
 		|| isMerchanting()
 		|| isStoreOpen()
 		|| isTrading()
@@ -1464,7 +1464,7 @@ COMMAND_HANDLER(CUser::HandleGoldtoKCCommand) {
 	}
 
 
-	int32 ExchangeKC = (CGold / 100000000) * (g_pMain->KCmiktari2);
+	int32 ExchangeKC = (CGold / 100000000) * (g_pMain->KcToGoldBar);
 
 	if (GoldExchangeAsk && GoldExchangeValue == CGold) {
 		g_pMain->SendHelpDescription(this, string_format("You earned [%d] Knight Cash!", ExchangeKC));

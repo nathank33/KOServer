@@ -1779,7 +1779,7 @@ bool MagicInstance::ExecuteType3() {
 					Unit *pTmp = (pSkillCaster->isPlayer() ? pSkillCaster : pTarget);
 					int16 sDataCopy[] =
 					{
-						sData[0], bResult, sData[2], sDuration,
+						sData[0], bResult, sData[2], (int16) sDuration,
 						sData[4], pType2->bSpeed, sData[6]
 					};
 
@@ -2061,7 +2061,7 @@ bool MagicInstance::ExecuteType4() {
 			Unit *pTmp = (pSkillCaster->isPlayer() ? pSkillCaster : pTarget);
 			int16 sDataCopy[] =
 			{
-				sData[0], bResult, sData[2], sDuration,
+				sData[0], bResult, sData[2], (int16) sDuration,
 				sData[4], pType->bSpeed, sData[6]
 			};
 
@@ -2491,7 +2491,7 @@ bool MagicInstance::ExecuteType8() {
 					Unit *pTmp = (pSkillCaster->isPlayer() ? pSkillCaster : *itr);
 					int16 sDataCopy[] =
 					{
-						sData[0], bResult, sData[2], sDuration,
+						sData[0], bResult, sData[2], (int16) sDuration,
 						sData[4], pType2->bSpeed, sData[6]
 					};
 				}

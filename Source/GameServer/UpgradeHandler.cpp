@@ -793,7 +793,7 @@ void CUser::ItemUpgradePet(Packet & pkt) {
 	uint64 Serial = g_pMain->GenerateItemSerial();
 
 	if (Name.length() > 21
-		|| !g_pMain->WordGuardSystem(Name, Name.length())
+		|| !g_pMain->WordGuardSystem(Name, (uint8) Name.length())
 		|| Name.length() < 1) {
 		Error = 2;
 		goto fail_return;

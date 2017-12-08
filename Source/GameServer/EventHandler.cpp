@@ -372,5 +372,5 @@ void CUser::HandleCapture(Packet & pkt) {
 	g_pMain->Send_Zone(&result, GetZoneID(), nullptr, Nation::ALL, GetEventRoom());
 
 }
-uint8 CUser::GetMonsterChallengeUserCount() { return g_pMain->m_nForgettenTempleUsers.size(); }
-uint8 CUser::GetEventZoneUserCount() { return g_pMain->m_nEventZoneUsers.size(); }
+uint8 CUser::GetMonsterChallengeUserCount() { return (uint8) (uint8) g_pMain->m_nForgettenTempleUsers.size(); }
+uint8 CUser::GetEventZoneUserCount() { return (uint8) g_pMain->m_nEventZoneUsers.size(); }

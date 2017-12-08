@@ -132,7 +132,7 @@ void CKnightsManager::CreateKnights(CUser* pUser, Packet & pkt) {
 
 	if (idname.empty() || idname.size() > MAX_ID_SIZE
 		|| !IsAvailableName(idname.c_str())
-		|| !g_pMain->WordGuardSystem(idname, idname.length()))
+		|| !g_pMain->WordGuardSystem(idname, (uint8) idname.length()))
 		ret_value = 3;
 	else if (pUser->GetClanID() != 0)
 		ret_value = 5;

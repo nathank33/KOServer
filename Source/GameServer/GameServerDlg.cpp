@@ -344,22 +344,22 @@ void CGameServerDlg::GetTimeFromIni() {
 
 	m_byWeather = ini.GetInt("TIMER", "WEATHER", 1);
 	RoyalG1 = ini.GetBool("GAME", "AutoRoyalG1", 0);
-	onbesinde = ini.GetBool("GAME", "ResetLoyaltyMonthlyAt15", 0);
-	KCaktifmi = ini.GetBool("GAME", "NPtoKCSystem", 0);
-	KCmiktari = ini.GetInt("GAME", "KCto1000NP", 0);
-	KCaktifmi2 = ini.GetBool("GAME", "GoldtoKCSystem", 0);
-	KCmiktari2 = ini.GetInt("GAME", "KCto1GB", 0);
+	ResetLoyaltyMonthlyAt15 = ini.GetBool("GAME", "ResetLoyaltyMonthlyAt15", 0);
+	NpToKcSystem = ini.GetBool("GAME", "NPtoKCSystem", 0);
+	KcToThousandNp = ini.GetInt("GAME", "KCto1000NP", 0);
+	GoldToKcSystem = ini.GetBool("GAME", "GoldtoKCSystem", 0);
+	KcToGoldBar = ini.GetInt("GAME", "KCto1GB", 0);
 
 	AutoNovice = ini.GetBool("AUTOS", "AUTO NOVICE", 0);
 	AutoMaster = ini.GetBool("AUTOS", "AUTO MASTER", 0);
-	AutoSkills = ini.GetBool("AUTOS", "AUTO SKİLLS OPEN", 0);
+	AutoSkills = ini.GetBool("AUTOS", "AUTO SKILLS OPEN", 0);
 
 	OfflineMerchanting = ini.GetBool("GAME", "OFFLINE MERCHANT", 0);
 
-	Dakika1 = ini.GetInt("ONLINE KAL", "DAKİKA PK", 0);
-	Dakika2 = ini.GetInt("ONLINE KAL", "DAKİKA MORADON", 0);
-	HediyeKC = ini.GetInt("ONLINE KAL", "HEDİYE KC MORADON", 0);
-	HediyeKC2 = ini.GetInt("ONLINE KAL", "HEDİYE KC PK", 0);
+	MinutePk = ini.GetInt("ONLINE KAL", "MINUTE PK", 0);
+	MinuteMoradon = ini.GetInt("ONLINE KAL", "MINUTE MORADON", 0);
+	GiftKcMoradon = ini.GetInt("ONLINE KAL", "GIFT KC MORADON", 0);
+	GiftKcPk = ini.GetInt("ONLINE KAL", "GIFT KC PK", 0);
 
 	ini.GetString("BATTLE", "DAYS", "1,6", m_sBattleZoneOpenDays, false);
 
@@ -1039,7 +1039,7 @@ void CGameServerDlg::SnowBattleZoneOpenTimer() {
 
 	if (!isWarOpen() && nMin == 0) {
 		std::list<std::string> vargs = StrSplit(m_sBattleZoneOpenDays, ",");
-		uint8 nDaySize = vargs.size();
+		uint8 nDaySize = (uint8) vargs.size();
 		if (nDaySize > 0) {
 			uint8 nDay = 0;
 			for (int i = 0; i < nDaySize; i++) {
@@ -1615,7 +1615,7 @@ void CGameServerDlg::UpdateGameTime() {
 
 		// Player Ranking Rewards
 		std::list<std::string> vargs = StrSplit(m_sPlayerRankingsRewardZones, ",");
-		uint8 nZones = vargs.size();
+		uint8 nZones = (uint8) vargs.size();
 		if (nZones > 0) {
 			uint8 nZoneID = 0;
 			/*for (int i = 0; i < nZones; i++)
@@ -2376,7 +2376,7 @@ void CGameServerDlg::BattleZoneOpenTimer() {
 
 	if (!isWarOpen() && nMin == 0) {
 		std::list<std::string> vargs = StrSplit(m_sBattleZoneOpenDays, ",");
-		uint8 nDaySize = vargs.size();
+		uint8 nDaySize = (uint8) vargs.size();
 		if (nDaySize > 0) {
 			uint8 nDay = 0;
 			for (int i = 0; i < nDaySize; i++) {
@@ -3109,9 +3109,9 @@ void CGameServerDlg::EventZoneTimer() {
 			std::list<std::string> vargs1 = StrSplit(m_sEventZoneOpenDays1, ",");
 			std::list<std::string> vargs2 = StrSplit(m_sEventZoneOpenDays2, ",");
 			std::list<std::string> vargs3 = StrSplit(m_sEventZoneOpenDays3, ",");
-			uint8 nDaySize1 = vargs1.size();
-			uint8 nDaySize2 = vargs2.size();
-			uint8 nDaySize3 = vargs3.size();
+			uint8 nDaySize1 = (uint8) vargs1.size();
+			uint8 nDaySize2 = (uint8) vargs2.size();
+			uint8 nDaySize3 = (uint8) vargs3.size();
 			std::string sEventStart;
 			std::string sPvpMiniStart;
 			std::string sJuradEventStart;

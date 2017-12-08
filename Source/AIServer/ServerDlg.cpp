@@ -312,7 +312,7 @@ bool CServerDlg::LoadSpawnCallback(OdbcCommand *dbCommand) {
 
 			pNpc->m_sRegenTime = sRegTime * SECOND;
 			pNpc->m_byDirection = bDirection;
-			pNpc->m_sMaxPathCount = strlen(szPath) / 8;
+			pNpc->m_sMaxPathCount = (short) (strlen(szPath) / 8);
 
 			if (pNpc->m_byMoveType == 2 && pNpc->m_sMaxPathCount == 0) {
 				pNpc->m_byMoveType = 1;
@@ -773,13 +773,13 @@ CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, flo
 	if (nRandom <= 0)
 		fRandom_X = (float) fX;
 	else
-		fRandom_X = (float) (myrand((fX - nRandom) * 10, (fX + nRandom) * 10) / 10);
+		fRandom_X = (float) (myrand((uint32) (fX - nRandom) * 10, (uint32) (fX + nRandom) * 10) / 10);
 
 	nRandom = Radius;
 	if (nRandom <= 0)
 		fRandom_Z = (float) fZ;
 	else
-		fRandom_Z = (float) (myrand((fZ - nRandom) * 10, (fZ + nRandom) * 10) / 10);
+		fRandom_Z = (float) (myrand((int32) (fZ - nRandom) * 10, (int32) (fZ + nRandom) * 10) / 10);
 
 	pNpc->SetPosition(fRandom_X, 0.0f, fRandom_Z);
 

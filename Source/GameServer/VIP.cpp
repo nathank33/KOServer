@@ -91,7 +91,7 @@ void CUser::VipStorageOpen(Packet & pkt) {
 
 	for (size_t i = 0; i < MAX_SLOT_VIP_STORAGE; i++) {
 
-		auto pSlot = GetVipStorageSlot(i);
+		auto pSlot = GetVipStorageSlot((uint8) i);
 
 		if (!pSlot)
 			result << uint64(0) << uint64(0) << uint8(0);

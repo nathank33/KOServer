@@ -207,10 +207,10 @@ public:
 	uint16 Zone3Boss[MAX_MONSTER_STONE_EVENT_ROOM];
 	bool IsBusy2[MAX_MONSTER_STONE_EVENT_ROOM];
 	bool IsBusy3[MAX_MONSTER_STONE_EVENT_ROOM];
-	uint32 KCmiktari, KCmiktari2;
+	uint32 KcToThousandNp, KcToGoldBar;
 	uint32	LastPetID;
 	uint32	LastRingID;
-	bool KCaktifmi, onbesinde, RoyalG1, KCaktifmi2;
+	bool NpToKcSystem, ResetLoyaltyMonthlyAt15, RoyalG1, GoldToKcSystem;
 	bool AutoNovice, AutoMaster, AutoSkills;
 	Packet BoardCache[2];
 	void ReloadKnightAndUserRanks();
@@ -218,8 +218,8 @@ public:
 
 	bool	OfflineMerchanting;
 
-	uint8 Dakika1, Dakika2;
-	uint8 HediyeKC, HediyeKC2;
+	uint8 MinutePk, MinuteMoradon;
+	uint8 GiftKcMoradon, GiftKcPk;
 
 	bool CastleSiegeWarAttack(CUser *pUser, CUser *pTargetUser);
 	void UpdateSiege(int16 m_sCastleIndex, int16 m_sMasterKnights, int16 m_bySiegeType, int16 m_byWarDay, int16 m_byWarTime, int16 m_byWarMinute);

@@ -6,7 +6,6 @@
 *				  requires Update() to be called every loop.
 *
 */
-
 #pragma once
 
 template <class T>

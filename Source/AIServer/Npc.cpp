@@ -382,7 +382,7 @@ time_t CNpc::NpcTracing() {
 	if (m_bStopFollowingTarget) {
 		if (!ResetPath())// && !m_tNpcTraceType)
 		{
-			TRACE("##### NpcTracing Fail : ÆĞ½ºÆÄÀÎµå ½ÇÆĞ , NPC_STANDINGÀ¸·Î ######\n");
+			TRACE("##### NpcTracing Fail\n");
 			InitTarget();
 			NpcMoveEnd();	// ÀÌµ¿ ³¡..
 			m_NpcState = NPC_STANDING;
@@ -393,7 +393,7 @@ time_t CNpc::NpcTracing() {
 	if ((!m_bPathFlag && !StepMove())
 		|| (m_bPathFlag && !StepNoPathMove())) {
 		m_NpcState = NPC_STANDING;
-		TRACE("### NpcTracing Fail : StepMove ½ÇÆĞ, %s, %d ### \n", GetName().c_str(), GetID());
+		TRACE("### NpcTracing Fail : StepMove, %s, %d ### \n", GetName().c_str(), GetID());
 		return 0;
 	}
 

@@ -17,7 +17,7 @@ bool OdbcCommand::BindParameters()
 	{
 		auto param = itr->second;
 
-		if (!SQL_SUCCEEDED(SQLBindParameter(m_hStmt, itr->first + 1, param->GetParameterType(), 
+		if (!SQL_SUCCEEDED(SQLBindParameter(m_hStmt, (SQLUSMALLINT) (itr->first + 1), param->GetParameterType(), 
 			param->GetCDataType(), param->GetDataType(), param->GetDataTypeSize(), 0, 
 			param->GetAddress(), param->GetDataTypeSize(), param->GetCBValue())))
 		{

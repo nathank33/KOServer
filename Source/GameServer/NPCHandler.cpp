@@ -1131,7 +1131,7 @@ void CUser::HandleKnightsNameChange(Packet & pkt) {
 	string strKnightsID;
 	pkt >> strKnightsID;
 
-	if (strKnightsID.empty() || strKnightsID.length() > MAX_ID_SIZE || !g_pMain->WordGuardSystem(strKnightsID, strKnightsID.length()))
+	if (strKnightsID.empty() || strKnightsID.length() > MAX_ID_SIZE || !g_pMain->WordGuardSystem(strKnightsID, (uint8) strKnightsID.length()))
 		response = ClanNameChangeInvalidName;
 	else if (!isInClan() || !isClanLeader())
 		response = ClanNameChangeNotInClan;
@@ -1169,7 +1169,7 @@ void CUser::HandlePlayerNameChange(Packet & pkt) {
 	string strUserID;
 	pkt >> strUserID;
 
-	if (strUserID.empty() || strUserID.length() > MAX_ID_SIZE || !g_pMain->WordGuardSystem(strUserID, strUserID.length()))
+	if (strUserID.empty() || strUserID.length() > MAX_ID_SIZE || !g_pMain->WordGuardSystem(strUserID, (uint8) strUserID.length()))
 		response = NameChangeInvalidName;
 	else if (isInClan())
 		response = NameChangeInClan;

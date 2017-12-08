@@ -137,7 +137,7 @@ uint32 THREADCALL DatabaseThread::ThreadProc(void * lpParam) {
 		delete p;
 	}
 
-	printf("[Database Thread %d] Exiting...\n", lpParam);
+	printf("[Database Thread %d] Exiting...\n", (int) lpParam);
 	return 0;
 }
 

@@ -746,19 +746,19 @@ void CUser::Update() {
 		IllegalItemsBanned();
 	}
 
-	if ((UNIXTIME - m_LastCashTimeCheck) > g_pMain->Dakika1 * MINUTE) {
+	if ((UNIXTIME - m_LastCashTimeCheck) > g_pMain->MinutePk * MINUTE) {
 		m_LastCashTimeCheck = UNIXTIME;
 
 		if (GetZoneID() == ZONE_RONARK_LAND || GetZoneID() == ZONE_ARDREAM || GetZoneID() == ZONE_RONARK_LAND_BASE) {
-			GiveKnightCash(g_pMain->HediyeKC2);
+			GiveKnightCash(g_pMain->GiftKcPk);
 		}
 	}
 
-	if ((UNIXTIME - m_LastCashTimeCheck2) > g_pMain->Dakika2 * MINUTE) {
+	if ((UNIXTIME - m_LastCashTimeCheck2) > g_pMain->MinuteMoradon * MINUTE) {
 		m_LastCashTimeCheck2 = UNIXTIME;
 
 		if (GetZoneID() == ZONE_MORADON || GetZoneID() == ZONE_MORADONM2) {
-			GiveKnightCash(g_pMain->HediyeKC);
+			GiveKnightCash(g_pMain->GiftKcMoradon);
 		}
 	}
 
@@ -1205,7 +1205,7 @@ void CUser::SendBoard(uint16 npcID) {
 	else
 		Count += ListCount;
 
-	ListCount = g_pMain->m_playerPersonalRankings[NationArray].size();
+	ListCount = (uint8) g_pMain->m_playerPersonalRankings[NationArray].size();
 	if (ListCount > 9)
 		Count += 10;
 	else
@@ -3898,10 +3898,10 @@ void CUser::AppendExtraNoticeData(Packet & pkt, uint8 & elementCount) {
 		AppendNoticeEntry(pkt, elementCount, message.c_str(), "WAR Flash");
 	}
 
-	if (g_pMain->KCaktifmi)
+	if (g_pMain->NpToKcSystem)
 		g_pMain->SendHelpDescription(this, "You can transform NP to KC with chat '+nptokc <value>'.");
 
-	if (g_pMain->KCaktifmi2)
+	if (g_pMain->GoldToKcSystem)
 		g_pMain->SendHelpDescription(this, "You can transform Gold to KC with chat '+goldtokc <value>'.");
 
 
@@ -3987,7 +3987,7 @@ void CUser::CountConcurrentUser() {
 	}
 
 	Guard lock(g_pMain->m_BotcharacterNameLock);
-	count += g_pMain->m_BotcharacterNameMap.size();
+	count += (uint8) g_pMain->m_BotcharacterNameMap.size();
 
 	Packet result(WIZ_CONCURRENTUSER);
 	result << count;

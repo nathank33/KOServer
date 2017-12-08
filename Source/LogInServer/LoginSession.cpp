@@ -106,7 +106,7 @@ void LoginSession::HandleLogin(Packet & pkt) {
 		|| account.size() > MAX_ID_SIZE
 		|| password.size() == 0
 		|| password.size() > MAX_PW_SIZE
-		|| !WordGuardSystem(account, account.length()))
+		|| !WordGuardSystem(account, (uint8) account.length()))
 		resultCode = AUTH_NOT_FOUND;
 	else
 		resultCode = g_pMain->m_DBProcess.AccountLogin(account, password);
