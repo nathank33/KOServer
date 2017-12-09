@@ -44,7 +44,7 @@ if (EVENT == 1010) then
 end
 
 if (EVENT == 1006) then
-	CountMonster = CountMonsterQuestSub(UID, 144, 1);
+	CountMonster = CountMonsterQuestSub(UID, savenum, 1);
 	if (MonsterSub < 20) then
 		SelectMsg(UID, 2, savenum, 8152, NPC, 18, 1007);
 	else
