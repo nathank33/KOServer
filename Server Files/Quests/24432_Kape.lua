@@ -104,7 +104,7 @@ if (EVENT == 1006) then
 end
 
 if (EVENT == 1007) then
-	ShowMap(UID, 108);
+	ShowMap(UID, 107);
 end
 
 if (EVENT == 1008) then
@@ -268,7 +268,7 @@ if (EVENT == 1106) then
 end
 
 if (EVENT == 1107) then
-	ShowMap(UID, 108);
+	ShowMap(UID, 107);
 end
 
 if (EVENT == 1108) then
@@ -418,7 +418,7 @@ if (EVENT == 1206) then
 end
 
 if (EVENT == 1207) then
-	ShowMap(UID, 108);
+	ShowMap(UID, 540);
 end
 
 if (EVENT == 1208) then
@@ -779,7 +779,7 @@ if (EVENT == 207) then
 end
 
 if (EVENT == 210) then
-	ShowMap(UID, 108);
+	ShowMap(UID, 330);
 end
 
 if (EVENT == 208) then
@@ -881,7 +881,7 @@ if (EVENT == 307) then
 end
 
 if (EVENT == 310) then
-	ShowMap(UID, 108);
+	ShowMap(UID, 37);
 end
 
 if (EVENT == 308) then

@@ -1,5 +1,6 @@
 local Ret = 0;
 local NPC = 24431;
+local savenum = -1;
 
 if (EVENT == 155) then
 	QuestNum = SearchQuest(UID, NPC);
@@ -16,8 +17,61 @@ if (EVENT == 158) then
 	Ret = 1;
 end
 
+savenum = 457;
+
+if (EVENT == 200) then -- 50 Level Lamia Repeatable
+	SaveEvent(UID, 2193);
+end
+
+if (EVENT == 202) then
+	MonsterSub = ExistMonsterQuestSub(UID);
+	if (MonsterSub == 0) then
+		SelectMsg(UID, 4, savenum, 8233, NPC, 22, 203, 23, 204);
+	else
+		SelectMsg(UID, 2, savenum, 8261, NPC, 10, 158);
+	end
+end
+
+if (EVENT == 203) then
+	SaveEvent(UID, 2194);
+end
+
+if (EVENT == 204) then
+	SaveEvent(UID, 2197);
+end
+
+if (EVENT == 210) then
+	SaveEvent(UID, 2196);
+end
+
+if (EVENT == 207) then
+	CountMonster = CountMonsterQuestSub(UID, savenum, 1);
+	if (CountMonster < 20) then
+		SelectMsg(UID, 2, savenum, 8263, NPC, 18, 208);
+	else
+		SelectMsg(UID, 4, savenum, 8264, NPC, 41, 209, 27, 158);
+	end
+end
+
+if (EVENT == 208) then
+	ShowMap(UID, 182);
+end
+
+if (EVENT == 209) then
+	Prem = GetPremium(UID);
+	if (Prem > 0) then
+		ExpChange(UID, 1900000)
+		SaveEvent(UID, 2195);
+	else
+		ExpChange(UID, 1250000)
+		SaveEvent(UID, 2195);   
+	end
+end
+
+savenum = 218;
+
 if (EVENT == 8250) then -- 50 Level Lamia
-	SelectMsg(UID, 2, 218, 8231, NPC, 28, 8251);
+	SelectMsg(UID, 2, savenum, 8231, NPC, 28, 8251);
 end
 
 if (EVENT == 8251) then
@@ -28,14 +82,14 @@ end
 if (EVENT == 8252) then
 	MonsterSub = ExistMonsterQuestSub(UID);
 	if (MonsterSub == 0) then
-		SelectMsg(UID, 2, 218, 8232, NPC, 10, 8260);
+		SelectMsg(UID, 2, savenum, 8232, NPC, 10, 8260);
 	else
-		SelectMsg(UID, 2, 218, 8261, NPC, 10, 158);
+		SelectMsg(UID, 2, savenum, 8261, NPC, 10, 158);
 	end
 end
 
 if (EVENT == 8260) then
-	SelectMsg(UID, 4, 218, 8233, NPC, 22, 8253, 23, 8254);
+	SelectMsg(UID, 4, savenum, 8233, NPC, 22, 8253, 23, 8254);
 end
 
 if (EVENT == 8253) then
@@ -47,16 +101,16 @@ if (EVENT == 8254) then
 end
 
 if (EVENT == 8255) then
-	SelectMsg(UID, 2, 218, 8262, NPC, 3007, 158);
+	SelectMsg(UID, 2, savenum, 8262, NPC, 3007, 158);
 	SaveEvent(UID, 9012);
 end
 
 if (EVENT == 8257) then
-	MonsterCount = CountMonsterQuestSub(UID, 218, 1);
-	if (MonsterCount < 40) then
-		SelectMsg(UID, 2, 218, 8263, NPC, 18, 8258);
+	MonsterCount = CountMonsterQuestSub(UID, savenum, 1);
+	if (MonsterCount < 20) then
+		SelectMsg(UID, 2, savenum, 8263, NPC, 18, 8258);
 	else
-		SelectMsg(UID, 4, 218, 8264, NPC, 41, 8259, 27, 158);
+		SelectMsg(UID, 4, savenum, 8264, NPC, 41, 8259, 27, 158);
 	end
 end
 
@@ -66,31 +120,81 @@ end
 
 if (EVENT == 8259) then
 	Class = CheckClass(UID);
+    ExpChange(UID, 12500000)
 	if (Class == 1 or Class == 5 or Class == 6) then
-		ExpChange(UID, 5000000)
 		GiveItem(UID, 925003595, 1)
 		SaveEvent(UID, 9011);
 		ShowEffect(UID, 300391);
 	elseif (Class == 2 or Class == 7 or Class == 8) then
-		ExpChange(UID, 5000000)
 		GiveItem(UID, 925008596, 1)
 		SaveEvent(UID, 9011);
 		ShowEffect(UID, 300391);
 	elseif (Class == 3 or Class == 9 or Class == 10) then
-		ExpChange(UID, 5000000)
 		GiveItem(UID, 926003597, 1)
 		SaveEvent(UID, 9011);
 		ShowEffect(UID, 300391);
 	elseif (Class == 4 or Class == 11 or Class == 12) then
-		ExpChange(UID, 5000000)
 		GiveItem(UID, 926008598, 1)
 		SaveEvent(UID, 9011);
 		ShowEffect(UID, 300391);
 	end
 end
 
-if (EVENT == 8350) then -- 50 Level Uruk Hai
-	SelectMsg(UID, 2, 223, 8271, NPC, 14, 8351);
+savenum = 459;
+
+if (EVENT == 300) then -- 51 Level Uruk Hai Repeatable
+	SaveEvent(UID, 2205);
+end
+
+if (EVENT == 302) then
+	MonsterSub = ExistMonsterQuestSub(UID);
+	if (MonsterSub == 0) then
+		SelectMsg(UID, 4, savenum, 8272, NPC, 22, 303, 23, 304);
+	else
+		SelectMsg(UID, 2, savenum, 8261, NPC, 10, 158);
+	end
+end
+
+if (EVENT == 303) then
+	SaveEvent(UID, 2206);
+end
+
+if (EVENT == 304) then
+	SaveEvent(UID, 2209);
+end
+
+if (EVENT == 310) then
+	SaveEvent(UID, 2208);
+end
+
+if (EVENT == 307) then
+	CountMonster = CountMonsterQuestSub(UID, savenum, 1);
+	if (CountMonster < 20) then
+		SelectMsg(UID, 2, savenum, 8263, NPC, 18, 308);
+	else
+		SelectMsg(UID, 4, savenum, 8264, NPC, 41, 309, 27, 158);
+	end
+end
+
+if (EVENT == 308) then
+	ShowMap(UID, 544);
+end
+
+if (EVENT == 309) then
+	Prem = GetPremium(UID);
+	if (Prem > 0) then
+		ExpChange(UID, 1900000)
+		SaveEvent(UID, 2207);
+	else
+		ExpChange(UID, 1250000)
+		SaveEvent(UID, 2207);   
+	end
+end
+
+savenum = 223;
+
+if (EVENT == 8350) then -- 51 Level Uruk Hai
+	SelectMsg(UID, 2, savenum, 8271, NPC, 14, 8351);
 end
 
 if (EVENT == 8351) then
@@ -100,14 +204,14 @@ end
 if (EVENT == 8352) then
 	MonsterSub = ExistMonsterQuestSub(UID);
 	if (MonsterSub == 0) then
-		SelectMsg(UID, 2, 223, 8272, NPC, 10, 8360);
+		SelectMsg(UID, 2, savenum, 8272, NPC, 10, 8360);
 	else
-		SelectMsg(UID, 2, 223, 8261, NPC, 10, 158);
+		SelectMsg(UID, 2, savenum, 8261, NPC, 10, 158);
 	end
 end
 
 if (EVENT == 8360) then
-	SelectMsg(UID, 4, 223, 8273, NPC, 22, 8353, 23, 8354);
+	SelectMsg(UID, 4, savenum, 8273, NPC, 22, 8353, 23, 8354);
 end
 
 if (EVENT == 8353) then
@@ -119,16 +223,16 @@ if (EVENT == 8354) then
 end
 
 if (EVENT == 8355) then
-	SelectMsg(UID, 2, 223, 8262, NPC, 3007, 158);
+	SelectMsg(UID, 2, savenum, 8262, NPC, 3007, 158);
 	SaveEvent(UID, 9024);
 end
 
 if (EVENT == 8357) then
-	MonsterCount = CountMonsterQuestSub(UID, 223, 1);
-	if (MonsterCount < 40) then
-		SelectMsg(UID, 2, 223, 8263, NPC, 18, 8358);
+	MonsterCount = CountMonsterQuestSub(UID, savenum, 1);
+	if (MonsterCount < 20) then
+		SelectMsg(UID, 2, savenum, 8263, NPC, 18, 8358);
 	else
-		SelectMsg(UID, 4, 223, 8264, NPC, 41, 8359, 27, 158);
+		SelectMsg(UID, 4, savenum, 8264, NPC, 41, 8359, 27, 158);
 	end
 end
 
@@ -138,48 +242,98 @@ end
 
 if (EVENT == 8359) then
 	Class = CheckClass(UID);
+    ExpChange(UID, 13750000)
 	if (Class == 1 or Class == 5 or Class == 6) then
-		ExpChange(UID, 5500000)
 		GiveItem(UID, 925004595, 1)
 		SaveEvent(UID, 9023);
 		ShowEffect(UID, 300391);
 	elseif (Class == 2 or Class == 7 or Class == 8) then
-		ExpChange(UID, 5500000)
 		GiveItem(UID, 925009596, 1)
 		SaveEvent(UID, 9023);
 		ShowEffect(UID, 300391);
 	elseif (Class == 3 or Class == 9 or Class == 10) then
-		ExpChange(UID, 5500000)
 		GiveItem(UID, 926004597, 1)
 		SaveEvent(UID, 9023);
 		ShowEffect(UID, 300391);
 	elseif (Class == 4 or Class == 11 or Class == 12) then
-		ExpChange(UID, 5500000)
 		GiveItem(UID, 926009598, 1)
 		SaveEvent(UID, 9023);
 		ShowEffect(UID, 300391);
 	end	 
 end
 
+savenum = 465;
+
+if (EVENT == 400) then -- 53 Level Treant Repeatable
+	SaveEvent(UID, 2241);
+end
+
+if (EVENT == 410) then
+	MonsterSub = ExistMonsterQuestSub(UID);
+	if (MonsterSub == 0) then
+		SelectMsg(UID, 4, savenum, 8285, NPC, 22, 411, 23, 412);
+	else
+		SelectMsg(UID, 2, savenum, 8287, NPC, 10, 158);
+	end
+end
+
+if (EVENT == 411) then
+	SaveEvent(UID, 2242);
+end
+
+if (EVENT == 412) then
+	SaveEvent(UID, 2245);
+end
+
+if (EVENT == 413) then
+	SaveEvent(UID, 2244);
+end
+
+if (EVENT == 415) then
+	CountMonster = CountMonsterQuestSub(UID, savenum, 1);
+	if (CountMonster < 20) then
+		SelectMsg(UID, 2, savenum, 8289, NPC, 18, 416);
+	else
+		SelectMsg(UID, 4, savenum, 8290, NPC, 41, 417, 27, 158);
+	end
+end
+
+if (EVENT == 416) then
+	ShowMap(UID, 506);
+end
+
+if (EVENT == 417) then
+	Prem = GetPremium(UID);
+	if (Prem > 0) then
+		ExpChange(UID, 1900000)
+		SaveEvent(UID, 2243);
+	else
+		ExpChange(UID, 1250000)
+		SaveEvent(UID, 2243);   
+	end
+end
+
+savenum = 233;
+
 if (EVENT == 8650) then -- 53 Level Treant
-	SelectMsg(UID, 2, 233, 8277, NPC, 3008, 8651);
+	SelectMsg(UID, 2, savenum, 8277, NPC, 3008, 8651);
 end
 
 if (EVENT == 8651) then
-	SelectMsg(UID, 2, 233, 8278, NPC, 4080, 158);
+	SelectMsg(UID, 2, savenum, 8278, NPC, 4080, 158);
 	SaveEvent(UID, 9057);
 end
 
 if (EVENT == 8660) then
-	SelectMsg(UID, 2, 233, 8284, NPC, 3002, 8661);
+	SelectMsg(UID, 2, savenum, 8284, NPC, 3002, 8661);
 end
 
 if (EVENT == 8661) then
 	MonsterSub = ExistMonsterQuestSub(UID);
 	if (MonsterSub == 0) then
-		SelectMsg(UID, 4, 233, 8285, NPC, 3018, 8662, 3019, 8668);
+		SelectMsg(UID, 4, savenum, 8285, NPC, 3018, 8662, 3019, 8668);
 	else
-		SelectMsg(UID, 2, 233, 8287, NPC, 10, 158);
+		SelectMsg(UID, 2, savenum, 8287, NPC, 10, 158);
 	end
 end
 
@@ -192,16 +346,16 @@ if (EVENT == 8668) then
 end
 
 if (EVENT == 8663) then
-	SelectMsg(UID, 2, 233, 8288, NPC, 4080, 158);
+	SelectMsg(UID, 2, savenum, 8288, NPC, 4080, 158);
 	SaveEvent(UID, 9060);
 end
 
 if (EVENT == 8665) then
-	MonsterCount = CountMonsterQuestSub(UID, 233, 1);
-	if (MonsterCount < 40) then
-		SelectMsg(UID, 2, 233, 8289, NPC, 18, 8669);
+	MonsterCount = CountMonsterQuestSub(UID, savenum, 1);
+	if (MonsterCount < 20) then
+		SelectMsg(UID, 2, savenum, 8289, NPC, 18, 8669);
 	else
-		SelectMsg(UID, 4, 233, 8290, NPC, 41, 8667, 27, 158);
+		SelectMsg(UID, 4, savenum, 8290, NPC, 41, 8667, 27, 158);
 	end
 end
 
@@ -212,12 +366,65 @@ end
 if (EVENT == 8667) then
 	GiveItem(UID, 389155000, 5)
 	GiveItem(UID, 389156000, 5)
-	ExpChange(UID, 6000000)
+	ExpChange(UID, 15000000)
 	SaveEvent(UID, 9059);
 end
 
+savenum = 467;
+
+if (EVENT == 500) then -- 54 Level Ancient Repeatable
+	SaveEvent(UID, 2253);
+end
+
+if (EVENT == 502) then
+	MonsterSub = ExistMonsterQuestSub(UID);
+	if (MonsterSub == 0) then
+		SelectMsg(UID, 4, savenum, 8303, NPC, 22, 503, 23, 504);
+	else
+		SelectMsg(UID, 2, savenum, 8261, NPC, 10, 158);
+	end
+end
+
+if (EVENT == 503) then
+	SaveEvent(UID, 2254);
+end
+
+if (EVENT == 504) then
+	SaveEvent(UID, 2257);
+end
+
+if (EVENT == 510) then
+	SaveEvent(UID, 2256);
+end
+
+if (EVENT == 507) then
+	CountMonster = CountMonsterQuestSub(UID, savenum, 1);
+	if (CountMonster < 20) then
+		SelectMsg(UID, 2, savenum, 8263, NPC, 18, 508);
+	else
+		SelectMsg(UID, 4, savenum, 8264, NPC, 41, 509, 27, 158);
+	end
+end
+
+if (EVENT == 508) then
+	ShowMap(UID, 547);
+end
+
+if (EVENT == 509) then
+	Prem = GetPremium(UID);
+	if (Prem > 0) then
+		ExpChange(UID, 1900000)
+		SaveEvent(UID, 2255);
+	else
+		ExpChange(UID, 1250000)
+		SaveEvent(UID, 2255);   
+	end
+end
+
+savenum = 237;
+
 if (EVENT == 9180) then -- 54 Level Ancient
-	SelectMsg(UID, 2, 237, 8271, NPC, 14, 9181);
+	SelectMsg(UID, 2, savenum, 8271, NPC, 14, 9181);
 end
 
 if (EVENT == 9181) then
@@ -227,14 +434,14 @@ end
 if (EVENT == 9182) then
 	MonsterSub = ExistMonsterQuestSub(UID);
 	if (MonsterSub == 0) then
-		SelectMsg(UID, 2, 237, 8303, NPC, 10, 9190);
+		SelectMsg(UID, 2, savenum, 8303, NPC, 10, 9190);
 	else
-		SelectMsg(UID, 2, 237, 8261, NPC, 10, 158);
+		SelectMsg(UID, 2, savenum, 8261, NPC, 10, 158);
 	end
 end
 
 if (EVENT == 9190) then
-	SelectMsg(UID, 4, 237, 8304, NPC, 22, 9183, 23, 9184);
+	SelectMsg(UID, 4, savenum, 8304, NPC, 22, 9183, 23, 9184);
 end
 
 if (EVENT == 9183) then
@@ -246,16 +453,16 @@ if (EVENT == 9184) then
 end
 
 if (EVENT == 9185) then
-	SelectMsg(UID, 2, 237, 8262, NPC, 3007, 158);
+	SelectMsg(UID, 2, savenum, 8262, NPC, 3007, 158);
 	SaveEvent(UID, 9072);
 end
 
 if (EVENT == 9187) then
-	MonsterCount = CountMonsterQuestSub(UID, 237, 1);
-	if (MonsterCount < 40) then
-		SelectMsg(UID, 2, 237, 8263, NPC, 18, 9188);
+	MonsterCount = CountMonsterQuestSub(UID, savenum, 1);
+	if (MonsterCount < 20) then
+		SelectMsg(UID, 2, savenum, 8263, NPC, 18, 9188);
 	else
-		SelectMsg(UID, 4, 237, 8264, NPC, 41, 9189, 27, 158);
+		SelectMsg(UID, 4, savenum, 8264, NPC, 41, 9189, 27, 158);
 	end
 end
 
@@ -265,31 +472,81 @@ end
 
 if (EVENT == 9189) then
 	Class = CheckClass(UID);
+    ExpChange(UID, 16250000)
 	if (Class == 1 or Class == 5 or Class == 6) then
-		ExpChange(UID, 6500000)
 		GiveItem(UID, 925000595, 1)
 		SaveEvent(UID, 9071);
 		ShowEffect(UID, 300391);
 	elseif (Class == 2 or Class == 7 or Class == 8) then
-		ExpChange(UID, 6500000)
 		GiveItem(UID, 925005596, 1)
 		SaveEvent(UID, 9071);
 		ShowEffect(UID, 300391);
 	elseif (Class == 3 or Class == 9 or Class == 10) then
-		ExpChange(UID, 6500000)
 		GiveItem(UID, 926000597, 1)
 		SaveEvent(UID, 9071);
 		ShowEffect(UID, 300391);
 	elseif (Class == 4 or Class == 11 or Class == 12) then
-		ExpChange(UID, 6500000)
 		GiveItem(UID, 926005598, 1)
 		SaveEvent(UID, 9071);
 		ShowEffect(UID, 300391);
 	end	 
 end
 
-if (EVENT == 9020) then -- 55 Level Dragon Tooth Commander
-	SelectMsg(UID, 2, 870, 8271, NPC, 14, 9021);
+savenum = 471;
+
+if (EVENT == 600) then -- 55 Level Dragon Tooth Commander Repeatable (this quest doesn't exist in the db)
+	SaveEvent(UID, 2277);
+end
+
+if (EVENT == 602) then
+	MonsterSub = ExistMonsterQuestSub(UID);
+	if (MonsterSub == 0) then
+		SelectMsg(UID, 4, savenum, 8444, NPC, 22, 603, 23, 604);
+	else
+		SelectMsg(UID, 2, savenum, 8261, NPC, 10, 158);
+	end
+end
+
+if (EVENT == 603) then
+	SaveEvent(UID, 2278);
+end
+
+if (EVENT == 604) then
+	SaveEvent(UID, 2281);
+end
+
+if (EVENT == 610) then
+	SaveEvent(UID, 2280);
+end
+
+if (EVENT == 607) then
+	CountMonster = CountMonsterQuestSub(UID, savenum, 1);
+	if (CountMonster < 15) then
+		SelectMsg(UID, 2, savenum, 8263, NPC, 18, 608);
+	else
+		SelectMsg(UID, 4, savenum, 8450, NPC, 41, 609, 27, 158);
+	end
+end
+
+if (EVENT == 608) then
+	ShowMap(UID, 587);
+end
+
+if (EVENT == 609) then
+	Prem = GetPremium(UID);
+	if (Prem > 0) then
+		ExpChange(UID, 3750000)
+		SaveEvent(UID, 2279);
+	else
+		ExpChange(UID, 2500000)
+		SaveEvent(UID, 2279);   
+	end
+end
+
+savenum = 241;
+
+if (EVENT == 9020) then -- 55 Level Manticore (not correct in db)
+	SelectMsg(UID, 2, savenum, 8271, NPC, 14, 9021);
 end
 
 if (EVENT == 9021) then
@@ -299,14 +556,14 @@ end
 if (EVENT == 9022) then
 	MonsterSub = ExistMonsterQuestSub(UID);
 	if (MonsterSub == 0) then
-		SelectMsg(UID, 2, 870, 8444, NPC, 10, 9030);
+		SelectMsg(UID, 2, savenum, 8444, NPC, 10, 9030);
 	else
-		SelectMsg(UID, 2, 870, 8261, NPC, 10, 158);
+		SelectMsg(UID, 2, savenum, 8261, NPC, 10, 158);
 	end
 end
 
 if (EVENT == 9030) then
-	SelectMsg(UID, 4, 870, 8445, NPC, 22, 9023, 23, 9024);
+	SelectMsg(UID, 4, savenum, 8445, NPC, 22, 9023, 23, 9024);
 end
 
 if (EVENT == 9023) then
@@ -318,16 +575,16 @@ if (EVENT == 9024) then
 end
 
 if (EVENT == 9025) then
-	SelectMsg(UID, 2, 870, 8262, NPC, 3007, 158);
+	SelectMsg(UID, 2, savenum, 8262, NPC, 3007, 158);
 	SaveEvent(UID, 9096);
 end
 
 if (EVENT == 9027) then
-	MonsterCount = CountMonsterQuestSub(UID, 870, 1);
+	MonsterCount = CountMonsterQuestSub(UID, savenum, 1);
 	if (MonsterCount < 30) then
-		SelectMsg(UID, 2, 870, 8263, NPC, 18, 9028);
+		SelectMsg(UID, 2, savenum, 8263, NPC, 18, 9028);
 	else
-		SelectMsg(UID, 4, 870, 8450, NPC, 41, 9029, 27, 158);
+		SelectMsg(UID, 4, savenum, 8450, NPC, 41, 9029, 27, 158);
 	end
 end
 
@@ -340,8 +597,61 @@ if (EVENT == 9029) then
 	SaveEvent(UID, 9095);   
 end
 
+savenum = 473;
+
+if (EVENT == 700) then -- 56 Level Uruk Blade Repeatable
+	SaveEvent(UID, 2289);
+end
+
+if (EVENT == 702) then
+	MonsterSub = ExistMonsterQuestSub(UID);
+	if (MonsterSub == 0) then
+		SelectMsg(UID, 4, savenum, 8454, NPC, 22, 703, 23, 704);
+	else
+		SelectMsg(UID, 2, savenum, 8261, NPC, 10, 158);
+	end
+end
+
+if (EVENT == 703) then
+	SaveEvent(UID, 2290);
+end
+
+if (EVENT == 704) then
+	SaveEvent(UID, 2293);
+end
+
+if (EVENT == 710) then
+	SaveEvent(UID, 2292);
+end
+
+if (EVENT == 707) then
+	CountMonster = CountMonsterQuestSub(UID, savenum, 1);
+	if (CountMonster < 30) then
+		SelectMsg(UID, 2, savenum, 8263, NPC, 18, 708);
+	else
+		SelectMsg(UID, 4, savenum, 8264, NPC, 41, 709, 27, 158);
+	end
+end
+
+if (EVENT == 708) then
+	ShowMap(UID, 551);
+end
+
+if (EVENT == 709) then
+	Prem = GetPremium(UID);
+	if (Prem > 0) then
+		ExpChange(UID, 3750000)
+		SaveEvent(UID, 2291);
+	else
+		ExpChange(UID, 2500000)
+		SaveEvent(UID, 2291);   
+	end
+end
+
+savenum = 263;
+
 if (EVENT == 9040) then -- 56 Level Uruk Blade
-	SelectMsg(UID, 2, 263, 8271, NPC, 14, 9041);
+	SelectMsg(UID, 2, savenum, 8271, NPC, 14, 9041);
 end
 
 if (EVENT == 9041) then
@@ -351,14 +661,14 @@ end
 if (EVENT == 9042) then
 	MonsterSub = ExistMonsterQuestSub(UID);
 	if (MonsterSub == 0) then
-		SelectMsg(UID, 2, 263, 8454, NPC, 10, 9050);
+		SelectMsg(UID, 2, savenum, 8454, NPC, 10, 9050);
 	else
-		SelectMsg(UID, 2, 263, 8261, NPC, 10, 158);
+		SelectMsg(UID, 2, savenum, 8261, NPC, 10, 158);
 	end
 end
 
 if (EVENT == 9050) then
-	SelectMsg(UID, 4, 263, 8455, NPC, 22, 9043, 23, 9044);
+	SelectMsg(UID, 4, savenum, 8455, NPC, 22, 9043, 23, 9044);
 end
 
 if (EVENT == 9043) then
@@ -370,16 +680,16 @@ if (EVENT == 9044) then
 end
 
 if (EVENT == 9045) then
-	SelectMsg(UID, 2, 263, 8262, NPC, 3007, 158);
+	SelectMsg(UID, 2, savenum, 8262, NPC, 3007, 158);
 	SaveEvent(UID, 9108);
 end
 
 if (EVENT == 9047) then
-	MonsterCount = CountMonsterQuestSub(UID, 263, 1);
-	if (MonsterCount < 40) then
-		SelectMsg(UID, 2, 263, 8263, NPC, 18, 9048);
+	MonsterCount = CountMonsterQuestSub(UID, savenum, 1);
+	if (MonsterCount < 20) then
+		SelectMsg(UID, 2, savenum, 8263, NPC, 18, 9048);
 	else
-		SelectMsg(UID, 4, 263, 8264, NPC, 41, 9049, 27, 158);
+		SelectMsg(UID, 4, savenum, 8264, NPC, 41, 9049, 27, 158);
 	end
 end
 
@@ -388,9 +698,11 @@ if (EVENT == 9048) then
 end
 
 if (EVENT == 9049) then
-	ExpChange(UID, 10000000)
+	ExpChange(UID, 25000000)
 	SaveEvent(UID, 9107);	 
 end
+
+savenum = 285;
 
 if (EVENT == 9080) then -- 60 Level Deruvish
 	Class = CheckClass(UID);
@@ -410,20 +722,20 @@ if (EVENT == 9080) then -- 60 Level Deruvish
 end
 
 if (EVENT == 9081) then
-	SelectMsg(UID, 2, 285, 8458, NPC, 4080, 158);
+	SelectMsg(UID, 2, savenum, 8458, NPC, 4080, 158);
 end
 
 if (EVENT == 9082) then
 	MonsterSub = ExistMonsterQuestSub(UID);
 	if (MonsterSub == 0) then
-		SelectMsg(UID, 2, 285, 8459, NPC, 10, 9085);
+		SelectMsg(UID, 2, savenum, 8459, NPC, 10, 9085);
 	else
-		SelectMsg(UID, 2, 285, 8261, NPC, 10, 158);
+		SelectMsg(UID, 2, savenum, 8261, NPC, 10, 158);
 	end
 end
 
 if (EVENT == 9085) then
-	SelectMsg(UID, 4, 285, 8460, NPC, 22, 9083, 23, 9084);
+	SelectMsg(UID, 4, savenum, 8460, NPC, 22, 9083, 23, 9084);
 end
 
 if (EVENT == 9083) then
@@ -470,15 +782,15 @@ if (EVENT == 9090) then
 end
 
 if (EVENT == 9091) then
-	SelectMsg(UID, 2, 285, 8461, NPC, 3002, 158);
+	SelectMsg(UID, 2, savenum, 8461, NPC, 3002, 158);
 end
 
 if (EVENT == 9086) then
-	MonsterCount = CountMonsterQuestSub(UID, 285, 1);
+	MonsterCount = CountMonsterQuestSub(UID, savenum, 1);
 	if (MonsterCount < 40) then
-		SelectMsg(UID, 2, 285, 8462, NPC, 18, 9087);
+		SelectMsg(UID, 2, savenum, 8462, NPC, 18, 9087);
 	else
-		SelectMsg(UID, 4, 285, 8463, NPC, 41, 9088, 27, 158);
+		SelectMsg(UID, 4, savenum, 8463, NPC, 41, 9088, 27, 158);
 	end
 end
 
@@ -507,6 +819,8 @@ if (EVENT == 9088) then
 	end 
 end
 
+savenum = 287;
+
 if (EVENT == 9100) then -- 60 Level Apostle
 	Class = CheckClass(UID);
 	if (Class == 1 or Class == 5 or Class == 6) then
@@ -525,20 +839,20 @@ if (EVENT == 9100) then -- 60 Level Apostle
 end
 
 if (EVENT == 9101) then
-	SelectMsg(UID, 2, 287, 8472, NPC, 4080, 158);
+	SelectMsg(UID, 2, savenum, 8472, NPC, 4080, 158);
 end
 
 if (EVENT == 9102) then
 	MonsterSub = ExistMonsterQuestSub(UID);
 	if (MonsterSub == 0) then
-		SelectMsg(UID, 2, 287, 8473, NPC, 10, 9105);
+		SelectMsg(UID, 2, savenum, 8473, NPC, 10, 9105);
 	else
-		SelectMsg(UID, 2, 287, 8261, NPC, 10, 158);
+		SelectMsg(UID, 2, savenum, 8261, NPC, 10, 158);
 	end
 end
 
 if (EVENT == 9105) then
-	SelectMsg(UID, 4, 287, 8474, NPC, 22, 9103, 23, 9104);
+	SelectMsg(UID, 4, savenum, 8474, NPC, 22, 9103, 23, 9104);
 end
 
 if (EVENT == 9103) then
@@ -585,15 +899,15 @@ if (EVENT == 9110) then
 end
 
 if (EVENT == 9111) then
-	SelectMsg(UID, 2, 287, 8461, NPC, 3002, 158);
+	SelectMsg(UID, 2, savenum, 8461, NPC, 3002, 158);
 end
 
 if (EVENT == 9106) then
-	MonsterCount = CountMonsterQuestSub(UID, 287, 1);
+	MonsterCount = CountMonsterQuestSub(UID, savenum, 1);
 	if (MonsterCount < 40) then
-		SelectMsg(UID, 2, 287, 8462, NPC, 18, 9107);
+		SelectMsg(UID, 2, savenum, 8462, NPC, 18, 9107);
 	else
-		SelectMsg(UID, 4, 287, 8475, NPC, 41, 9108, 27, 158);
+		SelectMsg(UID, 4, savenum, 8475, NPC, 41, 9108, 27, 158);
 	end
 end
 
@@ -622,6 +936,8 @@ if (EVENT == 9108) then
 	end
 end
 
+savenum = 289;
+
 if (EVENT == 9120) then -- 60 Level Troll
 	Class = CheckClass(UID);
 	if (Class == 1 or Class == 5 or Class == 6) then
@@ -640,22 +956,20 @@ if (EVENT == 9120) then -- 60 Level Troll
 end
 
 if (EVENT == 9121) then
-	SelectMsg(UID, 2, 289, 8472, NPC, 4080, 158);
+	SelectMsg(UID, 2, savenum, 8472, NPC, 4080, 158);
 end
-
-local MonsterSub = 0;
 
 if (EVENT == 9122) then
 	MonsterSub = ExistMonsterQuestSub(UID);
 	if (MonsterSub == 0) then
-		SelectMsg(UID, 2, 289, 8480, NPC, 10, 9125);
+		SelectMsg(UID, 2, savenum, 8480, NPC, 10, 9125);
 	else
-		SelectMsg(UID, 2, 289, 8261, NPC, 10, 158);
+		SelectMsg(UID, 2, savenum, 8261, NPC, 10, 158);
 	end
 end
 
 if (EVENT == 9125) then
-	SelectMsg(UID, 4, 289, 8481, NPC, 22, 9123, 23, 9124);
+	SelectMsg(UID, 4, savenum, 8481, NPC, 22, 9123, 23, 9124);
 end
 
 if (EVENT == 9123) then
@@ -702,15 +1016,15 @@ if (EVENT == 9130) then
 end
 
 if (EVENT == 9131) then
-	SelectMsg(UID, 2, 289, 8461, NPC, 29, 158);
+	SelectMsg(UID, 2, savenum, 8461, NPC, 29, 158);
 end
 
 if (EVENT == 9126) then
-	MonsterCount = CountMonsterQuestSub(UID, 289, 1);
+	MonsterCount = CountMonsterQuestSub(UID, savenum, 1);
 	if (MonsterCount < 20) then
-		SelectMsg(UID, 2, 289, 8462, NPC, 18, 9127);
+		SelectMsg(UID, 2, savenum, 8462, NPC, 18, 9127);
 	else
-		SelectMsg(UID, 4, 289, 8482, NPC, 41, 9128, 27, 158);
+		SelectMsg(UID, 4, savenum, 8482, NPC, 41, 9128, 27, 158);
 	end
 end
 
@@ -739,6 +1053,8 @@ if (EVENT == 9128) then
 	end
 end
 
+savenum = 293;
+
 if (EVENT == 9160) then -- 60 Level Stone Golem
 	Class = CheckClass(UID);
 	if (Class == 1 or Class == 5 or Class == 6) then
@@ -757,20 +1073,20 @@ if (EVENT == 9160) then -- 60 Level Stone Golem
 end
 
 if (EVENT == 9161) then
-	SelectMsg(UID, 2, 293, 8472, NPC, 4080, 158);
+	SelectMsg(UID, 2, savenum, 8472, NPC, 4080, 158);
 end
 
 if (EVENT == 9162) then
 	MonsterSub = ExistMonsterQuestSub(UID);
 	if (MonsterSub == 0) then
-		SelectMsg(UID, 2, 293, 8486, NPC, 10, 9165);
+		SelectMsg(UID, 2, savenum, 8486, NPC, 10, 9165);
 	else
-		SelectMsg(UID, 2, 293, 8261, NPC, 10, 158);
+		SelectMsg(UID, 2, savenum, 8261, NPC, 10, 158);
 	end
 end
 
 if (EVENT == 9165) then
-	SelectMsg(UID, 4, 293, 8487, NPC, 22, 9163, 23, 9164);
+	SelectMsg(UID, 4, savenum, 8487, NPC, 22, 9163, 23, 9164);
 end
 
 if (EVENT == 9163) then
@@ -817,15 +1133,15 @@ if (EVENT == 9170) then
 end
 
 if (EVENT == 9171) then
-	SelectMsg(UID, 2, 293, 8461, NPC, 29, 158);
+	SelectMsg(UID, 2, savenum, 8461, NPC, 29, 158);
 end
 
 if (EVENT == 9166) then
-	MonsterCount = CountMonsterQuestSub(UID, 293, 1);
+	MonsterCount = CountMonsterQuestSub(UID, savenum, 1);
 	if (MonsterCount < 20) then
-		SelectMsg(UID, 2, 293, 8462, NPC, 18, 9167);
+		SelectMsg(UID, 2, savenum, 8462, NPC, 18, 9167);
 	else
-		SelectMsg(UID, 4, 293, 8488, NPC, 41, 9168, 27, 158);
+		SelectMsg(UID, 4, savenum, 8488, NPC, 41, 9168, 27, 158);
 	end
 end
 
