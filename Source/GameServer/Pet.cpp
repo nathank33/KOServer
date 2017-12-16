@@ -130,7 +130,7 @@ void CPet::SummonPet(CUser * pSessionz) {
 	m_bMonster = false;
 
 
-	g_pMain->SpawnEventNpc(m_sSid, false, m_bZone, m_curx, m_cury, m_curz, 1, 2, 0, m_bNation, m_oSocketID, m_bEventRoom, true, GetName(), pSession->GetName(), m_Serial, pSession->GetID());
+	g_pMain->SpawnEventNpc(m_sSid, false, m_bZone, m_curx, m_cury, m_curz, 1, 2, 0, 0, m_bNation, m_oSocketID, m_bEventRoom, true, GetName(), pSession->GetName(), m_Serial, pSession->GetID());
 
 }
 

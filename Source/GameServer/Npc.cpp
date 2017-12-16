@@ -537,7 +537,7 @@ void CNpc::OnDeathProcess(Unit *pKiller) {
 		} else if (g_pMain->pTempleEvent.ActiveEvent == TEMPLE_EVENT_JURAD_MOUNTAIN) {
 			if (JuraidTempleEventZone()) {
 				if (g_pMain->m_MonsterRespawnListArray.GetData(GetProtoID()) != nullptr)
-					g_pMain->SpawnEventNpc(g_pMain->m_MonsterRespawnListArray.GetData(GetProtoID())->sSid, true, GetZoneID(), GetX(), GetY(), GetZ(), g_pMain->m_MonsterRespawnListArray.GetData(GetProtoID())->sCount, 5, 60 * 60, GetNation(), pUser->GetSocketID(), pUser->GetEventRoom());
+					g_pMain->SpawnEventNpc(g_pMain->m_MonsterRespawnListArray.GetData(GetProtoID())->sSid, true, GetZoneID(), GetX(), GetY(), GetZ(), g_pMain->m_MonsterRespawnListArray.GetData(GetProtoID())->sCount, 5, 60 * 60, 0, GetNation(), pUser->GetSocketID(), pUser->GetEventRoom());
 
 
 				if (GetProtoID() == 8100 || GetProtoID() == 8102) {

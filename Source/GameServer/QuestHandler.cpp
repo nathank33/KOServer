@@ -119,7 +119,8 @@ void CUser::V3_QuestProcess(Packet & pkt) {
 
 void CUser::V3_QuestEvent(uint16 sQuestID, uint8 bQuestState) {
 	if (V3_CheckExistEvent(sQuestID, 2) && (bQuestState == 2 || bQuestState == 1 || bQuestState == 4)) {
-		Packet resultmer;
+		// This use to ban people for doing repeatable quests. We want repeatable quests to be allowed
+	/*	Packet resultmer;
 		std::string bufferpro = string_format("[Quest Message] only can do one time");
 		ChatPacket::Construct(&resultmer, 7, &bufferpro);
 		Send(&resultmer);
@@ -130,7 +131,7 @@ void CUser::V3_QuestEvent(uint16 sQuestID, uint8 bQuestState) {
 		g_pMain->SendNotice(BanNotice.c_str(), Nation::ALL);
 
 		printf("%s is currently blocked for illegal activity. Quest BUG \n", GetName().c_str());
-		return;
+		return;*/
 	}
 	_QUEST_MONSTER * pQuestMonster = g_pMain->m_QuestMonsterArray.GetData(sQuestID);
 	_QUEST_HELPER * pQuestHelper = g_pMain->m_QuestHelperArray.GetData(sQuestID);
@@ -143,8 +144,7 @@ void CUser::V3_QuestEvent(uint16 sQuestID, uint8 bQuestState) {
 
 	m_questMap[sQuestID] = bQuestState;
 
-	// Don't need to handle special/kill quests any further
-	if (sQuestID >= QUEST_KILL_GROUP1 || sQuestID < 0)
+	if (sQuestID < 0)
 		return;
 
 	Packet result(WIZ_QUEST, uint8(2));

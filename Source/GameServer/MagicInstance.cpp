@@ -2839,7 +2839,7 @@ bool MagicInstance::ExecuteType9() {
 			return 0;
 
 		buffMap.insert(std::make_pair(pType->bStateChange, _BUFF_TYPE9_INFO(nSkillID, UNIXTIME + pType->sDuration)));
-		g_pMain->SpawnEventNpc(pType->sMonsterNum, false, pCaster->GetZoneID(), pCaster->GetX(), pCaster->GetY(), pCaster->GetZ(), 1, 2, pType->sDuration, /*pCaster->GetZoneID() == ZONE_MORADON ? 3 :*/ pCaster->GetNation(), pCaster->GetSocketID());
+		g_pMain->SpawnEventNpc(pType->sMonsterNum, false, pCaster->GetZoneID(), pCaster->GetX(), pCaster->GetY(), pCaster->GetZ(), 1, 2, pType->sDuration, 0, /*pCaster->GetZoneID() == ZONE_MORADON ? 3 :*/ pCaster->GetNation(), pCaster->GetSocketID());
 		SendSkill();
 	}
 

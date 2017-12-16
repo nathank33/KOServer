@@ -2,6 +2,7 @@
 #include "../shared/Condition.h"
 #include "ConsoleInputThread.h"
 #include "../shared/signal_handler.h"
+#include "WorldEventManager.h"
 
 CGameServerDlg * g_pMain;
 static Condition s_hEvent;

@@ -21,6 +21,7 @@ class CBot;
 #include "Pet.h"
 #include "AISocket.h"
 #include "../shared/ClientSocketMgr.h"
+#include "WorldEventManager.h"
 
 typedef std::map<std::string, CUser *>  NameMap;
 typedef std::map<std::string, CBot *>  BotNameMap;
@@ -383,7 +384,7 @@ public:
 	Unit * GetUnitPtr(uint16 id);
 
 	// Spawns an event NPC/monster
-	void SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 sCount = 1, uint16 sRadius = 0, uint16 sDuration = 0, uint8 nation = 0, int16 socketID = -1, uint16 nEventRoom = 0, bool nIsPet = false, std::string strPetName = "", std::string strUserName = "", uint64 nSerial = 1, uint16 UserId = -1);
+	void SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 sCount = 1, uint16 sRadius = 0, uint16 sDuration = 0, uint16 sRegenTime = 0, uint8 nation = 0, int16 socketID = -1, uint16 nEventRoom = 0, bool nIsPet = false, std::string strPetName = "", std::string strUserName = "", uint64 nSerial = 1, uint16 UserId = -1);
 
 	uint16 SpawnBot(int Minute, uint8 byZone, float fX, float fY, float fZ, uint8 Restipi, uint8 minlevel = 1);
 
@@ -744,8 +745,6 @@ public:
 	FILE *m_fpMerchant;
 	FILE *m_fpTrade;
 
-
-
 	void WriteMerchantUserLogFile(std::string & logMessage);
 	void WriteTradeUserLogFile(std::string & logMessage);
 	void WriteDeathUserLogFile(std::string & logMessage);
@@ -754,6 +753,9 @@ public:
 	void WriteGMLogFile(std::string & logMessage);
 	void WriteUpgradeLogFile(std::string & logMessage);
 	void WriteCheatLogFile(std::string & logMessage);
+
+	// WorldEvent Fields
+	std::unique_ptr<CWorldEventManager> m_pWorldEventManager;
 
 private:
 	CLuaEngine	m_luaEngine;
@@ -823,6 +825,10 @@ public:
 	COMMAND_HANDLER(HandleChaosCloseCommand);
 	COMMAND_HANDLER(HandleJuraidOpenCommand);
 	COMMAND_HANDLER(HandleJuraidCloseCommand);
+	COMMAND_HANDLER(HandleGmCommand);
+	COMMAND_HANDLER(HandleRemoveGmCommand);
+	COMMAND_HANDLER(HandleOpenEventCommand);
+	COMMAND_HANDLER(HandleCloseEventCommand);
 };
 
 extern CGameServerDlg * g_pMain;

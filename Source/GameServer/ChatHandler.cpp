@@ -3,6 +3,7 @@
 #include "../shared/DateTime.h"
 #include "../shared/packets.h"
 #include <boost\foreach.hpp>
+#include <boost\algorithm\string.hpp>
 #include <chrono>
 
 using std::string;
@@ -68,6 +69,10 @@ void CGameServerDlg::InitServerCommands() {
 		{ "close_chaos",		&CGameServerDlg::HandleChaosCloseCommand,			"Close chaos"},
 		{ "open_juraid",		&CGameServerDlg::HandleJuraidOpenCommand,			"Open juraid"},
 		{ "close_juraid",		&CGameServerDlg::HandleJuraidCloseCommand,			"Close juraid"},
+		{ "gm",					&CGameServerDlg::HandleGmCommand,					"Grant a player GM authority"},
+		{ "remove_gm",			&CGameServerDlg::HandleRemoveGmCommand,				"Remove a player's GM authority"},
+		{ "open_event",			&CGameServerDlg::HandleOpenEventCommand,			"Open a world event"},
+		{ "close_event",		&CGameServerDlg::HandleCloseEventCommand,			"Close a world event"},
 	};
 
 	init_command_table(CGameServerDlg, commandTable, s_commandTable);
@@ -533,7 +538,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleGiveItemCommand) {
 
 	CUser *pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER);
 	if (pUser == nullptr) {
-		printf("Error : User is not online");
+		printf("Error : User is not online\n");
 		return true;
 	}
 
@@ -917,6 +922,70 @@ COMMAND_HANDLER(CGameServerDlg::HandleHelpCommand) {
 	return true;
 }
 
+COMMAND_HANDLER(CGameServerDlg::HandleGmCommand) {
+	// Char name
+	if (vargs.size() < 1) {
+		// send description
+		printf("Using Sample : /gm CharacterName\n");
+		return true;
+	}
+
+	std::string strUserID = vargs.front();
+	vargs.pop_front();
+	g_DBAgent.UpdateUserAuthority(strUserID, AUTHORITY_GAME_MASTER);
+	printf("%s has been promoted to Game Master..!\n", strUserID.c_str());
+	return true;
+}
+
+COMMAND_HANDLER(CGameServerDlg::HandleRemoveGmCommand) {
+	// Char name
+	if (vargs.size() < 1) {
+		// send description
+		printf("Using Sample : /remove_gm CharacterName\n");
+		return true;
+	}
+
+	std::string strUserID = vargs.front();
+	vargs.pop_front();
+	g_DBAgent.UpdateUserAuthority(strUserID, AUTHORITY_PLAYER);
+	printf("%s has been demoted to Player..!\n", strUserID.c_str());
+	return true;
+}
+
+COMMAND_HANDLER(CGameServerDlg::HandleOpenEventCommand) {
+	// Event name 
+	if (vargs.size() < 1) {
+		// send description
+		printf("Using Sample : /open_event EventName\n");
+		return true;
+	}
+
+	std::string eventName = vargs.front();
+	vargs.pop_front();
+
+	if (boost::iequals(eventName, "bifrost")) {
+		return g_pMain->m_pWorldEventManager->AddBifrostEvent();
+	}
+	return false;
+}
+
+COMMAND_HANDLER(CGameServerDlg::HandleCloseEventCommand) {
+	// Event name 
+	if (vargs.size() < 1) {
+		// send description
+		printf("Using Sample : /close_event EventName\n");
+		return true;
+	}
+
+	std::string eventName = vargs.front();
+	vargs.pop_front();
+
+	if (boost::iequals(eventName, "bifrost")) {
+		return g_pMain->m_pWorldEventManager->RemoveBifrostEvent();
+	}
+	return false;
+}
+
 COMMAND_HANDLER(CUser::HandleBorderDefenseWarOpenCommand) {
 	if (!isGM()) {
 		return false;
@@ -1192,7 +1261,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleMoneyAddCommand) {
 COMMAND_HANDLER(CGameServerDlg::HandleMonSummonCommand) {
 	if (vargs.size() < 1) {
 		// send description
-		printf("Using Sample : /monsummon MonsterID Zoneid X Y R");
+		printf("Using Sample : /monsummon MonsterID Zoneid X Y R\n");
 		return true;
 	}
 	int sSid = 0;

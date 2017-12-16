@@ -70,6 +70,8 @@ CGameServerDlg::CGameServerDlg() {
 	m_bSantaOrAngel = FLYING_NONE;
 
 	m_nextEvent = -1;
+
+	m_pWorldEventManager = std::make_unique<CWorldEventManager> (this);
 }
 
 
@@ -925,7 +927,7 @@ Unit * CGameServerDlg::GetUnitPtr(uint16 id) {
 * @param	sCount	  	Number of spawns to create.
 * @param	sRadius	  	Spawn radius.
 */
-void CGameServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 sCount /*= 1*/, uint16 sRadius /*= 0*/, uint16 sDuration /*= 0*/, uint8 nation /*= 0*/, int16 socketID /*= -1*/, uint16 nEventRoom, bool nIsPet, std::string strPetName, std::string strUserName, uint64 nSerial, uint16 UserId /* = -1*/) {
+void CGameServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 sCount /*= 1*/, uint16 sRadius /*= 0*/, uint16 sDuration /*= 0*/, uint16 sRegenTime /*= 0*/, uint8 nation /*= 0*/, int16 socketID /*= -1*/, uint16 nEventRoom, bool nIsPet, std::string strPetName, std::string strUserName, uint64 nSerial, uint16 UserId /* = -1*/) {
 	Packet result(AG_NPC_SPAWN_REQ);
 	result << sSid << bIsMonster
 		<< byZone
@@ -933,6 +935,7 @@ void CGameServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, f
 		<< sCount
 		<< sRadius
 		<< sDuration
+		<< sRegenTime
 		<< nation
 		<< socketID
 		<< nEventRoom
@@ -1107,6 +1110,7 @@ uint32 CGameServerDlg::Timer_CheckGameEvents(void * lpParam) {
 		if (g_pMain->isWarOpen() && ((UNIXTIME - g_pMain->m_lastBlessTime) >= (5 * NATION_MONUMENT_REWARD_SECOND)))
 			g_pMain->CheckNationMonumentRewards();
 		g_pMain->CheckEventTime();
+		g_pMain->m_pWorldEventManager->Tick();
 
 		sleep(1 * SECOND);
 	}
@@ -3549,7 +3553,7 @@ void CGameServerDlg::TempleEventTimer() {
 			pTempleEvent.m_nChaosPrizeLoserExp = m_nChaosPrizeLoserExp[0];
 
 			TempleEventStart();
-		} else if (m_nextEvent == TEMPLE_EVENT_BORDER_DEFENCE_WAR) {
+		} else if (m_nextEvent == TEMPLE_EVENT_JURAD_MOUNTAIN) {
 			pTempleEvent.ActiveEvent = TEMPLE_EVENT_JURAD_MOUNTAIN;
 			pTempleEvent.ZoneID = ZONE_JURAD_MOUNTAIN;
 
@@ -3765,11 +3769,11 @@ void CGameServerDlg::MonsterStoneSummon(uint16 RoomEvent, uint8 ZoneID) {
 			if (itr->second->sSid != 7032
 				&& itr->second->sSid != 7033
 				&& itr->second->sSid != 7034)
-				SpawnEventNpc(itr->second->sSid, true, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, itr->second->sCount, 2, 25 * 60, 0, -1, RoomEvent);
+				SpawnEventNpc(itr->second->sSid, true, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, itr->second->sCount, 2, 25 * 60, 0, 0, -1, RoomEvent);
 			else
-				SpawnEventNpc(itr->second->sSid, true, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, itr->second->sCount, 0, 25 * 60, 0, -1, RoomEvent);
+				SpawnEventNpc(itr->second->sSid, true, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, itr->second->sCount, 0, 25 * 60, 0, 0, -1, RoomEvent);
 		} else if (itr->second->ZoneID == ZoneID && itr->second->sCount == 2) {
-			SpawnEventNpc(itr->second->sSid, false, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, 1, 2, 25 * 60, 0, -1, RoomEvent);
+			SpawnEventNpc(itr->second->sSid, false, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, 1, 2, 25 * 60, 0, 0, -1, RoomEvent);
 		}
 	}
 
@@ -3785,9 +3789,9 @@ void CGameServerDlg::TempleEventSummon() {
 			foreach_stlmap_nolock(itr, m_MonsterRespawnListInformationArray) {
 				if (itr->second->ZoneID == ZONE_CHAOS_DUNGEON) {
 					if (itr->second->sSid == CHAOS_CUBE_SSID)
-						SpawnEventNpc(itr->second->sSid, false, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, itr->second->sCount, itr->second->bRadius, 60 * 60, 0, -1, i + 1/* EventRoom */);
+						SpawnEventNpc(itr->second->sSid, false, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, itr->second->sCount, itr->second->bRadius, 60 * 60, 0, 0, -1, i + 1/* EventRoom */);
 					else
-						SpawnEventNpc(itr->second->sSid, true, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, itr->second->sCount, itr->second->bRadius, 60 * 60, 0, -1, i + 1/* EventRoom */);
+						SpawnEventNpc(itr->second->sSid, true, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, itr->second->sCount, itr->second->bRadius, 60 * 60, 0, 0, -1, i + 1/* EventRoom */);
 				}
 			}
 		}
@@ -3795,8 +3799,8 @@ void CGameServerDlg::TempleEventSummon() {
 		for (int i = 0; i < g_pMain->pTempleEvent.LastEventRoom; i++) {
 			foreach_stlmap_nolock(itr, m_MonsterRespawnListInformationArray) {
 				if (itr->second->ZoneID == ZONE_BORDER_DEFENSE_WAR) {
-					SpawnEventNpc(itr->second->sSid, false, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, itr->second->sCount, itr->second->bRadius, 60 * 60, 0, -1, i + 1/* EventRoom */);
-					SpawnEventNpc(itr->second->sSid, true, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, itr->second->sCount, itr->second->bRadius, 60 * 60, 0, -1, i + 1/* EventRoom */);
+					SpawnEventNpc(itr->second->sSid, false, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, itr->second->sCount, itr->second->bRadius, 60 * 60, 0, 0, -1, i + 1/* EventRoom */);
+					SpawnEventNpc(itr->second->sSid, true, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, itr->second->sCount, itr->second->bRadius, 60 * 60, 0, 0, -1, i + 1/* EventRoom */);
 				}
 			}
 		}
@@ -3804,9 +3808,9 @@ void CGameServerDlg::TempleEventSummon() {
 		for (int i = 0; i < g_pMain->pTempleEvent.LastEventRoom; i++) {
 			foreach_stlmap_nolock(itr, m_MonsterRespawnListInformationArray) {
 				if (itr->second->ZoneID == ZONE_JURAD_MOUNTAIN && itr->second->sCount == 1)
-					SpawnEventNpc(itr->second->sSid, true, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, itr->second->sCount, itr->second->bRadius, 60 * 60, 0, -1, i + 1/* EventRoom */);
+					SpawnEventNpc(itr->second->sSid, true, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, itr->second->sCount, itr->second->bRadius, 60 * 60, 0, 0, -1, i + 1/* EventRoom */);
 				else if (itr->second->ZoneID == ZONE_JURAD_MOUNTAIN && itr->second->sCount == 2)
-					SpawnEventNpc(itr->second->sSid, false, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, 1, 2, 60 * 60, 0, -1, i + 1);
+					SpawnEventNpc(itr->second->sSid, false, itr->second->ZoneID, itr->second->X, itr->second->Y, itr->second->Z, 1, 2, 60 * 60, 0, 0, -1, i + 1);
 
 
 			}

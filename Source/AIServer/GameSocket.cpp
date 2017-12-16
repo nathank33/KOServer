@@ -524,7 +524,7 @@ void CGameSocket::RecvBattleEvent(Packet & pkt) {
 }
 
 void CGameSocket::RecvNpcSpawnRequest(Packet & pkt) {
-	uint16 sSid, sX, sY, sZ, sCount, sRadius, sDuration;
+	uint16 sSid, sX, sY, sZ, sCount, sRadius, sDuration, sRegenTime;
 	int16 socketID;
 	uint16 nEventRoom;
 	uint8 byZone;
@@ -537,7 +537,7 @@ void CGameSocket::RecvNpcSpawnRequest(Packet & pkt) {
 	bool bIsMonster;
 	float fX, fY, fZ;
 
-	pkt >> sSid >> bIsMonster >> byZone >> sX >> sY >> sZ >> sCount >> sRadius >> sDuration >> nation >> socketID >> nEventRoom >> nIsPet >> strPetName >> strUserName >> nSerial >> UserId;
+	pkt >> sSid >> bIsMonster >> byZone >> sX >> sY >> sZ >> sCount >> sRadius >> sDuration >> sRegenTime >> nation >> socketID >> nEventRoom >> nIsPet >> strPetName >> strUserName >> nSerial >> UserId;
 
 	fX = sX / 10.0f;
 	fY = sY / 10.0f;
@@ -546,7 +546,7 @@ void CGameSocket::RecvNpcSpawnRequest(Packet & pkt) {
 
 	for (uint16 i = 0; i < sCount; i++)
 		g_pMain->SpawnEventNpc(sSid, bIsMonster,
-			byZone, fX, fY, fZ, sRadius, sDuration, nation, socketID, nEventRoom, nIsPet, strPetName, strUserName, nSerial, UserId);
+			byZone, fX, fY, fZ, sRadius, sDuration, sRegenTime, nation, socketID, nEventRoom, nIsPet, strPetName, strUserName, nSerial, UserId);
 }
 
 void CGameSocket::RecvNpcKillRequest(Packet & pkt) {

@@ -731,7 +731,7 @@ bool CServerDlg::AddObjectEventNpc(_OBJECT_EVENT* pEvent, MAP * pMap) {
 	return true;
 }
 
-CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 Radius, uint16 sDuration, uint8 nation, int16 socketID, uint16 nEventRoom, bool nIsPet, std::string strPetName, std::string strUserName, uint64 nSerial, uint16 UserId /* = -1*/) {
+CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 Radius, uint16 sDuration, uint16 sRegenTime, uint8 nation, int16 socketID, uint16 nEventRoom, bool nIsPet, std::string strPetName, std::string strUserName, uint64 nSerial, uint16 UserId /* = -1*/) {
 	static float fRandom_X = 0.0f, fRandom_Z = 0.0f;
 	CNpcTable * proto = nullptr;
 	MAP * pZone = GetZoneByID(byZone);
@@ -762,6 +762,7 @@ CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, flo
 	pNpc->m_bIsEventNpc = true;
 	pNpc->m_byMoveType = (bIsMonster ? 1 : 0);
 	pNpc->m_byInitMoveType = pNpc->m_byMoveType;
+	pNpc->m_sRegenTime = sRegenTime;
 
 
 
