@@ -104,11 +104,19 @@ if (EVENT == 205) then
 end
 
 if (EVENT == 106) then -- Under The Castle Event
-	SelectMsg(UID, 3, -1, 11972, NPC, 2002, 400, 8535, 401, 8536, 402);
+	--SelectMsg(UID, 3, -1, 11972, NPC, 2002, 400, 8535, 401, 8536, 402);
+   
+    SelectMsg(UID, 3, -1, 10528, NPC, 4311, 200, 68, 201);
+	--ZoneChange(UID, 86, 1000, 1000);
+end
+
+if (EVENT == 200) then
+    -- UTC id: 86, x=69, z=64
+    ZoneChange(UID, 86, 69, 64);
 end
 
 if (EVENT == 107) then -- Attendance Check Event
-	
+
 end
 
 if (EVENT == 108) then -- Guardian Emblem Exchange
