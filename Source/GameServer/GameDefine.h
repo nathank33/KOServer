@@ -42,12 +42,12 @@
 #define BABARIAN      11  // Barbarian (El Morad Warriors - only!)
 #define ELMORAD_MAN      12  // El Morad Male (El Morad - ALL CLASSES)
 #define ELMORAD_WOMAN    13  // El Morad Female (El Morad - ALL CLASSES)
-#define ELMORAD_MONSTER    14 
+#define ELMORAD_MONSTER    14
 // Ÿ�ݺ� ����� //
 #define GREAT_SUCCESS			0X01		// �뼺��
 #define SUCCESS					0X02		// ����
 #define NORMAL					0X03		// ����
-#define	FAIL					0X04		// ���� 
+#define	FAIL					0X04		// ����
 
 enum ItemMovementType {
 	ITEM_INVEN_SLOT = 1,
@@ -63,7 +63,6 @@ enum ItemMovementType {
 	ITEM_MBAG_TO_MBAG = 11,  // Magic bag -> Magic bag
 	ITEM_INVEN_TO_PET = 12, // Inventory -> Pet
 	ITEM_PET_TO_INVEN = 13 // Pet -> Inventory
-
 };
 
 enum ItemSlotType {
@@ -147,7 +146,7 @@ enum ItemSlotType {
 #define OFFICER				0x04
 #define KNIGHT				0x03
 //#define TRAINEE				0x02
-#define PUNISH				0x01	
+#define PUNISH				0x01
 
 #define CHIEF				0x01	// ����
 #define VICECHIEF			0x02	// �δ���
@@ -508,7 +507,6 @@ struct _PET_DATA {
 	uint32	SpecialPetID;
 };
 
-
 // TO-DO: Rewrite this system to be less script dependent for exchange logic.
 // Coin requirements should be in the database, and exchanges should be grouped.
 #define ITEMS_IN_ORIGIN_GROUP 5
@@ -768,7 +766,6 @@ struct _USER_RANKING {
 	CUser * pUser;
 };
 
-
 struct _TEMPLE_EVENT_USER {
 	uint16 m_socketID;
 	uint16 m_bEventRoom;
@@ -851,7 +848,6 @@ struct _EVENT_STATUS {
 	uint16 JuraidElmoGateID2[MAX_TEMPLE_EVENT_ROOM];
 	uint16 JuraidElmoGateID3[MAX_TEMPLE_EVENT_ROOM];
 
-
 	uint16 KarusDeathRoom1[MAX_TEMPLE_EVENT_ROOM];
 	uint16 KarusDeathRoom2[MAX_TEMPLE_EVENT_ROOM];
 	uint16 KarusDeathRoom3[MAX_TEMPLE_EVENT_ROOM];
@@ -864,7 +860,6 @@ struct _EVENT_STATUS {
 	bool isDevaFlag[MAX_TEMPLE_EVENT_ROOM];
 	bool isDevaControl[MAX_TEMPLE_EVENT_ROOM];
 	uint8 DevaNation[MAX_TEMPLE_EVENT_ROOM];
-
 
 	uint32	m_nChaosPrizeWonItemNo1;
 	uint32	m_nChaosPrizeWonItemNo2;
@@ -907,7 +902,6 @@ struct _EVENT_STATUS {
 	uint32	m_nJuraidMountainPrizeLoserExp;
 	uint8	m_nJuraidMountainMAXLEVEL;
 	uint8	m_nJuraidMountainMINLEVEL;
-
 };
 
 struct _START_POSITION_RANDOM {
@@ -922,7 +916,6 @@ struct _USER_ITEM {
 	uint32 nItemID;
 	std::vector<uint64> nItemSerial;
 };
-
 
 enum BuffType {
 	BUFF_TYPE_NONE = 0,
@@ -989,7 +982,7 @@ enum BuffType {
 	BUFF_TYPE_SLEEP = 160, // Zantman (Sandman)
 	BUFF_TYPE_INC_CONTRIBUTION = 162, // Increase of the contribution
 	BUFF_TYPE_INVISIBILITY_POTION = 163, // "Unidentified potion"
-	BUFF_TYPE_GODS_BLESSING = 164, // Increases your defense/max HP 
+	BUFF_TYPE_GODS_BLESSING = 164, // Increases your defense/max HP
 	BUFF_TYPE_HELP_COMPENSATION = 165, // Compensation for using the help system (to help, ask for help, both?)
 	BUFF_TYPE_UNKNOW = 166, // Unknow Skill Buff type
 	BUFF_TYPE_IMIR_ROAR = 167, // Creates a physical damage immune area around 10 meter radius of the caster for 20 seconds.
@@ -1013,7 +1006,6 @@ enum UserInfoOpCode {
 	UserInfoShow = 4
 };
 
-
 enum AchieveOpcodes {
 	AchieveError = 0,
 	AchieveSuccess = 1,
@@ -1030,7 +1022,5 @@ enum AchieveOpcodes {
 	AchieveCoverTitleReset = 12,
 	AchieveSkillTitleReset = 13
 };
-
-
 
 #include "../shared/database/structs.h"

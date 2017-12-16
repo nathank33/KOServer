@@ -42,7 +42,6 @@ void CUser::FriendModify(Packet & pkt, uint8 opcode) {
 	else if (pUser == nullptr && opcode == FRIEND_ADD)
 		result << pBot->GetID();
 
-
 	result.SByte();
 	result << strUserID;
 	g_pMain->AddDatabaseRequest(result, this);

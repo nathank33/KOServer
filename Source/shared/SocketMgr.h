@@ -7,8 +7,7 @@
 
 uint32 THREADCALL SocketCleanupThread(void * lpParam);
 
-class SocketMgr
-{
+class SocketMgr {
 public:
 	SocketMgr();
 
@@ -26,7 +25,7 @@ public:
 
 	static void SetupWinsock();
 	static void CleanupWinsock();
-	
+
 	static uint32 THREADCALL SocketWorkerThread(void * lpParam);
 
 	HANDLE m_completionPort;

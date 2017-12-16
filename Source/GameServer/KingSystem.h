@@ -27,7 +27,6 @@ enum ElectionType {
 
 	ELECTION_TYPE_TERM_STARTED = 6, // these two probably aren't accurately named at all
 	ELECTION_TYPE_TERM_ENDED = 7,
-
 };
 
 enum ImpeachmentType {};

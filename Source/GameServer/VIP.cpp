@@ -75,9 +75,6 @@ void CUser::VipStorageOpen(Packet & pkt) {
 		return;
 	}
 
-
-
-
 	VIPStoreFalseTrying = 0;
 	result << uint8(1) << uint8(1) << uint8(1);
 
@@ -86,11 +83,7 @@ void CUser::VipStorageOpen(Packet & pkt) {
 	else
 		result << uint8(0) << uint32(0) << uint8(0) << uint32(0) << uint8(0) << uint32(0) << uint8(0) << uint32(0);
 
-
-
-
 	for (size_t i = 0; i < MAX_SLOT_VIP_STORAGE; i++) {
-
 		auto pSlot = GetVipStorageSlot((uint8) i);
 
 		if (!pSlot)
@@ -188,7 +181,6 @@ void CUser::VipStorageItemInput(Packet & pkt) {
 	if (pInventoryItem->sCount <= 0)
 		memset(pInventoryItem, 0, sizeof(_ITEM_DATA));
 
-
 	SetUserAbility(false);
 	SendItemWeight();
 
@@ -204,8 +196,6 @@ void CUser::VipStorageItemOutput(Packet & pkt) {
 	uint32 ItemID;
 	uint16 NpcID, Count;
 	uint8 Page, SourcePosition, DestinationPosition;
-
-
 
 	pkt >> NpcID >> ItemID >> Page >> SourcePosition >> DestinationPosition >> Count;
 
@@ -260,7 +250,6 @@ void CUser::VipStorageItemOutput(Packet & pkt) {
 
 	if (pInventoryItem->sCount <= 0 || pInventoryItem->nNum == 0)
 		memset(pInventoryItem, 0, sizeof(_ITEM_DATA));
-
 
 	pInventoryItem->nNum = pVipStorAgeSlot->nNum;
 	pInventoryItem->sDuration = pVipStorAgeSlot->sDuration;
@@ -420,7 +409,6 @@ void CUser::VipStorageUseKey(Packet & pkt) {
 		|| m_bMerchantStatex)
 		return;
 
-
 	if (VIPStorePassword.length() < 4) {
 		ReturnValue = 2;
 		goto failed_return;
@@ -437,7 +425,6 @@ void CUser::VipStorageUseKey(Packet & pkt) {
 		goto failed_return;
 	}
 
-
 	_ITEM_TABLE *pTable = g_pMain->GetItemPtr(pItem->nNum);
 
 	if (pTable == nullptr) {
@@ -451,7 +438,6 @@ void CUser::VipStorageUseKey(Packet & pkt) {
 	}
 
 	if (nVIPExpirationTime > 0) {
-
 		if (nVIPExpirationTime + (DAY * 30) > (UNIXTIME + (DAY * 60))) {
 			ReturnValue = 5;
 			goto failed_return;
@@ -460,7 +446,6 @@ void CUser::VipStorageUseKey(Packet & pkt) {
 		nVIPExpirationTime += (DAY * 30);
 	} else
 		nVIPExpirationTime += uint32(UNIXTIME + 24 * 60 * 60 * 30);
-
 
 	RobItem(SourcePosition + SLOT_MAX, pTable, 1);
 	memset(pItem, 0, sizeof(pItem));

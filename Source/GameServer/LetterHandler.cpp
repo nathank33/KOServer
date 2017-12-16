@@ -4,7 +4,6 @@
 using std::string;
 
 void CUser::LetterSystem(Packet & pkt) {
-
 	if (isDead()
 		|| isTrading()
 		|| isMerchanting()
@@ -50,7 +49,6 @@ void CUser::LetterSystem(Packet & pkt) {
 }
 
 void CUser::ReqLetterSystem(Packet & pkt) {
-
 	if (isDead()
 		|| isTrading()
 		|| isMerchanting()
@@ -93,7 +91,7 @@ void CUser::ReqLetterSystem(Packet & pkt) {
 		ReqLetterSend(pkt);
 		break;
 
-		// Used to take an item from a letter. 
+		// Used to take an item from a letter.
 	case LETTER_GET_ITEM:
 		ReqLetterGetItem(pkt);
 		break;
@@ -114,7 +112,6 @@ void CUser::ReqLetterUnread() {
 }
 
 void CUser::ReqLetterList(bool bNewLettersOnly /*= true*/) {
-
 	Packet result(WIZ_SHOPPING_MALL, uint8(STORE_LETTER));
 	result << uint8(bNewLettersOnly ? LETTER_LIST : LETTER_HISTORY);
 
@@ -284,7 +281,6 @@ void CUser::ReqLetterGetItem(Packet & pkt) {
 			else
 				pItem->sCount = sCount;
 
-
 			pItem->nNum = nItemID;
 			pItem->sDuration += sDurability;
 			pItem->nSerialNum = g_pMain->GenerateItemSerial();
@@ -309,7 +305,6 @@ void CUser::ReqLetterGetItem(Packet & pkt) {
 	Send(&result);
 }
 void CUser::ReqLetterDelete(Packet & pkt) {
-
 	Packet result(WIZ_SHOPPING_MALL, uint8(STORE_LETTER));
 	uint8 bCount = pkt.read<uint8>();
 	result << uint8(LETTER_DELETE) << bCount;

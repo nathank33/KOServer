@@ -1,7 +1,6 @@
 #pragma once
 
-class OdbcParameter
-{
+class OdbcParameter {
 public:
 	OdbcParameter(SQLSMALLINT parameterType, SQLSMALLINT dataType, SQLPOINTER parameterAddress, SQLLEN maxLength = 1);
 

@@ -91,13 +91,10 @@ void CUser::ReqLoadWebItemMall() {
 	if (!g_DBAgent.LoadWebItemMall(itemList, this))
 		return;
 
-
 	if (int(itemList.size()) > GetEmptySlotCount())
 		return;
 	else
 		g_DBAgent.ClearWebItemMall(this);
-
-
 
 	// reuse the GiveItem() method for giving them the item, just don't send the packet
 	// as it's handled by STORE_CLOSE.

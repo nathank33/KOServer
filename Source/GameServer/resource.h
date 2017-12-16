@@ -145,7 +145,3 @@
 #define IDS_EXP_REPAY_FLASH									254
 #define IDS_DC_REPAY_FLASH									255
 #define IDS_WAR_REPAY_FLASH									256
-
-
-
-

@@ -32,7 +32,6 @@ bool CDBProcess::LoadVersionList() {
 
 			if (g_pMain->m_sLastVersion < pVersion->sVersion)
 				g_pMain->m_sLastVersion = pVersion->sVersion;
-
 		} while (dbCommand->MoveNext());
 	}
 

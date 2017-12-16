@@ -75,5 +75,4 @@ public:
 	static int GetKnightsIndex(int nation);
 	static bool IsAvailableName(const char* strname);
 	static void PacketProcess(CUser* pUser, Packet & pkt);
-
 };

@@ -154,7 +154,6 @@ void CUser::ItemSealProcess(Packet & pkt) {
 		uint8 bSrcPos, bResponse = SealErrorNone;
 		pkt >> unk0 >> nItemID >> bSrcPos >> strPasswd;
 
-
 		if (bSrcPos >= HAVE_MAX
 			|| GetItem(SLOT_MAX + bSrcPos)->nNum != nItemID)
 			bResponse = SealErrorFailed;
@@ -221,7 +220,6 @@ void CUser::SendCharacterSealInfo(Packet & pkt) {
 	if (pRingData == nullptr)
 		goto fail_return;
 
-
 	result << uint8(4) << uint8(1);
 	g_DBAgent.LoadCharSeal(pRingData->UserName, result);
 	Send(&result);
@@ -230,13 +228,11 @@ fail_return:
 	Send(&result);
 }
 
-
 void CUser::SendCharacterSealProcess() {
 	Packet result(WIZ_ITEM_UPGRADE, uint8(9));
 
 	if (!CheckExistItem(800111000) && !CheckExistItem(800112000))
 		return;
-
 
 	std::string strCharID1, strCharID2, strCharID3, strCharID4;
 	uint16 Class1 = 0, Class2 = 0, Class3 = 0, Class4 = 0;
@@ -260,8 +256,6 @@ void CUser::SendCharacterSealProcess() {
 			strCharID4.clear();
 		}
 	}
-
-
 
 	if (!strCharID1.empty())
 		Class1 = g_DBAgent.LoadAccountNTS(strCharID1);
@@ -290,21 +284,18 @@ void CUser::SendCharacterSealProcess() {
 
 			result << strCharID1 << uint8(1) << Class1 << Level1 << uint8(1) << uint32(1) << uint8(1);
 			result << uint64(0) << uint64(0) << uint64(0) << uint64(0) << uint64(0) << uint64(0);
-
 		} else if (a == 1) {
 			if (strCharID2.empty())
 				continue;
 
 			result << strCharID2 << uint8(1) << Class2 << Level2 << uint8(1) << uint32(1) << uint8(1);
 			result << uint64(0) << uint64(0) << uint64(0) << uint64(0) << uint64(0) << uint64(0);
-
 		} else if (a == 2) {
 			if (strCharID3.empty())
 				continue;
 
 			result << strCharID3 << uint8(1) << Class3 << Level3 << uint8(1) << uint32(1) << uint8(1);
 			result << uint64(0) << uint64(0) << uint64(0) << uint64(0) << uint64(0) << uint64(0);
-
 		} else if (a == 3) {
 			if (strCharID4.empty())
 				continue;
@@ -312,7 +303,6 @@ void CUser::SendCharacterSealProcess() {
 			result << strCharID4 << uint8(1) << Class4 << Level4 << uint8(1) << uint32(1) << uint8(1);
 			result << uint64(0) << uint64(0) << uint64(0) << uint64(0) << uint64(0) << uint64(0);
 		}
-
 	}
 
 	Send(&result);
@@ -350,10 +340,6 @@ void CUser::CharacterSealProcess(Packet & pkt) {
 		SendCharacterSealInfo(pkt);
 		break;
 	}
-
-
-
-
 }
 
 void CUser::CharacterGetSealed(Packet & pkt) {
@@ -421,10 +407,8 @@ void CUser::CharacterGetSealed(Packet & pkt) {
 	// When a bound item is equipped or stored on a character it cannot be sealed. 14044
 	// When a rental item is equipped or stored on a character it cannot be sealed. 14045
 
-
 	// 2 0 20 >> There is no password set for the VIP Vault. Visit the Inn Hostess to set the VIP Vault password.
 	// 2 0 22 >> Invalid Citizen Registry Number.
-
 
 	result.DByte();
 	result << uint8(2) << uint8(1) << Slot << uint32(pItem->nNum) << uint32(pData->ID) << pData->UserName << uint8(pData->sClass) << uint8(pData->bLevel) << uint16((pData->iExp * 10000) / g_pMain->GetExpByLevel(pData->bLevel)) << uint16(pData->bRace);
@@ -436,7 +420,6 @@ void CUser::CharacterGetSealed(Packet & pkt) {
 	// uint16 -5 14045
 	// nothing 14032
 }
-
 
 void CUser::CharacterGetUnSealed(Packet & pkt) {
 	Packet result(WIZ_ITEM_UPGRADE, uint8(9));

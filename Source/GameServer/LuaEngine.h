@@ -60,7 +60,7 @@ public:
 
 private:
 	// For now, we'll only use a single instance for such.
-	// In the future, however, it would be wise to spread the load across 
+	// In the future, however, it would be wise to spread the load across
 	// multiple script instances (which have been completely thread-safe since Lua 5.1)
 	CLuaScript m_luaScript;
 	RWLock * m_lock;

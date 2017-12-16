@@ -61,7 +61,6 @@ bool MAP::Initialize(_ZONE_INFO *pZone) {
 					|| pEvent->sType == OBJECT_ARTIFACT
 					|| pEvent->sType == OBJECT_GATE_UNK)
 					g_pMain->AddObjectEventNpc(pEvent, this);
-
 			}
 		}
 
@@ -164,7 +163,6 @@ bool MAP::RegionNpcRemove(int rx, int rz, int nid) {
 	m_ppRegion[rx][rz].m_RegionNpcArray.DeleteData(nid);
 	return true;
 }
-
 
 CRegion * MAP::GetRegion(uint16 regionX, uint16 regionZ) {
 	if (regionX > GetXRegionMax()
@@ -411,8 +409,6 @@ bool MAP::IsRoomStatusCheck() {
 	}
 	return false;
 }
-
-
 
 void MAP::InitializeRoom() {
 	foreach_stlmap_nolock(itr, m_arRoomEventArray) {

@@ -79,7 +79,6 @@ public:
 
 	MAP * GetZoneByID(int zonenumber);
 
-
 	static uint32 THREADCALL Timer_CheckAliveTest(void * lpParam);
 	static uint32 THREADCALL Timer_CheckLiveTimes(void * lpParam);
 	void CheckAliveTest();
@@ -129,7 +128,7 @@ public:
 	Atomic<uint16>	MaxMonsterID;
 	Atomic<uint16>	m_TotalNPC;			// DB에있는 총 수
 	Atomic<uint16>	m_CurrentNPC;
-	short			m_sTotalMap;		// Zone 수 
+	short			m_sTotalMap;		// Zone 수
 	short			m_sMapEventNpc;		// Map에서 읽어들이는 event npc 수
 
 	bool			m_bFirstServerFlag;		// 서버가 처음시작한 후 게임서버가 붙은 경우에는 1, 붙지 않은 경우 0

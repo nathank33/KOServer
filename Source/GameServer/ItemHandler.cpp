@@ -24,7 +24,6 @@ void CUser::WarehouseProcess(Packet & pkt) {
 		|| m_bMerchantStatex)
 		return;
 
-
 	pkt >> opcode;
 	if (opcode == WAREHOUSE_OPEN) {
 		result << opcode << uint8(1) << GetInnCoins();
@@ -123,7 +122,6 @@ void CUser::WarehouseProcess(Packet & pkt) {
 			pDstItem->sCount += (uint16) nCount;
 		else
 			pDstItem->sCount = (uint16) nCount;
-
 
 		if (pTable->isStackable())
 			pSrcItem->sCount -= nCount;
@@ -287,7 +285,6 @@ bool CUser::CheckExistItem(int itemid, short count /*= 1*/) {
 			return true;
 	}
 
-
 	return false;
 }
 
@@ -344,7 +341,6 @@ bool CUser::CheckExistItemAnd(int32 nItemID1, int32 sCount1, int32 nItemID2, int
 		&& nItemID5 > 99999999)
 		if (nItemID5 != 900000000 || nItemID5 != 900001000 || nItemID5 != 900002000 || nItemID5 != 900003000 || nItemID5 != 900004000 || nItemID5 != 900005000 || nItemID5 != 900006000 || nItemID5 != 900007000 || nItemID5 != 900008000 || nItemID5 != 900009000 || nItemID5 != 900010000 || nItemID5 != 900011000)
 			return false;
-
 
 	return true;
 }
@@ -417,7 +413,6 @@ bool CUser::CheckExistSpecialItemAnd(int32 nItemID1, int16 sCount1, int32 nItemI
 }
 
 bool CUser::RobItem(uint32 nItemID, uint16 sCount /*= 1*/, bool SendPacket /*=true*/) {
-
 	// Allow unused exchanges.
 	if (sCount == 0 || nItemID == 0)
 		return false;
@@ -456,8 +451,6 @@ bool CUser::RobItem(uint32 nItemID, uint16 sCount /*= 1*/, bool SendPacket /*=tr
 }
 
 bool CUser::RobItem(uint8 bPos, _ITEM_TABLE * pTable, uint16 sCount /*= 1*/, bool SendPacket /*=true*/) {
-
-
 	// Allow unused exchanges.
 	if (sCount == 0)
 		return false;
@@ -484,7 +477,6 @@ bool CUser::RobItem(uint8 bPos, _ITEM_TABLE * pTable, uint16 sCount /*= 1*/, boo
 	else
 		pItem->sCount = 0;
 
-
 	std::string errorMessage = string_format(_T("ROB_ITEM uId-%s- I-%d- C-%d- Z-%d- X-%d- Y-%d-"),
 		GetName().c_str(), pItem->nNum, sCount, GetZoneID(), uint16(GetX()), uint16(GetZ()));
 	g_pMain->WriteTradeUserLogFile(errorMessage);
@@ -493,9 +485,6 @@ bool CUser::RobItem(uint8 bPos, _ITEM_TABLE * pTable, uint16 sCount /*= 1*/, boo
 	if (pItem->sCount == 0
 		|| (bIsConsumableScroll && pItem->sDuration == 0))
 		memset(pItem, 0, sizeof(_ITEM_DATA));
-
-
-
 
 	if (SendPacket)
 		SendStackChange(pTable->m_iNum, pItem->sCount, pItem->sDuration, bPos - SLOT_MAX);
@@ -531,7 +520,7 @@ bool CUser::RobAllItemParty(uint32 nItemID, uint16 sCount /*= 1*/) {
 		partyUsers.push_back(pUser);
 	}
 
-	// Since all users have the required item, we can now remove them. 
+	// Since all users have the required item, we can now remove them.
 	foreach(itr, partyUsers)
 		(*itr)->RobItem(nItemID, sCount);
 
@@ -588,7 +577,6 @@ bool CUser::GiveItem(uint32 itemid, uint32 count, bool send_packet /*= true*/, u
 		pItem->nExpirationTime = 0;
 	}
 
-
 	// This is really silly, but match the count up with the duration
 	// for this special items that behave this way.
 	/*if (pTable->m_bKind == 255)
@@ -634,14 +622,12 @@ void CUser::ItemMove(Packet & pkt) {
 
 	pkt >> type >> dir >> nItemID >> bSrcPos >> bDstPos;
 
-
 	if (isTrading()
 		|| isMerchanting()
 		|| m_bMerchantStatex
 		|| isMining()
 		|| GetZoneID() == ZONE_CHAOS_DUNGEON)
 		goto fail_return;
-
 
 	if (type == 2) {
 		if (isTrading()
@@ -667,7 +653,6 @@ void CUser::ItemMove(Packet & pkt) {
 
 		uint8 lastCount = 0;
 
-
 		for (int i = 0; i < INVENTORY_TOTAL; i++) {
 			_ITEM_DATA  pItems = m_sItemArray[i];
 			_ITEM_DATA * pItem = GetItem(i);
@@ -677,7 +662,6 @@ void CUser::ItemMove(Packet & pkt) {
 				m_sCopyItemArray[i] = pItems;
 				continue;
 			}
-
 
 			_ITEM_TABLE * pTable = g_pMain->GetItemPtr(pItem->nNum);
 
@@ -694,7 +678,6 @@ void CUser::ItemMove(Packet & pkt) {
 		for (int i = 0; i < INVENTORY_TOTAL; i++)
 			m_sItemArray[i] = m_sCopyItemArray[i];
 
-
 		for (int i = SLOT_MAX; i < (SLOT_MAX + HAVE_MAX); i++) {
 			_ITEM_DATA * pItem = GetItem(i);
 
@@ -706,18 +689,13 @@ void CUser::ItemMove(Packet & pkt) {
 				<< pItem->sRemainingRentalTime;	// remaining time
 			SetSpecialItemData(pItem, IteAuto);
 			IteAuto << pItem->nExpirationTime;
-
-
 		}
 		Send(&IteAuto);
 	}
 
-
 	_ITEM_TABLE * pItemData = nullptr;
 	CPet *newPet = nullptr;
 	_ITEM_DATA *pItem = nullptr;
-
-
 
 	pTable = g_pMain->GetItemPtr(nItemID);
 	if (pTable == nullptr
@@ -743,7 +721,6 @@ void CUser::ItemMove(Packet & pkt) {
 		pSrcItem = &m_sItemArray[INVENTORY_MBAG + bSrcPos];
 		pDstItem = &m_sItemArray[INVENTORY_MBAG + bDstPos];
 		break;
-
 
 	case ITEM_MBAG_TO_INVEN:
 		if (bDstPos >= HAVE_MAX || bSrcPos >= MBAG_TOTAL
@@ -837,7 +814,6 @@ void CUser::ItemMove(Packet & pkt) {
 		pSrcItem = &m_sItemArray[SLOT_MAX + bSrcPos];
 		break;
 
-
 	case ITEM_INVEN_TO_COSP:
 		if (bDstPos >= COSP_MAX + MBAG_COUNT || bSrcPos >= HAVE_MAX
 			// Make sure that the item actually exists there.
@@ -926,7 +902,7 @@ void CUser::ItemMove(Packet & pkt) {
 		} else if (pTable->m_bSlot == 0x03) {
 			if (pLeftHand->nNum != 0 && pRightHand->nNum != 0) // her iki el de dolu ise işlem yapma
 				goto fail_return;
-			else if (pLeftHand->nNum != 0) // sol el dolu ise 
+			else if (pLeftHand->nNum != 0) // sol el dolu ise
 			{
 				memcpy(pRightHand, pSrcItem, sizeof(_ITEM_DATA));
 				memcpy(pSrcItem, pLeftHand, sizeof(_ITEM_DATA));
@@ -1031,8 +1007,6 @@ void CUser::ItemMove(Packet & pkt) {
 	SendItemMove(1);
 	SendItemWeight();
 
-
-
 	// Update everyone else, so that they can see your shiny new items (you didn't take them off did you!? DID YOU!?)
 	switch (dir) {
 	case ITEM_INVEN_SLOT:
@@ -1126,9 +1100,9 @@ bool CUser::CheckExchange(int nExchangeID) {
 
 		// Now that we have our slot, see if it's in use (i.e. if adding a stackable item)
 		// If it's in use, then we don't have to worry about requiring an extra slot for this item.
-		// The only caveat here is with having multiple of the same stackable item: 
+		// The only caveat here is with having multiple of the same stackable item:
 		// theoretically we could give them OK, but when it comes time to adding them, we'll find that
-		// there's too many of them and they can't fit in the same slot. 
+		// there's too many of them and they can't fit in the same slot.
 		// As this isn't an issue with real use cases, we can ignore it.
 		_ITEM_DATA *pItem = GetItem(pos);
 		if (pItem->nNum == 0)
@@ -1215,9 +1189,9 @@ bool CUser::CheckSpecialExchange(int nExchangeID) {
 
 		// Now that we have our slot, see if it's in use (i.e. if adding a stackable item)
 		// If it's in use, then we don't have to worry about requiring an extra slot for this item.
-		// The only caveat here is with having multiple of the same stackable item: 
+		// The only caveat here is with having multiple of the same stackable item:
 		// theoretically we could give them OK, but when it comes time to adding them, we'll find that
-		// there's too many of them and they can't fit in the same slot. 
+		// there's too many of them and they can't fit in the same slot.
 		// As this isn't an issue with real use cases, we can ignore it.
 		_ITEM_DATA *pItem = GetItem(pos);
 		if (pItem->nNum == 0)
@@ -1248,7 +1222,6 @@ bool CUser::RunExchange(int nExchangeID, uint16 count) {
 		|| isMining()
 		|| m_bMerchantStatex)
 		return false;
-
 
 	_ITEM_EXCHANGE * pExchange = g_pMain->m_ItemExchangeArray.GetData(nExchangeID);
 
@@ -1316,7 +1289,6 @@ bool CUser::RunExchange(int nExchangeID, uint16 count) {
 
 			if (pExchange->nOriginItemNum[i] != 900000000)
 				RobItem(pExchange->nOriginItemNum[i], pExchange->sOriginItemCount[i]);
-
 		}
 	}
 
@@ -1409,7 +1381,7 @@ bool CUser::RunExchange(int nExchangeID, uint16 count) {
 		for (int i = 0; i < ITEMS_IN_EXCHANGE_GROUP; i++)
 			nTotalPercent += pExchange->sExchangeItemCount[i];
 
-		// If they add up to more than 100%, 
+		// If they add up to more than 100%,
 		if (nTotalPercent > 10000) {
 			TRACE("Exchange %d is invalid. Rates add up to more than 100%% (%d%%)", nExchangeID, nTotalPercent / 100);
 			return false;
@@ -1548,7 +1520,6 @@ bool CUser::RunSelectExchange(int nExchangeID, uint32 Count) {
 			}
 		}
 	} else if (bMenuID >= 0 && bySelectedReward != -1) {
-
 		_ITEM_EXCHANGE * pExchange = g_pMain->m_ItemExchangeArray.GetData(nExchangeID);
 
 		if (pExchange == nullptr || !CheckExchange(nExchangeID))
@@ -1593,7 +1564,6 @@ bool CUser::RunSelectExchange(int nExchangeID, uint32 Count) {
 			}
 
 			else if (!m_ItemExchange) {
-
 				GiveItem(pExchangeExp->nExchangeItemNum[bySelectedReward], pExchangeExp->sExchangeItemCount[bySelectedReward]);
 				V3_QuestShowGiveItem(pExchange->nExchangeItemNum[0], pExchange->sExchangeItemCount[0],
 					pExchange->nExchangeItemNum[1], pExchange->sExchangeItemCount[1],
@@ -1652,11 +1622,9 @@ bool CUser::RunSelectExchange(int nExchangeID, uint32 Count) {
 				}
 			}
 		}
-
 	}
 	return true;
 }
-
 
 uint32 CUser::GetMaxExchange(int nExchangeID) {
 	uint16 sResult = 0;
@@ -1681,7 +1649,6 @@ uint32 CUser::GetMaxExchange(int nExchangeID) {
 bool CUser::IsValidSlotPos(_ITEM_TABLE* pTable, int destpos) {
 	if (pTable == nullptr)
 		return false;
-
 
 	bool bOneHandedItem = false;
 	switch (pTable->m_bSlot) {
@@ -1861,7 +1828,6 @@ void CUser::SendStackChangeSpecial(uint32 nItemID, uint32 nCount /* needs to be 
 	Send(&result);
 }
 
-
 void CUser::SendStackChange(uint32 nItemID, uint32 nCount /* needs to be 4 bytes, not a bug */, uint16 sDurability, uint8 bPos, bool bNewItem /* = false */, uint32 Time) {
 	Packet result(WIZ_ITEM_COUNT_CHANGE);
 
@@ -1877,8 +1843,6 @@ void CUser::SendStackChange(uint32 nItemID, uint32 nCount /* needs to be 4 bytes
 	} else {
 		Time = 0;
 	}
-
-
 
 	if (Time != 0) {
 		result << Time << Time;

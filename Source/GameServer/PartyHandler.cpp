@@ -208,7 +208,7 @@ void CUser::PartyInsert() {
 			continue;
 		}
 
-		// For everyone else, 
+		// For everyone else,
 		pUser = g_pMain->GetUserPtr(pParty->uid[i]);
 		if (pUser == nullptr)
 			continue;
@@ -287,7 +287,7 @@ void CUser::PartyPromote(uint16 sMemberID) {
 	std::swap(m_bPartyLeader, pUser->m_bPartyLeader);
 
 	// Remove our leadership state from the client
-	StateChangeServerDirect(6, 0); // remove 'P' symbol from old party leader	
+	StateChangeServerDirect(6, 0); // remove 'P' symbol from old party leader
 	StateChangeServerDirect(2, m_bNeedParty); // seeking a party
 
 	// Make them leader.
@@ -464,7 +464,7 @@ void CUser::PartyBBSRegister(Packet & pkt) {
 }
 
 void CUser::PartyBBSDelete(Packet & pkt) {
-	// You don't need anymore 
+	// You don't need anymore
 	if (m_bNeedParty == 1) {
 		Packet result(WIZ_PARTY_BBS, uint8(PARTY_BBS_DELETE));
 		result << uint8(0);
@@ -502,9 +502,9 @@ void CUser::SendPartyBBSNeeded(uint16 page_index, uint8 bType) {
 	// TODO: Make this a more localised map
 	SessionMap sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
 	int i = -1; // start at -1, first iteration gets us to 0.+
-#if __VERSION > 2005 
+#if __VERSION > 2005
 	result << uint16(0);
-#endif 
+#endif
 	BOOST_FOREACH(auto itr, sessMap) {
 		CUser *pUser = TO_USER(itr.second);
 		_PARTY_GROUP *pParty = nullptr;
@@ -518,7 +518,7 @@ void CUser::SendPartyBBSNeeded(uint16 page_index, uint8 bType) {
 				&& (GetZoneID() != ZONE_MORADON && GetZoneID() != ZONE_MORADONM2)
 				&& GetZoneID() != ZONE_FORGOTTEN_TEMPLE)
 			|| (pUser->m_bNeedParty == 1 && !pUser->m_bPartyLeader))
-			//|| !((pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 2 / 3)) 
+			//|| !((pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 2 / 3))
 			//|| (pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
 			continue;
 
@@ -548,9 +548,9 @@ void CUser::SendPartyBBSNeeded(uint16 page_index, uint8 bType) {
 			<< PartyMembers
 			<< pUser->GetNation();
 
-#if __VERSION > 2005 
+#if __VERSION > 2005
 		result << uint8(0);
-#endif 
+#endif
 
 		valid_counter++;
 	}

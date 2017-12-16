@@ -97,8 +97,7 @@ struct _NpcPosition {
 
 // Battlezone Announcement
 #define BATTLEZONE_OPEN         0x00
-#define BATTLEZONE_CLOSE        0x01           
+#define BATTLEZONE_CLOSE        0x01
 #define DECLARE_WINNER          0x02
-
 
 const int TYPE_MONEY_SID = 900000000;

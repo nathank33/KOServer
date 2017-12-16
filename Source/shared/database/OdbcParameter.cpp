@@ -2,11 +2,9 @@
 #include "OdbcConnection.h"
 
 OdbcParameter::OdbcParameter(SQLSMALLINT parameterType, SQLSMALLINT dataType, SQLPOINTER parameterAddress, SQLLEN maxLength /*= 1*/)
-	: m_parameterType(parameterType), m_cDataType(dataType), m_parameterAddress(parameterAddress), 
-	m_dataTypeLength(0), m_pCBValue(SQL_NTS)
-{
-	switch (m_cDataType)
-	{
+	: m_parameterType(parameterType), m_cDataType(dataType), m_parameterAddress(parameterAddress),
+	m_dataTypeLength(0), m_pCBValue(SQL_NTS) {
+	switch (m_cDataType) {
 	case SQL_CHAR:
 	case SQL_VARCHAR:
 	case SQL_BINARY:

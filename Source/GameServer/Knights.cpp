@@ -64,7 +64,6 @@ void CKnights::OnLogin(CUser *pUser) {
 	}
 }
 
-
 void CKnights::ConstructClanNoticePacket(Packet *result) {
 	result->Initialize(WIZ_NOTICE);
 	result->DByte();
@@ -114,24 +113,19 @@ void CKnights::UpdateClanFund() {
 }
 
 void CKnights::OnLogout(CUser *pUser) {
-
-
 	// Unset the active session for this user
 	if (pUser->m_pKnightsUser != nullptr) {
-
 		pUser->m_pKnightsUser->m_lastLogin = UNIXTIME;
 		pUser->m_pKnightsUser->m_lastLogined = uint32(UNIXTIME);
 		pUser->m_pKnightsUser->pSession = nullptr;
 		pUser->m_pKnightsUser = nullptr;
 	}
 
-
 	Packet logoutNotice;
 	// TODO: Shift this to SERVER_RESOURCE
 	std::string buffer = string_format("%s is offline.", pUser->GetName().c_str());
 	ChatPacket::Construct(&logoutNotice, KNIGHTS_CHAT, &buffer);
 	Send(&logoutNotice);
-
 
 	Packet result2;
 
@@ -140,8 +134,6 @@ void CKnights::OnLogout(CUser *pUser) {
 		ChatPacket::Construct(&result2, ALLIANCE_CHAT, &buffer2);
 		g_pMain->Send_KnightsAlliance(GetAllianceID(), &result2);
 	}
-
-
 }
 
 bool CKnights::AddUser(std::string & strUserID) {
@@ -311,7 +303,6 @@ void CKnights::Disband(CUser *pLeader /*= nullptr*/) {
 			RemoveUser(p->pSession);
 		else
 			RemoveUser(p->strUserName);
-
 	}
 	g_pMain->m_KnightsArray.DeleteData(m_sIndex);
 

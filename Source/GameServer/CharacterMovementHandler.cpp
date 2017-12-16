@@ -16,7 +16,6 @@ void CUser::MoveProcess(Packet & pkt) {
 
 	m_sSpeed = speed;
 
-
 	SpeedHackUser();
 
 	if (!GetMap()->IsValidPosition(real_x, real_z, real_y))
@@ -81,7 +80,6 @@ void CUser::MoveProcess(Packet & pkt) {
 	result.Initialize(AG_USER_MOVE);
 	result << GetSocketID() << m_curx << m_curz << m_cury << speed;
 	Send_AIServer(&result);
-
 }
 
 void CUser::AddToRegion(int16 new_region_x, int16 new_region_z) {
@@ -147,9 +145,9 @@ void CUser::GetUserInfo(Packet & pkt) {
 			<< pKnights->m_strName
 			<< pKnights->m_byGrade << pKnights->m_byRanking
 			<< uint16(pKnights->m_sMarkVersion) // symbol/mark version
-			<< pKnights->GetCapeID(aKnights) // cape ID 
+			<< pKnights->GetCapeID(aKnights) // cape ID
 			<< pKnights->m_bCapeR << pKnights->m_bCapeG << pKnights->m_bCapeB << uint8(0) // this is stored in 4 bytes after all.
-			// not sure what this is, but it (just?) enables the clan symbol on the cape 
+			// not sure what this is, but it (just?) enables the clan symbol on the cape
 			// value in dump was 9, but everything tested seems to behave as equally well...
 			// we'll probably have to implement logic to respect requirements.
 			<< uint8(1);
@@ -157,7 +155,7 @@ void CUser::GetUserInfo(Packet & pkt) {
 
 	// There are two event-driven invisibility states; dispel on attack, and dispel on move.
 	// These are handled primarily server-side; from memory the client only cares about value 1 (which we class as 'dispel on move').
-	// As this is the only place where this flag is actually sent to the client, we'll just convert 'dispel on attack' 
+	// As this is the only place where this flag is actually sent to the client, we'll just convert 'dispel on attack'
 	// back to 'dispel on move' as the client expects.
 	uint8 bInvisibilityType = m_bInvisibilityType;
 	if (bInvisibilityType != INVIS_NONE)
@@ -179,19 +177,16 @@ void CUser::GetUserInfo(Packet & pkt) {
 		pkt << uint16(1);
 	else
 		pkt << m_bIsHidingHelmet << m_bIsDevil; // either this is correct and items are super buggy, or it causes baldness. You choose.
-	pkt << m_sDirection // direction 
+	pkt << m_sDirection // direction
 		<< m_bIsChicken // chicken/beginner flag
 		<< m_bRank // king flag
 		<< uint16(0)
 		<< m_bKnightsRank << m_bPersonalRank; // NP ranks (total, monthly)
 
-
 	uint8 equippedItems[] =
 	{
 		BREAST, LEG, HEAD, GLOVE, FOOT, SHOULDER, RIGHTHAND, LEFTHAND, CWING, CHELMET, CRIGHT, CLEFT, CTOP, FAIRY
 	};
-
-
 
 	foreach_array(i, equippedItems) {
 		_ITEM_DATA * pItem = GetItem(equippedItems[i]);
@@ -205,10 +200,7 @@ void CUser::GetUserInfo(Packet & pkt) {
 			equippedItems[8] = CWING;*/
 
 		pkt << pItem->nNum << pItem->sDuration << pItem->bFlag;
-
 	}
-
-
 
 	pkt << GetZoneID() << uint8(-1) << uint8(-1) << uint16(0) << uint16(0) << uint16(0) << m_bIsHidingCospre << isGenieActive();
 
@@ -256,7 +248,7 @@ bool CUser::CanChangeZone(C3DMap * pTargetMap, WarpListResponse & errorReason) {
 
 	switch (pTargetMap->GetID()) {
 	case ZONE_KARUS:
-		// Users may enter Luferson (1)/El Morad (2) if they are that nation, 
+		// Users may enter Luferson (1)/El Morad (2) if they are that nation,
 		if (GetNation() == pTargetMap->GetID())
 			return true;
 
@@ -266,7 +258,7 @@ bool CUser::CanChangeZone(C3DMap * pTargetMap, WarpListResponse & errorReason) {
 		else
 			return g_pMain->m_byElmoradOpenFlag;
 	case ZONE_ELMORAD:
-		// Users may enter Luferson (1)/El Morad (2) if they are that nation, 
+		// Users may enter Luferson (1)/El Morad (2) if they are that nation,
 		if (GetNation() == pTargetMap->GetID())
 			return true;
 
@@ -387,7 +379,6 @@ void CUser::ZoneChange(uint16 sNewZone, float x, float z, uint16 nEventRoom) {
 		return;
 	}
 
-
 	if (GetZoneID() == ZONE_STONE1)
 		g_pMain->IsBusy1[GetEventRoom()] = false;
 	if (GetZoneID() == ZONE_STONE2)
@@ -429,7 +420,6 @@ void CUser::ZoneChange(uint16 sNewZone, float x, float z, uint16 nEventRoom) {
 	m_LastX = x;
 	m_LastZ = z;
 
-
 	uint16 OldEventRoom = GetEventRoom();
 	if (GetZoneID() != sNewZone && isInTempleEventZone((uint8) sNewZone)) {
 		if (!isEventUser() && !isGM())
@@ -446,10 +436,7 @@ void CUser::ZoneChange(uint16 sNewZone, float x, float z, uint16 nEventRoom) {
 	if (isGM())
 		m_TimeMonsterStone = UNIXTIME + 3000;
 
-
-
 	if (GetZoneID() != sNewZone) {
-
 		UserInOut(INOUT_OUT);
 
 		m_bZoneChangeSameZone = false;
@@ -458,12 +445,10 @@ void CUser::ZoneChange(uint16 sNewZone, float x, float z, uint16 nEventRoom) {
 		SetUserEventRoom(nEventRoom);
 		SetUnitEventRoom(nEventRoom);
 
-
 		// Reset the user's anger gauge when leaving the zone
 		// Unknown if this is official behaviour, but it's logical.
 		if (GetAngerGauge() > 0)
 			UpdateAngerGauge(0);
-
 
 		/*
 		Here we also send a clan packet with subopcode 0x16 (with a byte flag of 2) if war zone/Moradon
@@ -486,7 +471,6 @@ void CUser::ZoneChange(uint16 sNewZone, float x, float z, uint16 nEventRoom) {
 		Warp(uint16(x * 10), uint16(z * 10));
 		return;
 	}
-
 
 	if (sNewZone != ZONE_SNOW_BATTLE && GetZoneID() == ZONE_SNOW_BATTLE)
 		SetMaxHp(1);
@@ -519,7 +503,6 @@ void CUser::ZoneChange(uint16 sNewZone, float x, float z, uint16 nEventRoom) {
 
 	SetPosition(x, 0.0f, z);
 	m_pMap = pMap;
-
 
 	SetRegion(GetNewRegionX(), GetNewRegionZ());
 
@@ -572,10 +555,7 @@ void CUser::ZoneChange(uint16 sNewZone, float x, float z, uint16 nEventRoom) {
 
 	if (GetZoneID() == ZONE_BATTLE4)
 		g_pMain->NereidsMonumentEvent(0, 0, this);
-
-
 }
-
 
 void CUser::CheckWaiting(uint8 sNewZone, uint16 Time) {
 	uint16 m_RemainEventZone = Time;
@@ -616,11 +596,9 @@ void CUser::CheckWaiting(uint8 sNewZone, uint16 Time) {
 		Packet juraidtime(WIZ_BIFROST, uint8(MONSTER_SQUARD));
 		juraidtime << uint16(m_RemainEventZone);
 		Send(&juraidtime);*/
-
 	}
 
 	if (sNewZone == ZONE_STONE1 || sNewZone == ZONE_STONE2 || sNewZone == ZONE_STONE3) {
-
 		Packet stone(WIZ_SELECT_MSG);
 		stone << uint16(0x00) << uint8(0x09) << uint64(0x00) << uint8(0x09) << uint32(0x00) << uint8(0x10) << Time << uint16(0x00);
 		Send(&stone);
@@ -677,7 +655,6 @@ void CUser::RemovePlayerRank() {
 		return;
 
 	g_pMain->m_UserRankingArray[GetNation() - 1].DeleteData(GetSocketID());
-
 }
 
 void CUser::UpdatePlayerRank() {
@@ -749,16 +726,12 @@ void CUser::Warp(uint16 sPosX, uint16 sPosZ) {
 		return;
 	}
 
-
-
 	m_LastX = real_x;
 	m_LastZ = real_z;
 
 	Packet result(WIZ_WARP);
 	result << sPosX << sPosZ;
 	Send(&result);
-
-
 
 	UserInOut(INOUT_OUT);
 
@@ -772,7 +745,6 @@ void CUser::Warp(uint16 sPosX, uint16 sPosZ) {
 	SetRegion(GetNewRegionX(), GetNewRegionZ());
 
 	UserInOut(INOUT_WARP);
-
 
 	g_pMain->UserInOutForMe(this);
 	g_pMain->RegionNpcInfoForMe(this);
@@ -799,7 +771,6 @@ void CUser::Warp(uint16 sPosX, uint16 sPosZ) {
 	ResetWindows();
 }
 
-
 void CUser::RecvWarp(Packet & pkt) {
 	uint16 warp_x, warp_z;
 	pkt >> warp_x >> warp_z;
@@ -818,7 +789,6 @@ void CUser::RecvZoneChange(Packet & pkt) {
 
 		Packet result(WIZ_ZONE_CHANGE, uint8(ZoneChangeLoaded)); // finalise the zone change
 		Send(&result);
-
 	} else if (opcode == ZoneChangeLoaded) {
 		UserInOut(INOUT_RESPAWN);
 
@@ -845,9 +815,7 @@ void CUser::RecvZoneChange(Packet & pkt) {
 				<< (pKnightsMaster != nullptr ? pKnightsMaster->GetName() : std::string(""));
 			g_pMain->Send_Zone(&result16, ZONE_DELOS);
 		}
-
 	} else if (opcode == MilitaryCampChange) {
-
 		uint8 MilitaryCampID = pkt.read<uint8>();
 
 		if (GetZoneID() != ZONE_MORADON
@@ -861,11 +829,11 @@ void CUser::RecvZoneChange(Packet & pkt) {
 			return;
 
 		ZoneChange(MilitaryCampID, 0.0f, 0.0f);
-		// Karus 
+		// Karus
 		// 1	1
 		// 2	5
 		// 3	6
-		// Elmorad 
+		// Elmorad
 		// 1	2
 		// 2	7
 		// 3	8
@@ -883,6 +851,5 @@ void CUser::RecvZoneChange(Packet & pkt) {
 		// 1	11
 		// 2	13
 		// 3	14
-
 	}
 }

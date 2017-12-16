@@ -12,4 +12,3 @@ void CUser::RentalSystem(Packet & pkt) {
 	else if (opcode == 2)
 	PvPRentalProcess(pBuf + index);*/
 }
-

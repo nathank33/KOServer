@@ -1,9 +1,8 @@
 #pragma once
 
-typedef uint32 (THREADCALL lpfnThreadFunc)(void *);
+typedef uint32(THREADCALL lpfnThreadFunc)(void *);
 
-class Thread
-{
+class Thread {
 public:
 	Thread();
 	Thread(lpfnThreadFunc lpThreadFunc, void * lpParam = nullptr);

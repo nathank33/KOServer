@@ -14,7 +14,6 @@ public:
 
 	void Initialize();
 
-
 	void LoginProcess(Packet & pkt);
 	void RecvCheckAlive(Packet & pkt);
 	void RecvServerInfo(Packet & pkt);

@@ -45,14 +45,14 @@ const struct luaL_Reg gFuncs[] =
 	 }
 
 // Helper macros to generate elements in a Lua function table.
-#define MAKE_LUA_FUNCTION(name) { #name, Lua_ ## name }, 
+#define MAKE_LUA_FUNCTION(name) { #name, Lua_ ## name },
 
-// #define MAKE_LUA_METHOD(Class, name) { STR(name), Class::Lua_ ## name }, 
-#define MAKE_LUA_METHOD(name) { #name, LUA_CLASS::Lua_ ## name }, 
+// #define MAKE_LUA_METHOD(Class, name) { STR(name), Class::Lua_ ## name },
+#define MAKE_LUA_METHOD(name) { #name, LUA_CLASS::Lua_ ## name },
 
 // Defines the header for a Lua C function (or C++ method prototype, but remember to define as static).
 #define LUA_FUNCTION(name) int Lua_ ## name(lua_State *L)
-#define DECLARE_LUA_FUNCTION(name) static LUA_FUNCTION(name) 
+#define DECLARE_LUA_FUNCTION(name) static LUA_FUNCTION(name)
 
 #define DECLARE_LUA_GETTER(name) DECLARE_LUA_FUNCTION(name) { LUA_RETURN(LUA_GET_INSTANCE()->name()); }
 

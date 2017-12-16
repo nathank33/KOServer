@@ -185,7 +185,6 @@ void CUser::KissUser() {
 }
 
 void CUser::ClassChange(Packet & pkt, bool bFromClient /*= true */) {
-
 	if (isDead()
 		|| isTrading()
 		|| isMerchanting()
@@ -352,7 +351,6 @@ void CUser::ClassChange(Packet & pkt, bool bFromClient /*= true */) {
 		if (classcode == DRUID)
 			bSuccess = true;
 		break;
-
 	}
 
 	// Not allowed this job change
@@ -384,7 +382,6 @@ void CUser::RecvSelectMsg(Packet & pkt)	// Receive menu reply from client.
 		|| isDead()
 		|| isStoreOpen())
 		return;
-
 
 	if (!AttemptSelectMsg(bMenuID, bySelectedReward))
 		memset(&m_iSelMsgEvent, -1, sizeof(m_iSelMsgEvent));
@@ -488,7 +485,7 @@ void CUser::NpcEvent(Packet & pkt) {
 	case NPC_RENTAL:
 		result.SetOpcode(WIZ_RENTAL);
 		result << uint8(RENTAL_NPC)
-			<< uint16(1) // 1 = enabled, -1 = disabled 
+			<< uint16(1) // 1 = enabled, -1 = disabled
 			<< pNpc->m_iSellingGroup;
 		Send(&result);
 		break;
@@ -583,7 +580,6 @@ void CUser::NpcEvent(Packet & pkt) {
 }
 
 void CUser::CaptureEvent() {
-
 	if (GetZoneID() != ZONE_BORDER_DEFENSE_WAR ||
 		g_pMain->pTempleEvent.m_sMiniTimerNation[GetEventRoom()] == GetNation())
 		return;
@@ -596,7 +592,6 @@ void CUser::CaptureEvent() {
 	Border.Initialize(WIZ_QUEST);
 	Border << uint8(0x03) << uint32(9993);
 	Send(&Border);
-
 
 	Reg.Initialize(WIZ_CAPTURE);
 	Reg << uint8(CAPURE_RIGHT_CLICK) << GetSocketID() << GetName();
@@ -645,7 +640,6 @@ void CUser::ItemTrade(Packet & pkt) {
 
 	pkt >> type;
 
-
 	if (type == 5) {
 		RecvRepurchase(pkt);
 		return;
@@ -655,7 +649,6 @@ void CUser::ItemTrade(Packet & pkt) {
 	if (type == 1 || type == 2) {
 		pkt >> group >> npcid;
 
-
 		if (!g_pMain->m_bPointCheckFlag
 			|| (pNpc = g_pMain->GetNpcPtr(npcid)) == nullptr
 			|| (pNpc->GetType() != NPC_MERCHANT && pNpc->GetType() != NPC_TINKER && pNpc->GetType() != NPC_LOYALTY_MERCHANT && pNpc->m_iSellingGroup != 232000)
@@ -663,7 +656,6 @@ void CUser::ItemTrade(Packet & pkt) {
 			|| !isInRange(pNpc, MAX_NPC_RANGE))
 			goto fail_return;
 	}
-
 
 	pkt >> purchased_item_count;
 
@@ -725,13 +717,10 @@ void CUser::ItemTrade(Packet & pkt) {
 		}
 	}
 
-
-
 	uint32 real_price = 0;
 	uint32 total_price = 0;
 	// Buying from an NPC Gold
 	if (type == 1 && pNpc->m_iSellingGroup != 249000) {
-
 		for (int i = 0; i < purchased_item_count; i++) {
 			transactionPrice = 0;
 			if (pItems[i].ITEMID != 0) {
@@ -812,9 +801,6 @@ void CUser::ItemTrade(Packet & pkt) {
 						}
 					}
 
-
-
-
 					uint32 tariffTax = 0/*Kiþiye*/, nationalTax = 0/*Irka*/;
 					uint32 BuyPrice = pTable->m_iBuyPrice * 90 / 100;
 					if (GetMap()->GetTariff() > 0)
@@ -859,13 +845,10 @@ void CUser::ItemTrade(Packet & pkt) {
 					else
 						transactionPrice = (((uint32) pTable->m_iBuyPrice) * pItems[i]._ICOUNT);
 
-
 					if (!hasCoins(transactionPrice)) {
 						errorCode = 3;
 						goto fail_return;
 					}
-
-
 
 					m_sItemArray[SLOT_MAX + pItems[i].IPOS].nNum = pItems[i].ITEMID;
 					m_sItemArray[SLOT_MAX + pItems[i].IPOS].sDuration = pTable->m_sDuration;
@@ -883,7 +866,6 @@ void CUser::ItemTrade(Packet & pkt) {
 						GetName().c_str(), pNpc->GetName().c_str(), transactionPrice, pItems[i].ITEMID, GetZoneID(), uint16(GetX()), uint16(GetZ()), tariffTax);
 					g_pMain->WriteTradeUserLogFile(errorMessage);
 				}
-
 			}
 			real_price += transactionPrice;
 		}
@@ -922,13 +904,10 @@ void CUser::ItemTrade(Packet & pkt) {
 			else if (PremiumID > 0 && pTable->m_iSellPrice != SellTypeFullPrice)
 				transactionPrice = (((uint32) pTable->m_iBuyPrice / 4) * pItems[i]._ICOUNT);
 
-
-
 			if (GetCoins() + transactionPrice > COIN_MAX) {
 				errorCode = 3;
 				goto fail_return;
 			}
-
 
 			GoldGain(transactionPrice, false);
 
@@ -953,7 +932,6 @@ void CUser::ItemTrade(Packet & pkt) {
 	}
 	// Buying an item to an NPC NationalPoint
 	else if (type == 1 && pNpc->m_iSellingGroup == 249000) {
-
 		for (int i = 0; i < purchased_item_count; i++) {
 			transactionPrice = 0;
 			if (pItems[i].ITEMID != 0) {
@@ -988,7 +966,6 @@ void CUser::ItemTrade(Packet & pkt) {
 						prTable = g_pMain->GetItemPtr(pItems[j].ITEMID);
 						if (prTable != nullptr)
 							total_price += uint32(((uint32) prTable->m_iNPBuyPrice * pItems[j]._ICOUNT));
-
 					}
 
 					if (!hasLoyalty(total_price)) {
@@ -1017,14 +994,10 @@ void CUser::ItemTrade(Packet & pkt) {
 						}
 					}
 
-
-
-
 					uint32 BuyPrice;
 					BuyPrice = pTable->m_iNPBuyPrice;
 
 					transactionPrice = ((((uint32) BuyPrice) * pItems[i]._ICOUNT));
-
 
 					if (!hasLoyalty(transactionPrice) || pTable->m_bSellingGroup == 0) {
 						errorCode = 3;
@@ -1052,7 +1025,6 @@ void CUser::ItemTrade(Packet & pkt) {
 						GetName().c_str(), pNpc->GetName().c_str(), transactionPrice, pItems[i].ITEMID, GetZoneID(), uint16(GetX()), uint16(GetZ()));
 					g_pMain->WriteTradeUserLogFile(errorMessage);
 				}
-
 			}
 			real_price += transactionPrice;
 		}
@@ -1204,14 +1176,11 @@ void CUser::SendNameChange(NameChangeOpcode opcode /*= NameChangeShowDialog*/) {
 	Send(&result);
 }
 
-
 void CUser::SendKnightsNameChange(ClanNameChangeOpcode opcode /*= ClanNameChangeShowDialog*/) {
 	Packet result(WIZ_NAME_CHANGE, uint8(16));
 	result << opcode;
 	Send(&result);
 }
-
-
 
 void CUser::HandleCapeChange(Packet & pkt) {
 	if (isDead()
@@ -1433,7 +1402,7 @@ void CUser::RecvRepurchase(Packet& pkt) {
 	pos = FindSlotForItem(nItemID, 1);
 	if (pos < 0) {
 		Packet result(WIZ_ITEM_TRADE, uint8(5));
-		result << uint8(2) << uint8(2) << uint16(-4); // Not enough inventory slot 
+		result << uint8(2) << uint8(2) << uint16(-4); // Not enough inventory slot
 		Send(&result);
 		return;
 	}
@@ -1455,5 +1424,4 @@ void CUser::RecvRepurchase(Packet& pkt) {
 	result << nItemID;
 
 	Send(&result);
-
 }

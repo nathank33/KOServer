@@ -1,7 +1,6 @@
 #pragma once
 
-namespace SocketOps
-{
+namespace SocketOps {
 	// Create file descriptor for socket i/o operations.
 	SOCKET CreateTCPFileDescriptor();
 

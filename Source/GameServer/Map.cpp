@@ -59,7 +59,6 @@ bool C3DMap::RegionItemAdd(uint16 rx, uint16 rz, _LOOT_BUNDLE * pBundle) {
 	foreach(itr, willdelete)
 		m_RegionItemArray.DeleteData(*itr);
 
-
 	m_RegionItemArray.PutData(pBundle->nBundleID, pBundle);
 	if (m_wBundle == UINT16_MAX)
 		m_wBundle = 1;
@@ -149,8 +148,6 @@ bool C3DMap::CheckEvent(float x, float z, CUser* pUser) {
 	else if (pEvent->m_bType == 1 && pEvent->m_iExec[0] == ZONE_SNOW_BATTLE && g_pMain->m_byBattleOpen != SNOW_BATTLE)
 		return false;
 	else if (pEvent->m_iExec[0] > ZONE_BATTLE_BASE && pEvent->m_iExec[0] <= ZONE_BATTLE6) {
-
-
 		if (g_pMain->m_byBattleZoneType == ZONE_ARDREAM && (pUser->GetLevel() < MIN_LEVEL_NIEDS_TRIANGLE || pUser->GetLevel() > MAX_LEVEL_NIEDS_TRIANGLE || !pUser->CanLevelQualify(MAX_LEVEL_NIEDS_TRIANGLE)))
 			return false;
 	}

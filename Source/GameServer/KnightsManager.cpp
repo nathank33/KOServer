@@ -239,7 +239,6 @@ void CKnightsManager::JoinKnights(CUser *pUser, Packet & pkt) {
 		return;
 	} while (0);
 
-
 	result << uint8(KNIGHTS_JOIN) << bResult;
 	pUser->Send(&result);
 }
@@ -453,7 +452,6 @@ void CKnightsManager::ModifyKnightsMember(CUser *pUser, Packet & pkt, uint8 opco
 	pUser->Send(&result);
 }
 
-
 void CKnightsManager::ModifyKnightsPointMethod(CUser *pUser, Packet & pkt) {
 	if (pUser == nullptr && !pUser->isClanLeader())
 		return;
@@ -596,7 +594,6 @@ void CKnightsManager::RecvUpdateKnights(CUser *pUser, Packet & pkt, uint8 comman
 		g_pMain->GetServerResource(IDS_KNIGHTS_JOIN, &noticeText, pUser->GetName().c_str());
 		pKnights->AddUser(pUser);
 		pKnights->SendChat("%s", noticeText.c_str());
-
 	} else if (command == KNIGHTS_WITHDRAW || command == KNIGHTS_REMOVE) {
 		pKnights->RemoveUser(pUser);
 	}
@@ -745,7 +742,6 @@ void CKnightsManager::UpdateClanPoint(uint16 sClanID, int32 nChangeAmount) {
 }
 
 void CKnightsManager::LoadUserDonatedNP(int index, std::string & strUserID, uint32 nDonatedNP, bool bIsKillReward) {
-
 	CKnights *pKnights = g_pMain->GetClanPtr(index);
 	if (pKnights == nullptr)
 		return;
@@ -764,10 +760,8 @@ void CKnightsManager::LoadUserDonatedNP(int index, std::string & strUserID, uint
 
 		pKnights->m_arKnightsUser[i].nDonatedNP = nDonatedNP;
 		break;
-
 	}
 }
-
 
 void CKnightsManager::AddUserDonatedNPinGame(int index, CUser * pUser, uint32 nDonatedNP, bool bIsKillReward) {
 	CKnights *pKnights = g_pMain->GetClanPtr(index);
@@ -786,8 +780,6 @@ void CKnightsManager::AddUserDonatedNPinGame(int index, CUser * pUser, uint32 nD
 			break;
 		}
 	}
-
-
 
 	pUser->AchieveType4(5);
 }
@@ -892,7 +884,7 @@ void CKnightsManager::RequestClanSymbolVersion(CUser* pUser, Packet & pkt) {
 * they have for this clan. This is a horrible, horrible idea.
 **/
 void CKnightsManager::RequestClanSymbols(CUser* pUser, Packet & pkt) {
-	// Should we force them to be a clan leader too? 
+	// Should we force them to be a clan leader too?
 	// Need to check if *any* clan member can trigger this, or if it's just leaders.
 	if (pUser == nullptr
 		|| !pUser->isInClan())
@@ -1016,7 +1008,6 @@ void CKnightsManager::KnightsAllianceInsert(CUser* pUser, Packet & pkt) {
 			if (bResult != 0)
 				break;
 
-
 			uint16 sTUserClanID = pTUser->GetClanID();
 			CKnights *pTUserKnights = g_pMain->GetClanPtr(sTUserClanID);
 
@@ -1027,7 +1018,6 @@ void CKnightsManager::KnightsAllianceInsert(CUser* pUser, Packet & pkt) {
 			return;
 		}
 	} while (0);
-
 
 	result << uint8(KNIGHTS_JOIN) << bResult;
 	pUser->Send(&result);
@@ -1131,7 +1121,6 @@ void CKnightsManager::KnightsAllianceRemove(CUser* pUser, Packet & pkt) {
 			|| pAlliance->sMercenaryClan_1 == pKnights->m_sIndex
 			|| pAlliance->sMercenaryClan_2 == pKnights->m_sIndex
 			|| pAlliance->sSubAllianceKnights == pKnights->m_sIndex) {
-
 			result << uint8(1) << pKnights->m_sAlliance << pUser->GetClanID() << uint16(-1);
 			g_pMain->AddDatabaseRequest(result, pUser);
 			pUser->SendToRegion(&result);
@@ -1150,8 +1139,6 @@ void CKnightsManager::KnightsAllianceRemove(CUser* pUser, Packet & pkt) {
 }
 
 void CKnightsManager::KnightsAlliancePunish(CUser* pUser, Packet & pkt) {
-
-
 	if (pUser == nullptr
 		|| pUser->isDead())
 		return;
@@ -1184,7 +1171,6 @@ void CKnightsManager::KnightsAlliancePunish(CUser* pUser, Packet & pkt) {
 			pAlliance->sMercenaryClan_1 == pTargetKnights->m_sIndex ||
 			pAlliance->sMercenaryClan_2 == pTargetKnights->m_sIndex ||
 			pAlliance->sSubAllianceKnights == pTargetKnights->m_sIndex) {
-
 			if (pTargetUser != nullptr) {
 				result << uint8(1) << pUser->m_bKnights << pTargetUser->m_bKnights << MainCapeID;
 				g_pMain->AddDatabaseRequest(result, pUser);
@@ -1388,7 +1374,6 @@ void CKnightsManager::DonationList(CUser *pUser, Packet & pkt) {
 	pUser->Send(&result);
 }
 
-
 void CKnightsManager::UpdateKnightMemo(CUser * pUser, Packet & pkt) {
 	uint8 command = pkt.read<uint8>();
 
@@ -1433,5 +1418,4 @@ void CKnightsManager::UpdateKnightMemo(CUser * pUser, Packet & pkt) {
 	result << uint8(0x58) << uint8(0x03) << uint8(0x01) << p->strUserMemo;
 
 	g_pMain->Send_KnightsMember(pUser->GetClanID(), &result);
-
 }

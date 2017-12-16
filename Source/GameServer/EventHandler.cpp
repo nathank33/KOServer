@@ -115,7 +115,6 @@ void CUser::MonsterStoneProcess() {
 		bool IsFull = true;
 
 		for (int i = 1; i < MAX_MONSTER_STONE_EVENT_ROOM; i++) {
-
 			if (ZoneNumber == ZONE_STONE1) {
 				IsFull = g_pMain->IsBusy1[i];
 				ZoneTime = g_pMain->Zone1[i];
@@ -148,12 +147,10 @@ void CUser::MonsterStoneProcess() {
 				break;
 			} else
 				continue;
-
 		}
 
 		if (EventRoom == 0)
 			return;
-
 
 		if (ZoneNumber == ZONE_STONE1)
 			g_pMain->IsBusy1[EventRoom] = true;
@@ -176,7 +173,6 @@ void CUser::MonsterStoneProcess() {
 			CheckWaiting(ZONE_STONE3, 1501);
 
 		printf("%s gonna go %d %d\n", GetName().c_str(), EventRoom, ZoneNumber);
-
 	}
 }
 
@@ -258,7 +254,6 @@ void CGameServerDlg::RemoveEventUser(CUser *pUser) {
 
 	if (g_pMain->m_TempleEventUserArray.GetData(pUser->GetSocketID()) != nullptr)
 		g_pMain->m_TempleEventUserArray.DeleteData(pUser->GetSocketID());
-
 }
 
 void CGameServerDlg::UpdateEventUser(CUser *pUser, uint16 nEventRoom) {
@@ -270,7 +265,6 @@ void CGameServerDlg::UpdateEventUser(CUser *pUser, uint16 nEventRoom) {
 	_TEMPLE_EVENT_USER * pEventUser = g_pMain->m_TempleEventUserArray.GetData(pUser->GetSocketID());
 
 	if (pEventUser) {
-
 		Packet result2(AG_USER_EVENTROOM);
 		result2 << pUser->GetID() << uint16(nEventRoom);
 		g_pMain->Send_AIServer(&result2);
@@ -279,7 +273,6 @@ void CGameServerDlg::UpdateEventUser(CUser *pUser, uint16 nEventRoom) {
 		pUser->m_bEventRoom = nEventRoom;
 		pUser->SetUserEventRoom(nEventRoom);
 		pUser->SetUnitEventRoom(nEventRoom);
-
 	}
 }
 
@@ -363,14 +356,12 @@ void CUser::HandleCapture(Packet & pkt) {
 	g_pMain->Send_Zone(&result1, GetZoneID(), nullptr, Nation::ALL, GetEventRoom());
 	g_pMain->Send_Zone(&result, GetZoneID(), nullptr, Nation::ALL, GetEventRoom());
 
-
 	result.Initialize(WIZ_EVENT);
 	result << uint8(TEMPLE_EVENT_BORDER_COUNTER);
 	m_iLoyaltyDaily += 2;
 	UpdatePlayerRank();
 	result << g_pMain->pTempleEvent.ElmoDeathCount[GetEventRoom()] << uint16(0x00) << g_pMain->pTempleEvent.KarusDeathCount[GetEventRoom()] << uint16(0x00);
 	g_pMain->Send_Zone(&result, GetZoneID(), nullptr, Nation::ALL, GetEventRoom());
-
 }
 uint8 CUser::GetMonsterChallengeUserCount() { return (uint8) (uint8) g_pMain->m_nForgettenTempleUsers.size(); }
 uint8 CUser::GetEventZoneUserCount() { return (uint8) g_pMain->m_nEventZoneUsers.size(); }

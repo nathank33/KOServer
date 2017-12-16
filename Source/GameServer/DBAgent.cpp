@@ -69,8 +69,6 @@ void CDBAgent::ReportSQLError(OdbcError *pError) {
 	// And add him to waiting list,
 	// Get block his character while his query upload..
 
-
-
 	string errorMessage = string_format(_T("[ ODBC Error - %d.%d.%d %d:%d:%d ] ] Source: %s Error: %s Description: %s\n"),
 		time.GetDay(), time.GetMonth(), time.GetYear(), time.GetHour(), time.GetMinute(), time.GetSecond(),
 		pError->Source.c_str(), pError->ExtendedErrorMessage.c_str(), pError->ErrorMessage.c_str());
@@ -307,12 +305,10 @@ void CDBAgent::LoadCharSeal(string & strCharID, ByteBuffer & result) {
 		if (g_pMain->IsDuplicateItem(nItemID, nSerialNum))
 			bFlag = ITEM_FLAG_DUPLICATE;
 
-
 		if (sCount < 1)
 			result << uint32(0) << uint16(0) << uint16(0) << uint8(0);
 		else
 			result << nItemID << sDurability << sCount << bFlag;	// item type flag (e.g. rented)
-
 	}
 
 	result << uint8(0) << uint8(0) << uint8(0) << uint8(0) << uint8(0)/* Unique Level */ << uint8(0) /* Unique STR */;
@@ -399,7 +395,6 @@ uint64 CDBAgent::GetSerialByID(uint32 ID) {
 		dbCommand->FetchUInt64(1, sClass);
 	}
 
-
 	return sClass;
 }
 
@@ -444,7 +439,6 @@ uint16 CDBAgent::LoadCharKnights(string & strCharID) {
 
 	return sClass;
 }
-
 
 uint8 CDBAgent::LoadCharNation(string & strCharID) {
 	uint8 sClass = 0;
@@ -522,7 +516,6 @@ int8 CDBAgent::ChangeHair(std::string & strAccountID, std::string & strCharID, u
 	return bRet;
 }
 
-
 void CDBAgent::LoadRentalData(string & strAccountID, string & strCharID, UserRentalMap & rentalData) {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
@@ -564,7 +557,6 @@ void CDBAgent::LoadRentalData(string & strAccountID, string & strCharID, UserRen
 			delete pItem;
 		else
 			rentalData.insert(std::make_pair(pItem->nSerialNum, pItem));
-
 	} while (dbCommand->MoveNext());
 }
 
@@ -593,7 +585,6 @@ void CDBAgent::LoadItemSealData(string & strAccountID, string & strCharID, UserI
 			delete pItem;
 		else
 			itemSealData.insert(std::make_pair(pItem->nSerialNum, pItem));
-
 	} while (dbCommand->MoveNext());
 }
 uint8 CDBAgent::LoadPetData(uint64 PetSerial, CPet *pPet) {
@@ -601,8 +592,6 @@ uint8 CDBAgent::LoadPetData(uint64 PetSerial, CPet *pPet) {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return false;
-
-
 
 	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
 	if (!dbCommand->Execute(string_format(_T("{? = CALL LOAD_PET_DATA(" I64FMTD ", ?)}"), PetSerial)))
@@ -658,8 +647,6 @@ uint8 CDBAgent::InsertPetData(uint64 PetSerial, CPet *pPet) {
 	if (dbCommand.get() == nullptr)
 		return false;
 
-
-
 	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
 	dbCommand->AddParameter(SQL_PARAM_INPUT, pPet->m_strPetID.c_str(), pPet->m_strPetID.length());
 	if (!dbCommand->Execute(string_format(_T("{? = CALL INSERT_PET_DATA(" I64FMTD ", ?, " I64FMTD ", %d, %d, %d, %d)}"), PetSerial, pPet->m_iExp, pPet->m_bLevel, pPet->m_sSatisfaction, pPet->m_sClass, pPet->SpecialPetID)))
@@ -673,8 +660,6 @@ uint8 CDBAgent::InsertCypherRingData(uint64 Serial, _CYPHERRING_DATA *pData, std
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return false;
-
-
 
 	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
 	dbCommand->AddParameter(SQL_PARAM_INPUT, pData->UserName.c_str(), pData->UserName.length());
@@ -690,8 +675,6 @@ uint8 CDBAgent::InsertCypherRingChar(std::string strAccountID, uint64 Serial) {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return false;
-
-
 
 	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
@@ -724,7 +707,6 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 	char	strItem[INVENTORY_TOTAL * 8] = {0}, strSerial[INVENTORY_TOTAL * 8] = {0},
 		strVIPItem[MAX_SLOT_VIP_STORAGE * 8] = {0}, strVIPSerial[MAX_SLOT_VIP_STORAGE * 8] = {0}, strVIPItemTime[MAX_SLOT_VIP_STORAGE * 8],
 		strQuest[QUEST_ARRAY_SIZE], strQuestUse[100 * 6] = {0}, strRebStats[5] = {0}, strAchieveQuest[ACHIEVE_QUEST_ARRAY_SIZE], strItemTime[INVENTORY_TOTAL * 8];;
-
 
 	uint16  strAchieveQuestKill[ACHIEVE_QUEST_ARRAY_SIZE * 2];
 
@@ -816,7 +798,6 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 		uint16	sQuestID = *(uint16 *) (strQuest + index);
 		uint8	bQuestState = *(uint8  *) (strQuest + index + 2);
 		pUser->m_questMap.insert(std::make_pair(sQuestID, bQuestState));
-
 	}
 
 	// Start the Seed quest if it doesn't already exist.
@@ -842,7 +823,6 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 		QuestUseBufer >> pData->dCKills[3];
 
 		pUser->m_QuestMonMap.insert(std::make_pair(nQuestID, pData));
-
 	}
 
 	pUser->m_AchievequestMap.clear();
@@ -880,9 +860,7 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 			default:
 				break;
 			}
-
 		}
-
 
 		if (bQuestState == 2) {
 			if (pUser->AchieveLast3 == 0
@@ -894,7 +872,6 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 				pUser->AchieveLast2 = pUser->AchieveLast1;
 				pUser->AchieveLast1 = sAchieveQuestID;
 			}
-
 		}
 	}
 
@@ -903,19 +880,15 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 		uint16 bCount = strAchieveQuestKill[index + 2];
 		uint16 bCount1 = strAchieveQuestKill[index + 4];
 
-
 		if (sQuestID2 > 0) {
 			_ACHIEVE_QUEST * pAchieveQuest = new _ACHIEVE_QUEST;
-
 
 			pAchieveQuest->ID = sQuestID2;
 			pAchieveQuest->KillCount[0] = bCount;
 			pAchieveQuest->KillCount[1] = bCount1;
 
-
 			if (!pUser->m_bAchieveKillCount.PutData(pAchieveQuest->ID, pAchieveQuest))
 				delete pAchieveQuest;
-
 		}
 	}
 
@@ -935,7 +908,7 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 
 	UserRentalMap rentalData;
 
-	// Until this statement is cleaned up, 
+	// Until this statement is cleaned up,
 	// no other statements can be processed.
 	delete dbCommand.release();
 
@@ -1007,7 +980,6 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 			pItem->bFlag = ITEM_FLAG_DUPLICATE;
 	}
 
-
 	for (int a = 0; a < MAX_SLOT_VIP_STORAGE; a++) {
 		uint64 nSerialNum;
 		uint32 nItemID;
@@ -1017,7 +989,6 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 		VIPitemBuffer >> nItemID >> sDurability >> sCount;
 		VIPserialBuffer >> nSerialNum;
 		VIPitemTimeBuffer >> nItemTime;
-
 
 		_ITEM_TABLE *pTable = g_pMain->GetItemPtr(nItemID);
 		if (pTable == nullptr || sCount <= 0)
@@ -1059,7 +1030,6 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 
 		if (g_pMain->IsDuplicateItem(nItemID, nSerialNum))
 			pItem->bFlag = ITEM_FLAG_DUPLICATE;
-
 	}
 
 	// Clean up the rental data
@@ -1216,9 +1186,6 @@ bool CDBAgent::LoadPremiumServiceUser(string & strAccountID, CUser *pUser) {
 	if (!dbCommand->Execute(_T("{CALL LOAD_PREMIUM_SERVICE_USER(?,?)}")))
 		ReportSQLError(m_AccountDB->GetError());
 
-
-
-
 	uint16 count = 0;
 	do {
 		_PREMIUM_TYPE * pPremium = new _PREMIUM_TYPE;
@@ -1230,8 +1197,6 @@ bool CDBAgent::LoadPremiumServiceUser(string & strAccountID, CUser *pUser) {
 		count++;
 	} while (dbCommand->MoveNext());
 
-
-
 	// this is hardcoded because we don't really care about the other mode
 	if (pUser->PremiumID != 0)
 		pUser->m_bAccountStatus = 1; // normal premium with expiry time
@@ -1240,7 +1205,6 @@ bool CDBAgent::LoadPremiumServiceUser(string & strAccountID, CUser *pUser) {
 
 	return true;
 }
-
 
 bool CDBAgent::LoadSavedMagic(CUser *pUser) {
 	if (pUser == nullptr)
@@ -1341,7 +1305,6 @@ bool CDBAgent::ClearWebItemMall(CUser *pUser) {
 		return true;
 }
 
-
 bool CDBAgent::LoadWebItemMall(std::vector<_ITEM_DATA> & itemList, CUser *pUser) {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
@@ -1356,7 +1319,7 @@ bool CDBAgent::LoadWebItemMall(std::vector<_ITEM_DATA> & itemList, CUser *pUser)
 	if (dbCommand->hasData()) {
 		do {
 			_ITEM_DATA item;
-			dbCommand->FetchUInt32(2, item.nNum); // 1 is the account name, which we don't need to use unless we're logging	
+			dbCommand->FetchUInt32(2, item.nNum); // 1 is the account name, which we don't need to use unless we're logging
 			dbCommand->FetchUInt16(3, item.sCount);
 			dbCommand->FetchUInt32(5, item.nExpirationTime);
 			itemList.push_back(item);
@@ -1533,7 +1496,6 @@ bool CDBAgent::UpdateUser(string & strCharID, UserUpdateType type, CUser *pUser)
 
 	int index2 = 0;
 	foreach(itr, pUser->m_AchievequestMap) {
-
 		if (itr->first > 32000
 			|| itr->first < 0
 			|| itr->second == 0)
@@ -1560,9 +1522,7 @@ bool CDBAgent::UpdateUser(string & strCharID, UserUpdateType type, CUser *pUser)
 			AchieveQuestSize++;
 			index2 += 6;
 		}
-
 	}
-
 
 	ByteBuffer itemBuffer, serialBuffer, itemTimeBuffer, RebStatsBuffer, QuestBuffer;
 	ByteBuffer VIPitemBuffer, VIPserialBuffer, VIPitemTimeBuffer;
@@ -1604,7 +1564,6 @@ bool CDBAgent::UpdateUser(string & strCharID, UserUpdateType type, CUser *pUser)
 	RebStatsBuffer << pUser->GetRebStatBuff(STAT_STR) << pUser->GetRebStatBuff(STAT_STA)
 		<< pUser->GetRebStatBuff(STAT_DEX) << pUser->GetRebStatBuff(STAT_INT) << pUser->GetRebStatBuff(STAT_CHA);
 
-
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
 	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *) pUser->m_bstrSkill, sizeof(pUser->m_bstrSkill));
 	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *) itemBuffer.contents(), itemBuffer.size(), SQL_BINARY);
@@ -1622,7 +1581,7 @@ bool CDBAgent::UpdateUser(string & strCharID, UserUpdateType type, CUser *pUser)
 	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *) RebStatsBuffer.contents(), RebStatsBuffer.size(), SQL_BINARY);
 
 	if (!dbCommand->Execute(string_format(_T("{CALL UPDATE_USER_DATA("
-		"?, " // strCharID 
+		"?, " // strCharID
 		"%d, %d, %d, %d, %d, "		// nation, race, class, hair, rank
 		"%d, %d, %d, " I64FMTD ", %d, %d, "		// title, level,rebLevel, exp, loyalty, face
 		"%d, %d, %d, "				// city, knights, fame
@@ -1649,7 +1608,6 @@ bool CDBAgent::UpdateUser(string & strCharID, UserUpdateType type, CUser *pUser)
 		return false;
 	}
 
-
 	pUser->m_lastSaveTime = UNIXTIME;
 	pUser->m_lastBonusTime = UNIXTIME;
 	return true;
@@ -1662,7 +1620,6 @@ bool CDBAgent::UpdateWarehouseData(string & strAccountID, UserUpdateType type, C
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return false;
-
 
 	// This *should* be padded like the database field is (unnecessarily), but I want to see how MSSQL responds.
 	ByteBuffer itemBuffer, serialBuffer, itemTimeBuffer;
@@ -1693,7 +1650,6 @@ int8 CDBAgent::CreateAlliance(uint8 byType, uint16 shAlliancIndex, uint16 shKnig
 	if (dbCommand.get() == nullptr)
 		return bRet;
 
-
 	if (!dbCommand->Execute(string_format(_T("{CALL UPDATE_KNIGHTS_ALLIANCE(%d, %d, %d, %d, %d)}"), byType, shAlliancIndex, shKnightsIndex, byEmptyIndex, bySiegeFlag)))
 		ReportSQLError(m_GameDB->GetError());
 
@@ -1705,7 +1661,6 @@ int8 CDBAgent::InsertAlliance(uint8 byType, uint16 shAlliancIndex, uint16 shKnig
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return bRet;
-
 
 	if (!dbCommand->Execute(string_format(_T("{CALL UPDATE_KNIGHTS_ALLIANCE(%d, %d, %d, %d, %d)}"), byType, shAlliancIndex, shKnightsIndex, byEmptyIndex, bySiegeFlag)))
 		ReportSQLError(m_GameDB->GetError());
@@ -1719,7 +1674,6 @@ int8 CDBAgent::RemoveAlliance(uint8 byType, uint16 shAlliancIndex, uint16 shKnig
 	if (dbCommand.get() == nullptr)
 		return bRet;
 
-
 	if (!dbCommand->Execute(string_format(_T("{CALL UPDATE_KNIGHTS_ALLIANCE(%d, %d, %d, %d, %d)}"), byType, shAlliancIndex, shKnightsIndex, byEmptyIndex, bySiegeFlag)))
 		ReportSQLError(m_GameDB->GetError());
 
@@ -1731,7 +1685,6 @@ int8 CDBAgent::DestoryAlliance(uint8 byType, uint16 shAlliancIndex, uint16 shKni
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return bRet;
-
 
 	if (!dbCommand->Execute(string_format(_T("{CALL UPDATE_KNIGHTS_ALLIANCE(%d, %d, %d, %d, %d)}"), byType, shAlliancIndex, shKnightsIndex, byEmptyIndex, bySiegeFlag)))
 		ReportSQLError(m_GameDB->GetError());
@@ -1819,7 +1772,6 @@ void CDBAgent::UpdateVIPStorageMinute(std::string strUserID, uint32 VIPMinute) {
 
 	return;
 }
-
 
 uint16 CDBAgent::LoadKnightsAllMembers(uint16 sClanID, Packet & result) {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
@@ -1957,11 +1909,10 @@ void CKnightsManager::ReqDonateNP(CUser *pUser, Packet & pkt) {
 	if (pKnights == nullptr)
 		return;
 
-	// Take player's donated NP. Don't affect monthly NP. 
+	// Take player's donated NP. Don't affect monthly NP.
 	if (g_DBAgent.DonateClanPoints(pUser, amountNP)) {
 		// Update the user's donated NP
 		CKnightsManager::AddUserDonatedNPinGame(pUser->GetClanID(), pUser, amountNP);
-
 
 		// Take the NP from the user and update the client.
 		pUser->m_iLoyalty -= amountNP;
@@ -2041,8 +1992,6 @@ void CDBAgent::RefundNP(string & strUserID, uint32 nRefundNP) {
 		ReportSQLError(m_GameDB->GetError());
 }
 
-
-
 /**
 * @brief	Change authority is logged out character.
 *
@@ -2090,7 +2039,6 @@ void CDBAgent::UpdateClanNotice(uint16 sClanID, std::string & strClanNotice) {
 		ReportSQLError(m_GameDB->GetError());
 }
 
-
 NameChangeOpcode CDBAgent::UpdateCharacterName(std::string & strAccountID, std::string & strUserID, std::string & strNewUserID) {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
@@ -2108,7 +2056,6 @@ NameChangeOpcode CDBAgent::UpdateCharacterName(std::string & strAccountID, std::
 
 	return NameChangeOpcode(sRet);
 }
-
 
 ClanNameChangeOpcode CDBAgent::UpdateClanName(std::string & strUserID, uint16 sClanID, std::string & strNewKnightsID) {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
@@ -2147,7 +2094,6 @@ void CDBAgent::UpdateCape(uint16 sClanID, uint16 sCapeID, uint8 r, uint8 g, uint
 		sCapeID, r, g, b, sClanID)))
 		ReportSQLError(m_GameDB->GetError());
 }
-
 
 void CDBAgent::UpdatePremiumType(uint8 bType, std::string StrAccountID) {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
@@ -2206,7 +2152,7 @@ void CDBAgent::UpdateConCurrentUserCount(int nServerNo, int nZoneNo, int nCount)
 		ReportSQLError(m_AccountDB->GetError());
 }
 
-// This is what everything says it should do, 
+// This is what everything says it should do,
 // but the client doesn't seem to care if it's over 1
 uint8 CDBAgent::GetUnreadLetterCount(string & strCharID) {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
@@ -2274,7 +2220,6 @@ bool CDBAgent::GetLetterList(string & strCharID, Packet & result, bool bNewLette
 
 		result << nDate // date (yy*10000 + mm*100 + dd)
 			<< uint8(sDaysRemaining) << uint8(1);
-
 	} while (dbCommand->MoveNext());
 
 	result.put(offset, bCount); // set count now that the result set's been read
@@ -2467,10 +2412,6 @@ bool CDBAgent::GetElectionResult(uint8 byNation, CKingSystem *KingSystem) {
 	if (!dbCommand->hasData())
 		return false;
 
-
-
-
-
 	dbCommand->FetchString(1, KingSystem->m_strOldKingName);
 	dbCommand->FetchString(2, KingSystem->m_strKingName);
 	dbCommand->FetchUInt16(3, KingSystem->winPercent);
@@ -2662,7 +2603,6 @@ int8 CDBAgent::NationTransfer(std::string strAccountID, uint16 Race1, uint16 Rac
 	return bRet;
 }
 
-
 int8 CDBAgent::YanChar(std::string strAccountID) {
 	int8 bRet = 0;
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
@@ -2677,7 +2617,6 @@ int8 CDBAgent::YanChar(std::string strAccountID) {
 
 	return bRet;
 }
-
 
 int8 CDBAgent::YanCharClan(std::string strAccountID) {
 	int8 bRet = 0;
@@ -2711,7 +2650,6 @@ void CDBAgent::UpdateAccountKnightCash(string & strAccountID, uint32 KnightCash)
 }
 
 void CDBAgent::GetClanUserData(uint16 sClanID, _KNIGHTS_USER & p) {
-
 	_KNIGHTS_USER * pUser = &p;
 
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
@@ -2736,9 +2674,7 @@ void CDBAgent::GetClanUserData(uint16 sClanID, _KNIGHTS_USER & p) {
 	dbCommand->FetchUInt32(i++, pUser->m_lastLogined);
 
 	return;
-
 }
-
 
 void CDBAgent::UpdateSiege(int16 m_sCastleIndex, int16 m_sMasterKnights, int16 m_bySiegeType, int16 m_byWarDay, int16 m_byWarTime, int16 m_byWarMinute) {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
@@ -2836,4 +2772,3 @@ void CDBAgent::LoadRepurchase(CUser *pUser) {
 		} while (dbCommand->MoveNext());
 	}
 }
-

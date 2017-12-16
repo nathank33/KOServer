@@ -37,7 +37,6 @@ class CDBAgent {
 public:
 	CDBAgent();
 
-
 	bool Startup(bool bMarsEnabled,
 		tstring & strAccountDSN, tstring & strAccountUID, tstring & strAccountPWD,
 		tstring & strGameDSN, tstring & strGameUID, tstring & strGamePWD);
@@ -47,7 +46,6 @@ public:
 		tstring & strGameDSN, tstring & strGameUID, tstring & strGamePWD);
 
 	void ReportSQLError(OdbcError *pError);
-
 
 	int8 AccountLogin(std::string & strAccountID, std::string & strPasswd);
 	uint8 NationSelect(std::string & strAccountID, uint8 bNation);
@@ -125,7 +123,6 @@ public:
 	void InsertRepurchase(uint32 nItemID, time_t RepTime, uint64 nSerial, CUser *pUser);
 	void DeleteRepurchase(uint32 nItemID, time_t RepTime, CUser *pUser);
 	void LoadRepurchase(CUser *pUser);
-
 
 	void UpdateConCurrentUserCount(int nServerNo, int nZoneNo, int nCount);
 

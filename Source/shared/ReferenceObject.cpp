@@ -1,19 +1,16 @@
 #include "stdafx.h"
 #include "ReferenceObject.h"
 
-ReferenceObject::ReferenceObject() 
-	: m_refCount(0)
-{
+ReferenceObject::ReferenceObject()
+	: m_refCount(0) {
 	IncRef();
 }
 
-void ReferenceObject::IncRef() 
-{
+void ReferenceObject::IncRef() {
 	++m_refCount;
 }
 
-void ReferenceObject::DecRef()
-{
+void ReferenceObject::DecRef() {
 	if (m_refCount.decrement() == 0)
 		delete this;
 }

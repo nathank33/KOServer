@@ -29,13 +29,12 @@ void CUser::AchieveTimeQuest(Packet & pkt) {
 		goto fail_return2;
 	}
 
-
 	if (m_sChallangeAchieveID > 0 && m_sChallangeAchieveID != RealQuestID) {
 		ErrorCode = -2;
 		goto fail_return2;
 	}
 
-	// 37237 There's no ongoing achievement 7 -1 
+	// 37237 There's no ongoing achievement 7 -1
 	// 37238 This does not match the achievement you are challenging. 7 -2
 	// 37239 You already have another ongoing achievement. 6 -1
 	// 37240 Selected Achievement Error 6 -2
@@ -56,8 +55,6 @@ fail_return2:
 }
 
 void CUser::HandleAchieve(Packet & pkt) {
-
-
 	auto OpCode = pkt.read<uint8>();
 
 	switch (OpCode) {
@@ -222,7 +219,6 @@ void CUser::ChangeSkillTitle(Packet & pkt) {
 	uint16 UnKnow1 = 0, Title = 0;
 	pkt >> UnKnow1 >> Title;
 
-
 	auto pTitleData = g_pMain->GetAchieveTitlePointer(Title);
 	if (!pTitleData
 		|| m_AchievequestMap[pTitleData->UnKnow1] != 2)
@@ -301,7 +297,6 @@ void CUser::AchieveType1(uint8 pType) {
 			m_bAchieveKillCount.PutData(pAchieveQuest->ID, pAchieveQuest);
 		}
 
-
 		if ((pAchieveMain->ZoneID == ZONE_KARUS && (GetZoneID() != GetNation()))
 			|| (pAchieveMain->ZoneID == ZONE_KARUS_ESLANT && (GetZoneID() != GetNation() + 10))
 			|| (pAchieveMain->ZoneID != 0 && pAchieveMain->ZoneID != GetZoneID()))
@@ -331,7 +326,6 @@ void CUser::AchieveType1(uint8 pType) {
 			continue;
 		}
 
-
 		pAchieveQuest->KillCount[0]++;
 
 		if (pAchieveWarData->Data == pAchieveQuest->KillCount[0]) // Görevi bitirme iþlemleri
@@ -360,8 +354,6 @@ void CUser::AchieveType1(uint8 pType) {
 				break;
 			}
 
-
-
 			if (AchieveLast3 == 0
 				&& AchieveLast2 == 0
 				&& AchieveLast1 == 0)
@@ -371,9 +363,7 @@ void CUser::AchieveType1(uint8 pType) {
 				AchieveLast2 = AchieveLast1;
 				AchieveLast1 = pAchieveMain->ID;
 			}
-
 		}
-
 	}
 }
 
@@ -404,7 +394,6 @@ void CUser::AchieveType2(CNpc * pNpc) {
 		if (pMonsterData == nullptr)
 			continue;
 
-
 		_ACHIEVE_QUEST * pAchieveQuest = m_bAchieveKillCount.GetData(pMainData->ID);
 
 		if (pAchieveQuest == nullptr) {
@@ -416,7 +405,6 @@ void CUser::AchieveType2(CNpc * pNpc) {
 		}
 
 		for (size_t i = 0; i < 2; i++) {
-
 			if (pAchieveQuest->KillCount[i] == pMonsterData->MonsterCount[i])
 				continue;
 
@@ -428,7 +416,6 @@ void CUser::AchieveType2(CNpc * pNpc) {
 					pAchieveQuest->KillCount[i]++;
 				} else
 					pAchieveQuest->KillCount[i]++;
-
 			}
 		}
 
@@ -438,7 +425,6 @@ void CUser::AchieveType2(CNpc * pNpc) {
 			m_AchievequestMap[pMonsterData->ID] = 2;// görevi bitir
 			SendAchieveStatus(pMonsterData->ID, 2);
 			m_iAchievementPoint += pMainData->Point;
-
 
 			switch (pMainData->TabIndex) {
 			case 0:
@@ -460,7 +446,6 @@ void CUser::AchieveType2(CNpc * pNpc) {
 				break;
 			}
 
-
 			if (AchieveLast3 == 0
 				&& AchieveLast2 == 0
 				&& AchieveLast1 == 0)
@@ -470,19 +455,16 @@ void CUser::AchieveType2(CNpc * pNpc) {
 				AchieveLast2 = AchieveLast1;
 				AchieveLast1 = pMainData->ID;
 			}
-
 		}
 	}
 }
 
 /// ACHIEVE_COM
 void CUser::AchieveType3() {
-
 }
 
 /// ACHIEVE_NORMAL
 void CUser::AchieveType4(uint8 pType) {
-
 	/*
 	type1 is king
 	type2 Achieve Contribution x NP
@@ -511,16 +493,13 @@ void CUser::AchieveType4(uint8 pType) {
 			m_bAchieveKillCount.PutData(pAchieveQuest->ID, pAchieveQuest);
 		}
 
-
 		if ((pAchieveMain->ZoneID == ZONE_KARUS && (GetZoneID() != GetNation()))
 			|| (pAchieveMain->ZoneID == ZONE_KARUS_ESLANT && (GetZoneID() != GetNation() + 10))
 			|| (pAchieveMain->ZoneID != 0 && pAchieveMain->ZoneID != GetZoneID()))
 			continue;
 
-
 		if (pAchieveQuest->KillCount[0] == 0)
 			m_AchievequestMap[pAchieveNormalData->ID] = 1;
-
 
 		CKnights * pKnights = g_pMain->GetClanPtr(GetClanID());
 		_KNIGHTS_SIEGE_WARFARE * pSiegeKnights = g_pMain->GetSiegeMasterKnightsPtr(1);
@@ -569,7 +548,6 @@ void CUser::AchieveType4(uint8 pType) {
 			break;
 		}
 
-
 		if (pAchieveNormalData->UnKnow2 == pAchieveQuest->KillCount[0]) // Görevi bitirme iþlemleri
 		{
 			SendAchieveStatus(pAchieveNormalData->ID, 2);
@@ -596,7 +574,6 @@ void CUser::AchieveType4(uint8 pType) {
 				break;
 			}
 
-
 			if (AchieveLast3 == 0
 				&& AchieveLast2 == 0
 				&& AchieveLast1 == 0)
@@ -606,9 +583,7 @@ void CUser::AchieveType4(uint8 pType) {
 				AchieveLast2 = AchieveLast1;
 				AchieveLast1 = pAchieveMain->ID;
 			}
-
 		}
-
 	}
 }
 

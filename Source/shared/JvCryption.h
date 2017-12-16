@@ -4,11 +4,10 @@
 
 extern "C"
 {
-	#include "crc32.h"
+#include "crc32.h"
 }
 
-class CJvCryption
-{
+class CJvCryption {
 private:
 	uint64 m_public_key, m_tkey;
 
@@ -22,6 +21,6 @@ public:
 
 	void JvEncryptionFast(int len, uint8 *datain, uint8 *dataout);
 	INLINE void JvDecryptionFast(int len, uint8 *datain, uint8 *dataout) { JvEncryptionFast(len, datain, dataout); };
-	
+
 	int JvDecryptionWithCRC32(int len, uint8 *datain, uint8 *dataout);
 };

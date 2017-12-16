@@ -222,7 +222,7 @@ bool CLuaEngine::ExecuteScript(CUser * pUser, CNpc * pNpc, int32 nEventID, int8 
 		// Release the read lock (we're not reading anymore)
 		m_lock->ReleaseReadLock();
 
-		// Attempt to compile 
+		// Attempt to compile
 		BytecodeBuffer bytecode;
 		bytecode.reserve(LUA_SCRIPT_BUFFER_SIZE);
 		if (!SelectAvailableScript()->CompileScript(szPath.c_str(), bytecode)) {
@@ -340,7 +340,6 @@ bool CLuaScript::ExecuteScript(CUser * pUser, CNpc * pNpc, int32 nEventID, int8 
 		return false;
 	}
 
-
 	lua_tsetglobal(m_luaState, "UID", pUser->GetID());
 	lua_tsetglobal(m_luaState, "STEP", bSelectedReward);
 	lua_tsetglobal(m_luaState, "EVENT", nEventID);
@@ -401,7 +400,6 @@ bool CLuaScript::ExecuteScript(CUser * pUser, CNpc * pNpc, int32 nEventID, int8 
 		printf("ERROR: [%s] The following error was provided.\n", filename);
 		printf("MESSAGE: %s\n", lua_to<const char *>(m_luaState, -1));
 		printf("-\n");
-
 	}
 
 	lua_settop(m_luaState, 0);
@@ -439,9 +437,6 @@ void CLuaScript::RetrieveLoadError(int err, const char * filename) {
 		printf("ERROR: %s", lua_to<const char *>(m_luaState, -1));
 	}
 }
-
-
-
 
 /**
 * @brief	Waits for & shuts down the current Lua script.

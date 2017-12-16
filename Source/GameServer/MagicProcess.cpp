@@ -3,7 +3,6 @@
 #include "MagicInstance.h"
 #include "Map.h"
 
-
 #if defined(GAMESERVER)
 #	include "GameServerDlg.h"
 #	include "../shared/DateTime.h"
@@ -105,8 +104,6 @@ void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/) {
 
 	/*if(pSkillCaster != nullptr)
 	printf("Target : %s, sAmount: %d\n",pSkillCaster->GetName().c_str(),pSkillTarget->m_bSpeedAmount);*/
-
-
 }
 #endif
 
@@ -649,7 +646,7 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 	case BUFF_TYPE_INVISIBILITY_POTION:	// "Unidentified potion"
 		break;
 
-	case BUFF_TYPE_GODS_BLESSING:		// Increases your defense/max HP 
+	case BUFF_TYPE_GODS_BLESSING:		// Increases your defense/max HP
 		break;
 
 	case BUFF_TYPE_HELP_COMPENSATION:	// Compensation for using the help system (to help, ask for help, both?)
@@ -1093,7 +1090,7 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 	case BUFF_TYPE_INVISIBILITY_POTION:	// "Unidentified potion"
 		break;
 
-	case BUFF_TYPE_GODS_BLESSING:		// Increases your defense/max HP 
+	case BUFF_TYPE_GODS_BLESSING:		// Increases your defense/max HP
 		break;
 
 	case BUFF_TYPE_HELP_COMPENSATION:	// Compensation for using the help system (to help, ask for help, both?)
@@ -1110,8 +1107,6 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 		}
 
 		TO_USER(pTarget)->SetUserAbility();
-
-
 
 		if (bRemoveSavedMagic) {
 			Packet result(WIZ_MAGIC_PROCESS, uint8(MAGIC_DURATION_EXPIRED));
@@ -1299,14 +1294,13 @@ bool CMagicProcess::IsBuff(_MAGIC_TYPE4 * pType) {
 		return false;
 
 	case BUFF_TYPE_INVISIBILITY_POTION:	// "Unidentified potion", it debuffs, but hides in the interest of the user. Needs to be a buff.
-	case BUFF_TYPE_GODS_BLESSING:		// Increases your defense/max HP 
+	case BUFF_TYPE_GODS_BLESSING:		// Increases your defense/max HP
 	case BUFF_TYPE_HELP_COMPENSATION:	// Compensation for using the help system (to help, ask for help, both?)
 		return true;
 
 		// TODO: Identify and name these.
 	case BUFF_TYPE_FISHING: // DC/War/Exp Flash - grants additional NP/XP
 		return true;
-
 	}
 
 	printf("WARNING: Unhandled buff type (%d) for skill %d, assuming it's a debuff.\n", pType->bBuffType, pType->iNum);

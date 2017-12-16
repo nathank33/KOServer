@@ -77,7 +77,6 @@ public:
 		if (pMap != nullptr)
 			pMap->SetTariff(pData->m_nTerritoryTariff);
 
-
 		/* Names are so hard to remember. */
 		_dbCommand->FetchString(i++, pData->m_strKingName);
 		_dbCommand->FetchString(i++, pData->m_strImRequestID);

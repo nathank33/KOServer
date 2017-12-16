@@ -41,7 +41,6 @@ public:
 		for (int j = 0; j < ITEMS_IN_SPECIAL_EXCHANGE_GROUP; j++) {
 			_dbCommand->FetchUInt32(i++, pData->nExchangeItemNum[j]);
 			_dbCommand->FetchUInt16(i++, pData->sExchangeItemCount[j]);
-
 		}
 
 		if (!m_pMap->PutData(pData->nIndex, pData))

@@ -71,7 +71,6 @@ public:
 
 	void GetNpcInfos(Packet & pkt, CUser* pUser = nullptr);
 
-
 	virtual bool isAlive() { return m_pNpc->isAlive(); };
 	virtual void GetInOut(Packet& result, uint8 bType);
 	virtual void AddToRegion(int16 new_region_x, int16 new_region_z);

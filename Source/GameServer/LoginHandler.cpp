@@ -38,7 +38,6 @@ void CUser::LoginProcess(Packet & pkt) {
 	result << strPasswd;
 	m_strAccountID = strAccountID;
 
-
 	g_pMain->AddDatabaseRequest(result, this);
 	return;
 

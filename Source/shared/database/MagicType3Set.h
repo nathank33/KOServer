@@ -19,7 +19,6 @@ public:
 		_dbCommand->FetchByte(6, pData->bDuration);
 		_dbCommand->FetchByte(7, pData->bAttribute);
 
-
 		if (!m_pMap->PutData(pData->iNum, pData))
 			delete pData;
 

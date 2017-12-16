@@ -38,7 +38,7 @@ typedef	std::map<uint32, time_t>			UserSavedMagicMap;
 #define PLAYER_TRAINING_INTERVAL 15
 // Time for Check Premium Time
 #define	PREMIUM_TIME_CHECK	(1 * MINUTE)
-// time (in seconds) to verifi the User items 
+// time (in seconds) to verifi the User items
 #define PLAYER_CONF_INTERVAL	(2 * 60)
 
 enum GameState {
@@ -77,11 +77,11 @@ enum WarpListResponse {
 	WarpListNotDuringCSW = 3,  // "You cannot enter during the Castle Siege War."
 	WarpListNotDuringWar = 4,  // "You cannot enter during the Lunar War."
 	WarpListNeedNP = 5,  // "You cannot enter when you have 0 national points."
-	WarpListWrongLevelDLW = 6,  // "Only characters with level 30~50 can enter." (dialog) 
-	WarpListDoNotQualify = 7,  // "You can not enter because you do not qualify." (dialog) 
-	WarpListRecentlyTraded = 8,  // "You can't teleport for 2 minutes after trading." (dialog) 
-	WarpListArenaFull = 9,  // "Arena Server is full to capacity. Please try again later." (dialog) 
-	WarpListFinished7KeysQuest = 10, // "You can't enter because you completed Guardian of 7 Keys quest." (dialog) 
+	WarpListWrongLevelDLW = 6,  // "Only characters with level 30~50 can enter." (dialog)
+	WarpListDoNotQualify = 7,  // "You can not enter because you do not qualify." (dialog)
+	WarpListRecentlyTraded = 8,  // "You can't teleport for 2 minutes after trading." (dialog)
+	WarpListArenaFull = 9,  // "Arena Server is full to capacity. Please try again later." (dialog)
+	WarpListFinished7KeysQuest = 10, // "You can't enter because you completed Guardian of 7 Keys quest." (dialog)
 };
 
 enum TransformationType {
@@ -90,7 +90,6 @@ enum TransformationType {
 	TransformationNPC,
 	TransformationSiege
 };
-
 
 enum TeamColour {
 	TeamColourNone = 0,
@@ -118,7 +117,6 @@ class CGameServerDlg;
 class CUser : public Unit, public KOSocket {
 public:
 
-
 	virtual uint16 GetID() { return GetSocketID(); }
 
 	std::string & GetAccountName() { return m_strAccountID; }
@@ -137,7 +135,6 @@ public:
 	uint8 iguardkey;
 	uint8 iguard2;
 	uint8 iguard2count;
-
 
 	time_t  m_tBorderCapure;
 	uint32  m_pktcount;
@@ -205,10 +202,6 @@ public:
 
 	AchieveKillMap  m_bAchieveKillCount;
 
-
-
-
-
 	uint32	m_iMonsterDefeatedCount, m_iUserDefeatedCount, m_iUserDeathCount, m_iAchievementPoint;
 
 	uint16	AchieveNormalCount, AchieveQuestCount, AchieveWarCount, AchieveAdventureCount,
@@ -226,7 +219,6 @@ public:
 	std::string		VIPStorePassword;
 	uint8			VIPStoreFalseTrying;
 	bool			VIPStoreActive;
-
 
 	time_t	m_lastStaminaTime;
 	time_t	m_lastTrainingTime;
@@ -255,7 +247,7 @@ public:
 	int16	m_sRivalID;			// rival's session ID
 	time_t	m_tRivalExpiryTime;	// time when the rivalry ends
 
-	// Anger gauge system 
+	// Anger gauge system
 	uint8	m_byAngerGauge; // values range from 0-5
 
 	// Magic System Cooldown checks
@@ -345,11 +337,10 @@ public:
 
 	ItemList	m_ExchangeItemList;
 
-
 	bool	m_bBlockPrivateChat;
 	short	m_sPrivateChatUser;
 
-	time_t	m_tHPLastTimeNormal;					// For Automatic HP recovery. 
+	time_t	m_tHPLastTimeNormal;					// For Automatic HP recovery.
 	time_t	m_tHPStartTimeNormal;
 	short	m_bHPAmountNormal;
 	uint8	m_bHPDurationNormal;
@@ -683,7 +674,6 @@ public:
 	INLINE _ITEM_DATA * GetItem(uint8 pos) {
 		return &m_sItemArray[pos];
 	}
-
 
 	INLINE _ITEM_DATA * GetItembySerial(uint64 nSerial) {
 		for (int pos = SLOT_MAX; pos < (SLOT_MAX + HAVE_MAX); pos++) {
@@ -1226,10 +1216,8 @@ public:
 
 	// Premium Switching
 
-
 	typedef	CSTLMap	<_PREMIUM_TYPE>			PremiumArray;
 	PremiumArray		PremiumList;
-
 
 	void PremiumSwitchHandle(Packet & pkt);
 
@@ -1237,7 +1225,6 @@ public:
 	time_t	PremiumChangeTime;
 	uint8	m_bPremiumType;
 	uint16	m_sPremiumTime;
-
 
 	void GivePremium(uint8 bPremiumType, uint16 sPremiumTime);
 	void SendPremiumInfo();
@@ -1300,7 +1287,6 @@ public:
 
 	// Juraid Join
 	void TempleEventJoin();
-
 
 	bool PromoteUserNovice();
 	bool PromoteUser();
@@ -1521,12 +1507,10 @@ public:
 		if (pUser != nullptr) {
 			LUA_NO_RETURN(pUser->V3_QuestShowMap(LUA_ARG_OPTIONAL(uint32, pUser->m_nQuestHelperID, 2))); // quest helper ID
 		} else {
-
 			printf("Sikkinti vermeye caliisiyorlar showmap\n");
 			return 1;
 		}
 	}
-
 
 	DECLARE_LUA_FUNCTION(CountMonsterQuestSub) {
 		LUA_RETURN(LUA_GET_INSTANCE()->V3_QuestCheckMonsterCount(LUA_ARG(uint16, 2), LUA_ARG_OPTIONAL(uint8, 1, 3)));
@@ -1542,7 +1526,6 @@ public:
 		int32 nTextID[8];
 
 		if (pUser != nullptr) {
-
 			foreach_array(i, nTextID)
 				nTextID[i] = LUA_ARG_OPTIONAL(int32, -1, arg++);
 

@@ -4,8 +4,6 @@
 #include "KingSystem.h"
 #include "DBAgent.h"
 
-
-
 extern CDBAgent g_DBAgent;
 
 using std::string;
@@ -141,7 +139,6 @@ uint32 THREADCALL DatabaseThread::ThreadProc(void * lpParam) {
 	return 0;
 }
 
-
 void CUser::ReqAccountLogIn(Packet & pkt) {
 	string strPasswd;
 	pkt >> strPasswd;
@@ -185,7 +182,6 @@ void CUser::ReqAllCharInfo(Packet & pkt) {
 }
 
 void CUser::ReqChangeHair(Packet & pkt) {
-
 	Packet result(WIZ_CHANGE_HAIR);
 	string strUserID;
 	uint32 nHair;
@@ -195,9 +191,7 @@ void CUser::ReqChangeHair(Packet & pkt) {
 
 	pkt.put(2, g_DBAgent.ChangeHair(m_strAccountID, strUserID, bOpcode, bFace, nHair));
 	Send(&result);
-
 }
-
 
 void CUser::ReqCreateNewChar(Packet & pkt) {
 	string strCharID;
@@ -211,7 +205,6 @@ void CUser::ReqCreateNewChar(Packet & pkt) {
 
 	Send(&result);
 }
-
 
 void CUser::ReqSelectCharacter(Packet & pkt) {
 	Packet result(WIZ_SEL_CHAR);
@@ -372,12 +365,10 @@ void CUser::ReqChangeName(Packet & pkt) {
 			// Take the scroll...
 			RobItem(ITEM_SCROLL_OF_IDENTITY);
 
-			// Remove user from others' view & make them reappear again so 
+			// Remove user from others' view & make them reappear again so
 			// the name can be updated for those currently in range.
 			UserInOut(INOUT_OUT);
 			UserInOut(INOUT_IN);
-
-
 		}
 		SendNameChange(response);
 		break;
@@ -404,15 +395,13 @@ void CUser::ReqChangeName(Packet & pkt) {
 			result2 << uint8(ClanNameChangeSuccess) << strKnightsName;
 			pKnights->Send(&result2);
 			return;
-			// Remove user from others' view & make them reappear again so 
+			// Remove user from others' view & make them reappear again so
 			// the name can be updated for those currently in range.
 		}
 		SendKnightsNameChange(responseClan);
 		break;
 	}
-
 }
-
 
 /**
 * @brief	Handles clan cape update requests.
@@ -430,7 +419,6 @@ void CUser::ReqChangeCape(Packet & pkt) {
 void CUser::ReqUserLogOut() {
 	if (m_strUserID.empty() || m_strAccountID.empty())
 		return;
-
 
 	PlayerRankingProcess(GetZoneID(), true);
 	g_pMain->KillNpc(GetSocketID());
@@ -543,13 +531,11 @@ void CKnightsManager::ReqKnightsAllianceCreate(CUser *pUser, Packet & pkt) {
 
 	g_pMain->m_KnightsAllianceArray.PutData(pAlliance->sMainAllianceKnights, pAlliance);
 
-
 	result << uint8(1) << UserClanID;
 	if (pUser->isInGame())
 		pUser->Send(&result);
 	g_pMain->ReloadKnightAndUserRanks();
 }
-
 
 void CKnightsManager::ReqKnightsAllianceRequest(CUser *pUser, Packet & pkt) {
 	if (pUser == nullptr)
@@ -591,8 +577,6 @@ void CKnightsManager::ReqKnightsAllianceRequest(CUser *pUser, Packet & pkt) {
 	if (pUser->isInGame())
 		pUser->Send(&result);
 	g_pMain->ReloadKnightAndUserRanks();
-
-
 }
 
 void CKnightsManager::ReqKnightsAllianceRemove(CUser *pUser, Packet & pkt) {
@@ -738,7 +722,6 @@ void CKnightsManager::ReqCreateKnights(CUser *pUser, Packet & pkt) {
 	pKnights->m_strName = strKnightsName;
 	pKnights->m_strChief = pUser->GetName();
 
-
 	pUser->GoldLose(CLAN_COIN_REQUIREMENT, false);
 
 	pKnights->m_byGrade = g_pMain->GetKnightsGrade(pUser->GetLoyalty());
@@ -751,7 +734,6 @@ void CKnightsManager::ReqCreateKnights(CUser *pUser, Packet & pkt) {
 	// CKnights::AddUser() will default it to TRAINEE, so it needs to be set afterwards.
 	pUser->m_bFame = CHIEF;
 
-
 	result << uint8(1) << pUser->GetSocketID()
 		<< sClanID << strKnightsName
 		<< pKnights->m_byGrade << pKnights->m_byRanking
@@ -759,7 +741,6 @@ void CKnightsManager::ReqCreateKnights(CUser *pUser, Packet & pkt) {
 
 	pUser->SendToRegion(&result, nullptr, pUser->GetEventRoom());
 	g_DBAgent.UpdateUser(pUser->GetName(), UPDATE_LOGOUT, pUser);
-
 
 	if (g_pMain->RoyalG1) {
 		CKnightsManager::UpdateKnightsGrade(sClanID, ClanTypePromoted);
@@ -832,7 +813,7 @@ void CKnightsManager::ReqAllKnightsMember(CUser *pUser, Packet & pkt) {
 
 	result << uint8(1);
 	nOffset = result.wpos(); // store offset
-	result << uint16(0) // placeholder for packet length 
+	result << uint16(0) // placeholder for packet length
 		<< uint16(0) // placeholder for user count
 		<< pKnights->m_strClanNotice;
 

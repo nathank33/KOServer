@@ -29,7 +29,6 @@ public:
 		else
 			m_pMap->insert(std::make_pair(pData->m_Serial, pData));
 
-
 		return true;
 	}
 

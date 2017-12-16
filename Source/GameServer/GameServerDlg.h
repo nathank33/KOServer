@@ -13,7 +13,6 @@ class C3DMap;
 class CUser;
 class CBot;
 
-
 #include "LoadServerData.h"
 
 #include "User.h"
@@ -169,7 +168,6 @@ public:
 	void	ArdreamEventZoneClose();
 	void	CZEventZoneClose();
 	void	CheckEventTime();
-
 
 	time_t	m_lastBlessTime;
 	time_t	m_lastBorderTime;
@@ -400,7 +398,7 @@ public:
 	// Adds the character name & session to a hashmap (when in-game)
 	void AddCharacterName(CUser *pSession);
 
-	// Removes an existing character name/session from the hashmap, replaces the character's name 
+	// Removes an existing character name/session from the hashmap, replaces the character's name
 	// and reinserts the session with the new name into the hashmap.
 	void ReplaceCharacterName(CUser *pSession, std::string & strNewUserID);
 
@@ -587,7 +585,6 @@ public:
 	uint8	m_nJuraidMountainMAXLEVEL[JURAD_MOUNTAIN_EVENT_COUNT];
 	uint8	m_nJuraidMountainMINLEVEL[JURAD_MOUNTAIN_EVENT_COUNT];
 
-
 	uint32	m_nChaosPrizeWonItemNo1[CHAOS_EVENT_COUNT];
 	uint32	m_nChaosPrizeWonItemNo2[CHAOS_EVENT_COUNT];
 	uint32	m_nChaosPrizeWonItemNo3[CHAOS_EVENT_COUNT];
@@ -600,7 +597,6 @@ public:
 	uint32	m_nChaosPrizeLoserLoyalty[CHAOS_EVENT_COUNT];
 	uint32	m_nChaosPrizeLoserItem[CHAOS_EVENT_COUNT];
 	uint32	m_nChaosPrizeLoserExp[CHAOS_EVENT_COUNT];
-
 
 	uint8	m_nPVPMonumentNation[MAX_ZONE_ID];
 	uint8	m_nEventMonumentNation[MAX_ZONE_ID];
@@ -631,7 +627,6 @@ public:
 	int TotalGoldenMiningExchangeRate;
 	uint32 bRandArrayNormalMattock[10000];
 	uint32 bRandArrayGoldenMattock[10000];
-
 
 	// National Points Settings
 	int m_Loyalty_Ardream_Source;
@@ -707,7 +702,6 @@ public:
 		m_characterNameLock, m_BotcharacterNameLock,
 		m_questNpcLock;
 
-
 	bool m_IsDupeUpdateProcess;
 	bool m_IlegalItemsUpdateProcess;
 
@@ -716,7 +710,6 @@ public:
 	uint8 m_byKingWeatherEvent_Day;
 	uint8 m_byKingWeatherEvent_Hour;
 	uint8 m_byKingWeatherEvent_Minute;
-
 
 	// Military Camps
 	uint8 KarusBaseMilitaryCampCount, ElmoradBaseMilitaryCampCount, KarusEslantMilitaryCampCount, ElmoradEslantMilitaryCampCount, MoradonMilitaryCampCount;
@@ -729,7 +722,6 @@ public:
 	int m_byExpx2, m_byExpx10, m_byExpx50, m_byExpx100, m_byExpx500, m_byExpx1000, m_byExpTotal;
 	// Gold 2, Gold 10 , Gold 50, Gold 100, Gold 500, Gold 1000, Gold TOTAL
 	int m_byGoldx2, m_byGoldx10, m_byGoldx50, m_byGoldx100, m_byGoldx500, m_byGoldx1000, m_byGoldTotal;
-
 
 	INLINE CLuaEngine * GetLuaEngine() { return &m_luaEngine; }
 

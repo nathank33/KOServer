@@ -29,7 +29,6 @@ void CUser::Attack(Packet & pkt) {
 	pTarget = g_pMain->GetUnitPtr(tid);
 	bResult = ATTACK_FAIL;
 
-
 	if (pTarget != nullptr
 		&& isInAttackRange(pTarget)
 		&& CanAttack(pTarget)) {
@@ -50,7 +49,6 @@ void CUser::Attack(Packet & pkt) {
 			damage = GetDamage(pTarget);
 
 			if (pTarget->GetID() > NPC_BAND) {
-
 				switch (TO_NPC(pTarget)->GetType()) {
 				case NPC_FOSSIL:
 					damage = 1;
@@ -186,8 +184,6 @@ void CUser::Regene(uint8 regene_type, uint32 magicid /*= 0*/) {
 					x = sx;
 					z = sz;
 				}
-
-
 			}
 			// For all else, just grab the start position (/town coordinates) from the START_POSITION table.
 			else {
@@ -210,10 +206,10 @@ void CUser::Regene(uint8 regene_type, uint32 magicid /*= 0*/) {
 		if (pType == nullptr)
 			return;
 
-		MSpChange(-m_iMaxMp); // reset us to 0 MP. 
+		MSpChange(-m_iMaxMp); // reset us to 0 MP.
 
 		if (m_sWhoKilledMe == -1)
-			ExpChange((m_iLostExp * pType->bExpRecover) / 100); // Restore 
+			ExpChange((m_iLostExp * pType->bExpRecover) / 100); // Restore
 
 		m_bResHpType = USER_STANDING;
 		m_bRegeneType = REGENE_MAGIC;

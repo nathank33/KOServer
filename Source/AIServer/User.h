@@ -49,7 +49,7 @@ public:
 	float			m_fWill_x;			// 다음 X 좌표
 	float			m_fWill_y;			// 다음 Y 좌표
 	float			m_fWill_z;			// 다음 Z 좌표
-	short			m_sSpeed;			// 유저의 스피드	
+	short			m_sSpeed;			// 유저의 스피드
 
 	short	m_sHP;							// HP
 	short	m_sMP;							// MP
@@ -116,7 +116,4 @@ public:
 	uint8   m_FlashWarBonus;
 
 	bool	m_bPremiumMerchant;
-
-
 };
-

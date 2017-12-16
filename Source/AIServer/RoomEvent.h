@@ -54,7 +54,6 @@ public:
 private:
 	uint8    m_byLogicNumber;	// 현재의 조건문 검사 번호 (조건번호는 1부터 시작됨) (m_byCheck와 m_byLogicNumber이 같다면 클리어 상태)
 
-
 public:
 	CRoomEvent();
 	virtual ~CRoomEvent();
@@ -69,5 +68,4 @@ private:
 	bool  CheckMonsterCount(int sid, int count, int type);
 	CNpc* GetNpcPtr(int sid);
 	void  EndEventSay(int option1, int option2);
-
 };

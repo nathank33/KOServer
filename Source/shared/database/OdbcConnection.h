@@ -16,8 +16,7 @@
 
 #include "../tstring.h"
 
-struct OdbcError
-{
+struct OdbcError {
 	tstring	Source;
 	tstring	ErrorMessage;
 	tstring	ExtendedErrorMessage;
@@ -26,8 +25,7 @@ struct OdbcError
 #include "OdbcCommand.h"
 
 class std::recursive_mutex;
-class OdbcConnection
-{
+class OdbcConnection {
 	friend class OdbcCommand;
 
 public:
@@ -70,5 +68,5 @@ private:
 	std::vector<OdbcError   *> m_odbcErrors;
 	std::set   <OdbcCommand *> m_commandSet;
 
-	 bool m_bMarsEnabled;
+	bool m_bMarsEnabled;
 };

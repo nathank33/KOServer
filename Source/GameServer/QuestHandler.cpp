@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "KnightsManager.h"
-#include <boost\foreach.hpp>	
+#include <boost\foreach.hpp>
 
 void CUser::V3_QuestDataRequest() {
 	Packet result(WIZ_QUEST, uint8(1));
@@ -74,7 +74,7 @@ void CUser::V3_QuestProcess(Packet & pkt) {
 
 	uint16 nQuest = pQuestHelper->sEventDataIndex;
 
-	// If we're the same min. level as the quest requires, 
+	// If we're the same min. level as the quest requires,
 	// do we have the min. required XP? Seems kind of silly, but OK..
 	if (pQuestHelper->bLevel == GetLevel() && pQuestHelper->nExp > m_iExp)
 		return;
@@ -94,10 +94,8 @@ void CUser::V3_QuestProcess(Packet & pkt) {
 		if (!V3_CheckExistEvent(pQuestHelper->sEventDataIndex, 2))
 			V3_QuestEvent(pQuestHelper->sEventDataIndex, 4);
 
-
 		V3_QuestMonsterDataDeleteAll(nQuest);
 		V3_QuestMonsterDataRequest(nQuest);
-
 
 		// Kick the user out of the quest zone.
 		// Monster suppression squad is the only zone I'm aware of that this should apply to.
@@ -236,8 +234,6 @@ void CUser::V3_QuestMonsterDataRequest(uint16 uQuestID) {
 	if (itr == m_QuestMonMap.end())
 		return;
 
-
-
 	result << uint8(1)
 		<< itr->first
 		<< itr->second->dCKills[0] << itr->second->dCKills[1]
@@ -254,12 +250,11 @@ bool CUser::V3_CheckExistEvent(uint16 sQuestID, uint8 bQuestState) {
 	// Attempt to find a quest with that ID in the map
 	QuestMap::iterator itr = m_questMap.find(sQuestID);
 
-	// If it doesn't exist, it doesn't exist. 
+	// If it doesn't exist, it doesn't exist.
 	// Unless of course, we wanted it to not exist, in which case we're right!
 	// (this does seem silly, but this behaviour is STILL expected, so do not remove it.)
 	if (itr == m_questMap.end())
 		return bQuestState == 0;
-
 
 	return itr->second == bQuestState;
 }

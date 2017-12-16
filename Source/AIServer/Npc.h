@@ -167,7 +167,7 @@ public:
 	int		m_TotalDamage;
 	short   m_sMaxDamageUserid;		// 나에게 최고의 데미지를 준 유저의 아이디 저장..
 
-	_PathList m_PathList;			// Npc의 패스 리스트 
+	_PathList m_PathList;			// Npc의 패스 리스트
 	_PattenPos m_pPattenPos;		// Npc의 패턴,,
 
 	//int m_iPattenNumber;		// 현재의 패턴번호
@@ -236,7 +236,7 @@ public:
 	short	m_sMaxMP;			// 최대 MP
 	short	m_sAttack;			// 공격값(지금 사용하지 않음..)
 	short	m_sAttackDelay;		// 공격딜레이
-	short	m_sSpeed;			// 이동속도	
+	short	m_sSpeed;			// 이동속도
 	float   m_fSpeed_1;			// 기본 이동 타입		(1초에 갈 수 있는 거리)
 	float   m_fSpeed_2;			// 뛰는 이동 타입..		(1초에 갈 수 있는 거리)
 	short	m_sStandTime;		// 서있는 시간
@@ -264,8 +264,8 @@ public:
 	uint8	m_byMaxDamagedNation;	// 나를 죽인 유저의 국가를 저장.. (1:카루스, 2:엘모라드)
 	uint8	m_byObjectType;         // 보통은 0, object타입(성문, 레버)은 1
 	uint8	m_byDungeonFamily;		// 던젼에서 같은 패밀리 묶음 (같은 방)
-	NpcSpecialType	m_bySpecialType;		// 몬스터의 형태가 변하는지를 판단(0:변하지 않음, 1:변하는 몬스터, 
-	// 2:죽는경우 조정하는 몬스터(대장몬스터 죽을경우 성문이 열림), 
+	NpcSpecialType	m_bySpecialType;		// 몬스터의 형태가 변하는지를 판단(0:변하지 않음, 1:변하는 몬스터,
+	// 2:죽는경우 조정하는 몬스터(대장몬스터 죽을경우 성문이 열림),
 	// 3:대장몬스터의 죽음과 관련이 있는 몬스터(대장몬스터가 죽으면 관계되는 몬스터는 같이 죽도록)
 	// 4:변하면서 죽는경우 조정하는 몬스터 (m_sControlSid)
 	// 5:처음에 죽었있다가 출현하는 몬스터,,
@@ -275,7 +275,6 @@ public:
 	uint8	m_byChangeType;			// 0:정상상태, 1:변하기 위한 준비, 2:다른몬스터로 변함, 3:몬스터의 출현, 100:몬스터의 죽음
 	uint8	m_byRegenType;			// 0:정상적으로 리젠이 됨.. , 1:한번 죽으면 리젠이 안되는 특수 몸, 2:리젠이 안됨
 	uint8    m_byDeadType;			// 0:살아 있는 경우, 100:전쟁이벤트중 죽은 경우
-
 
 	//----------------------------------------------------------------
 	//	MONSTER_POS DB 쪽에 있는 변수들
@@ -312,7 +311,7 @@ public:
 
 	short m_iAniFrameIndex;
 	short m_iAniFrameCount;
-	uint8 m_byPathCount;					// 패스를 따라 이동하는 몬스터 끼리 겹치지 않도록,, 
+	uint8 m_byPathCount;					// 패스를 따라 이동하는 몬스터 끼리 겹치지 않도록,,
 	bool m_bStopFollowingTarget;		// when set, indicates that an NPC should stop following its target
 	uint8 m_byActionFlag;				// 행동변화 플래그 ( 0 : 행동변화 없음, 1 : 공격에서 추격)
 

@@ -54,7 +54,6 @@ CServerDlg::CServerDlg() {
 	KarusEslantMilitaryCampCount = 0;
 	ElmoradEslantMilitaryCampCount = 0;
 	MoradonMilitaryCampCount = 0;
-
 }
 
 bool CServerDlg::Startup() {
@@ -197,7 +196,6 @@ bool CServerDlg::CreateNpcThread() {
 	return true;
 }
 
-
 void CServerDlg::UserEventRoomUpdate(uint16 uid, uint16 RoomEvent) {
 	CUser *TargetUser = g_pMain->GetUserPtr(uid);
 
@@ -206,7 +204,6 @@ void CServerDlg::UserEventRoomUpdate(uint16 uid, uint16 RoomEvent) {
 
 	TargetUser->SetUserEventRoom(RoomEvent);
 	TargetUser->SetUnitEventRoom(RoomEvent);
-
 }
 bool CServerDlg::LoadSpawnCallback(OdbcCommand *dbCommand) {
 	// Avoid allocating stack space for these.
@@ -230,7 +227,6 @@ bool CServerDlg::LoadSpawnCallback(OdbcCommand *dbCommand) {
 	static int16	bDirection;
 	static int32	iLeftX, iTopZ, iRightX, iBottomZ,
 		iLimitMinX, iLimitMinZ, iLimitMaxX, iLimitMaxZ;
-
 
 	string strName;
 	dbCommand->FetchByte(1, bZoneID);
@@ -256,9 +252,6 @@ bool CServerDlg::LoadSpawnCallback(OdbcCommand *dbCommand) {
 
 	if ((bSpecialType == 7 && bTrapNumber == rand) || bSpecialType != 7)
 		for (uint8 j = 0; j < bNumNpc; j++) {
-
-
-
 			CNpc * pNpc = new CNpc();
 
 			pNpc->m_byMoveType = bActType;// bActType;
@@ -325,7 +318,6 @@ bool CServerDlg::LoadSpawnCallback(OdbcCommand *dbCommand) {
 				__Vector3 vStart;
 				vStart.Set(pNpc->GetX(), 0, pNpc->GetZ());
 				for (int l = 0; l < pNpc->m_sMaxPathCount; l++) {
-
 					if (l > 5000)
 						break;
 
@@ -356,7 +348,6 @@ bool CServerDlg::LoadSpawnCallback(OdbcCommand *dbCommand) {
 
 					fDis = pNpc->GetDistance(vStart, vEnd);
 
-
 					if (fDis > pNpc->GetProto()->m_bySpeed_1) {
 						for (;;) {
 							pNpc->GetVectorPosition(vStart, vEnd, pNpc->GetProto()->m_bySpeed_1, &vNewPos);
@@ -382,8 +373,6 @@ bool CServerDlg::LoadSpawnCallback(OdbcCommand *dbCommand) {
 						pNpc->m_PathList.pPattenPos[l].x = (short) myX;
 						pNpc->m_PathList.pPattenPos[l].z = (short) myZ;
 					}
-
-
 				}
 			}
 
@@ -436,7 +425,6 @@ bool CServerDlg::LoadSpawnCallback(OdbcCommand *dbCommand) {
 						pNpc->GetID(), pNpc->GetProtoID());
 				}
 			}
-
 		}
 	return true;
 }
@@ -633,7 +621,7 @@ void CServerDlg::DeleteAllUserList(CGameSocket *pSock) {
 		return;
 	}
 
-	// Server didn't disconnect? 
+	// Server didn't disconnect?
 	if (!m_bFirstServerFlag)
 		return;
 
@@ -658,7 +646,7 @@ void CServerDlg::DeleteAllUserList(CGameSocket *pSock) {
 	}
 	m_pUser.clear();
 
-	// Party Array Delete 
+	// Party Array Delete
 	m_arParty.DeleteAllData();
 
 	m_bFirstServerFlag = false;
@@ -764,11 +752,7 @@ CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, flo
 	pNpc->m_byInitMoveType = pNpc->m_byMoveType;
 	pNpc->m_sRegenTime = sRegenTime;
 
-
-
 	pNpc->m_bZone = byZone;
-
-
 
 	uint16 nRandom = Radius;
 	if (nRandom <= 0)
@@ -809,7 +793,6 @@ CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, flo
 		&& pNpc->GetProtoID() != 8110)
 		pNpc->InitPos();
 
-
 	if (pNpc->GetZoneID() == ZONE_STONE1) {
 		if ((pNpc->GetSPosX() / 10) == 126 && pNpc->GetProtoID() == 7032) {
 			pNpc->SetPosition(126.2194f, -0.34175f, 209.0543f);
@@ -822,7 +805,6 @@ CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, flo
 			pNpc->m_byMoveType = 4;
 			pNpc->m_sMaxPathCount = 0;
 		}
-
 	}
 
 	if (pNpc->GetZoneID() == ZONE_STONE2) {
@@ -845,7 +827,6 @@ CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, flo
 		}
 	}
 
-
 	if (pNpc->GetZoneID() == ZONE_STONE3) {
 		if ((pNpc->GetSPosX() / 10) == 131 && pNpc->GetProtoID() == 7034) {
 			pNpc->SetPosition(131.124f, -0.440191f, 208.4271f);
@@ -864,15 +845,12 @@ CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, flo
 			pNpc->m_byMoveType = 4;
 			pNpc->m_sMaxPathCount = 0;
 		}
-
 	}
-
 
 	if (pNpc->GetZoneID() == ZONE_JURAD_MOUNTAIN) {
 		if (pNpc->GetProtoID() == 8110) {
 			pNpc->m_byMoveType = 4;
 			pNpc->m_sMaxPathCount = 0;
-
 		}
 		if ((pNpc->GetSPosX() / 10) == 512 && (pNpc->GetSPosZ() / 10) == 256 && pNpc->GetProtoID() == 8110)
 			pNpc->SetPosition(512.10f, 18.80f, 256.40f);
@@ -902,7 +880,6 @@ CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, flo
 	pNpc->m_nInitMaxX = pNpc->m_nLimitMaxX = (int) fX + nRandom;
 	pNpc->m_nInitMaxY = pNpc->m_nLimitMaxZ = (int) fZ + nRandom;
 
-
 	if (sDuration > 0) // Duration npc or monsters
 	{
 		_NPC_LIVE_TIME * pData = new _NPC_LIVE_TIME();
@@ -917,7 +894,6 @@ CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, flo
 
 	return pNpc;
 }
-
 
 void CServerDlg::NpcUpdate(uint16 sSid, bool bIsMonster, uint8 byGroup, uint16 sPid) {
 	CNpcTable * proto = nullptr;

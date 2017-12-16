@@ -4,8 +4,7 @@
 #include <map>
 
 class OdbcConnection;
-class OdbcCommand
-{
+class OdbcCommand {
 public:
 	typedef std::map<size_t, OdbcParameter *> OdbcParameterCollection;
 
@@ -13,7 +12,7 @@ public:
 	OdbcCommand(OdbcConnection * conn);
 
 	INLINE bool isOpen() { return m_hStmt != nullptr; };
-	INLINE TCHAR * GetError() { return (TCHAR *)m_szError.c_str();  };
+	INLINE TCHAR * GetError() { return (TCHAR *) m_szError.c_str(); };
 	INLINE bool hasData() { return m_resultCode != SQL_NO_DATA && SQL_SUCCEEDED(m_resultCode); };
 	INLINE void SetConnectionHandle(HDBC handle) { m_connHandle = handle; };
 
@@ -26,7 +25,6 @@ public:
 
 	bool MoveNext();
 	bool MoveNextSet();
-
 
 #define ADD_ODBC_PARAMETER(name, type, sqlType) \
 	void AddParameter(SQLSMALLINT paramType, type *value, SQLLEN maxLength = sizeof(type)); \
@@ -46,8 +44,7 @@ public:
 
 		void AddParameter(SQLSMALLINT paramType, const char *value, SQLLEN maxLength, SQLSMALLINT sqlDatatype = SQL_CHAR);
 
-	INLINE bool FetchString(int pos, char *outBuffer, SQLLEN maxLength)
-	{
+	INLINE bool FetchString(int pos, char *outBuffer, SQLLEN maxLength) {
 		SQLLEN bufferSize = 0;
 		return FetchString(pos, outBuffer, maxLength, &bufferSize);
 	};
@@ -55,13 +52,11 @@ public:
 	bool FetchString(int pos, char *charArray, SQLLEN maxLength, SQLLEN *bufferSize);
 	bool FetchString(int pos, std::string & value);
 
-	INLINE bool FetchBinary(int pos, char *outBuffer, SQLLEN maxLength)
-	{
+	INLINE bool FetchBinary(int pos, char *outBuffer, SQLLEN maxLength) {
 		SQLLEN bufferSize = 0;
 		return FetchBinary(pos, outBuffer, maxLength, &bufferSize);
 	};
 	bool FetchBinary(int pos, char *charArray, SQLLEN maxLength, SQLLEN *bufferSize);
-
 
 #undef ADD_ODBC_PARAMETER
 

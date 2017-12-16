@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include <stdarg.h>
 
-void FormattedDebugString(const char * fmt, ...)
-{
+void FormattedDebugString(const char * fmt, ...) {
 	char buf[4096], *p = buf;
 	va_list args;
 	int n;
@@ -15,7 +14,7 @@ void FormattedDebugString(const char * fmt, ...)
 		*--p = '\0';
 	*p++ = '\r';
 	*p++ = '\n';
-	*p   = '\0';
+	*p = '\0';
 
 #ifdef WIN32
 	OutputDebugString(buf);

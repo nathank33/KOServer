@@ -4,8 +4,7 @@
 #include <signal.h>
 
 Condition * g_hNotifier;
-void HookSignals(Condition * notifier)
-{
+void HookSignals(Condition * notifier) {
 	g_hNotifier = notifier;
 
 	signal(SIGINT, OnSignal);
@@ -14,10 +13,8 @@ void HookSignals(Condition * notifier)
 	signal(SIGBREAK, OnSignal);
 }
 
-void OnSignal(int s)
-{
-	switch (s)
-	{
+void OnSignal(int s) {
+	switch (s) {
 	case SIGINT:
 	case SIGTERM:
 	case SIGABRT:
@@ -31,8 +28,7 @@ void OnSignal(int s)
 	signal(s, OnSignal);
 }
 
-void UnhookSignals()
-{
+void UnhookSignals() {
 	signal(SIGINT, 0);
 	signal(SIGTERM, 0);
 	signal(SIGABRT, 0);

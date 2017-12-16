@@ -2,26 +2,23 @@
 #include "OdbcConnection.h"
 #include "OdbcRecordset.h"
 
-OdbcRecordset::OdbcRecordset(OdbcConnection * dbConnection) : _dbConnection(dbConnection)
-{
+OdbcRecordset::OdbcRecordset(OdbcConnection * dbConnection) : _dbConnection(dbConnection) {
 	_dbCommand = _dbConnection->CreateCommand();
 }
 
-TCHAR * OdbcRecordset::Read(bool bAllowEmptyTable /*= false*/)
-{
+TCHAR * OdbcRecordset::Read(bool bAllowEmptyTable /*= false*/) {
 	static TCHAR szError[128] = {0};
 
 	// Build statement
 	tstring szSQL = _T("SELECT ");
-	
+
 	szSQL += GetColumns();
 	szSQL += _T(" FROM ");
 	szSQL += GetTableName();
 
 	tstring szWhereClause = GetWhereClause();
 	// Do we have a where clause? Include it.
-	if (!szWhereClause.empty())
-	{
+	if (!szWhereClause.empty()) {
 		szSQL += _T(" WHERE ");
 		szSQL += szWhereClause;
 	}
@@ -32,8 +29,7 @@ TCHAR * OdbcRecordset::Read(bool bAllowEmptyTable /*= false*/)
 
 	// Does the table have any rows?
 	// Make sure we allow for tables that can be empty.
-	if (!_dbCommand->hasData())
-	{
+	if (!_dbCommand->hasData()) {
 		if (bAllowEmptyTable)
 			return nullptr;
 
@@ -41,13 +37,11 @@ TCHAR * OdbcRecordset::Read(bool bAllowEmptyTable /*= false*/)
 		return szError;
 	}
 
-	do
-	{
-		// This extra result/check potentially slows things down. 
+	do {
+		// This extra result/check potentially slows things down.
 		// It's also not very informative, so this could really use a bit of a rewrite
 		// to better allow for this scenario.
-		if (!Fetch())
-		{
+		if (!Fetch()) {
 			_stprintf(szError, _T("Could not fetch row in table %s."), GetTableName().c_str());
 			return szError;
 		}
@@ -55,7 +49,6 @@ TCHAR * OdbcRecordset::Read(bool bAllowEmptyTable /*= false*/)
 	return nullptr;
 }
 
-OdbcRecordset::~OdbcRecordset()
-{
+OdbcRecordset::~OdbcRecordset() {
 	_dbCommand->Close();
 }

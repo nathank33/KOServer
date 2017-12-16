@@ -45,8 +45,6 @@ uint32 THREADCALL NpcThreadProc(void * pParam) {
 					if (pNpc->GetID() < 0)
 						continue;
 
-
-
 					dwTickTime = fTime2 - pNpc->m_fDelayTime;
 
 					if (pNpc->m_Delay > (int) dwTickTime && !pNpc->m_bFirstLive && pNpc->m_Delay != 0) {
@@ -62,7 +60,6 @@ uint32 THREADCALL NpcThreadProc(void * pParam) {
 						if (pNpc->GetName() != "Guard tower")
 							continue;
 					}
-
 
 					dwTickTime = fTime2 - pNpc->m_fHPChangeTime;
 					if (10000 < dwTickTime)
@@ -140,7 +137,6 @@ uint32 THREADCALL NpcThreadProc(void * pParam) {
 						--g_pMain->m_TotalNPC;
 						goto ThreadReloadNPC;
 					}
-
 				} catch (std::system_error & ex) {
 					printf("[ %s ] Warning 1 : %s\n", __FUNCTION__, ex.what());
 					continue;

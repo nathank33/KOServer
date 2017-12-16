@@ -34,7 +34,6 @@ public:
 		pUser->m_oldy = pUser->m_cury;
 		pUser->m_oldz = pUser->m_curz;
 
-
 		memset(pUser->m_sItemArray, 0x00, sizeof(pUser->m_sItemArray));
 
 		_dbCommand->FetchBinary(field++, strItem, sizeof(strItem));
@@ -48,15 +47,12 @@ public:
 			pItem->nNum = nItemID;
 			pItem->sDuration = sDurability;
 			pItem->sCount = sCount;
-
 		}
-
 
 		_dbCommand->FetchUInt16(field++, pUser->m_sSid);
 		_dbCommand->FetchUInt16(field++, pUser->m_sAchieveCoverTitle);
 
 		_dbCommand->FetchByte(field++, pUser->m_reblvl);
-
 
 		_dbCommand->FetchBinary(field++, (char *) pUser->m_bstrSkill, sizeof(pUser->m_bstrSkill));
 
@@ -68,14 +64,12 @@ public:
 		_dbCommand->FetchByte(field++, pUser->m_bStats[STAT_INT]);
 		_dbCommand->FetchByte(field++, pUser->m_bStats[STAT_CHA]);
 
-
 		pUser->m_sSid += MAX_USER;
 
 		if (pUser == nullptr)
 			delete pUser;
 		else
 			m_pMap->PutData(pUser->m_sSid, pUser);
-
 
 		return true;
 	}

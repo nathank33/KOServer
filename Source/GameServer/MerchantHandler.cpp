@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include <boost\foreach.hpp>	  
+#include <boost\foreach.hpp>
 
 using std::string;
 
@@ -81,8 +81,6 @@ void CUser::MerchantProcess(Packet & pkt) {
 		OfficialList(pkt);
 		break;
 	}
-
-
 }
 
 void CUser::MerchantOpen() {
@@ -110,7 +108,6 @@ void CUser::MerchantOpen() {
 		m_bMerchantStatex = 1;
 		m_bLastMerchantTime = uint32(UNIXTIME);
 	}
-
 
 	Packet result(WIZ_MERCHANT, uint8(MERCHANT_OPEN));
 	result << errorCode;
@@ -150,7 +147,7 @@ void CUser::MerchantItemAdd(Packet & pkt) {
 	uint32 nGold, nItemID;
 	uint16 sCount;
 	uint16 bResult = 0;
-	uint8 bSrcPos, // It sends the "actual" inventory slot (SLOT_MAX -> INVENTORY_MAX-SLOT_MAX), so need to allow for it. 
+	uint8 bSrcPos, // It sends the "actual" inventory slot (SLOT_MAX -> INVENTORY_MAX-SLOT_MAX), so need to allow for it.
 		bDstPos,
 		bMode; // Might be a flag for normal / "premium" merchant mode, once skills are implemented take another look at this.
 
@@ -250,23 +247,18 @@ void CUser::MerchantItemCancel(Packet & pkt) {
 		pItem->IsSelling = false;
 		pItem->nSerialNum = pMerch->nSerialNum; // NOTE: Stackable items will have an issue with this.
 
-
-
 		string errorMessage = string_format(_T("MERCHANT_ITEM_CANCEL uId-%s- %d,%d,%d"),
 			GetName().c_str(), pMerch->nNum, pMerch->bCount, pMerch->sDuration);
 		g_pMain->WriteMerchantUserLogFile(errorMessage);
 
 		memset(pMerch, 0, sizeof(pMerch));
 		result << int16(1) << bSrcPos;
-
-
 	}
 
 	Send(&result);
 }
 
 void CUser::MerchantItemList(Packet & pkt) {
-
 	if (isDead()
 		|| isTrading()
 		|| isMerchanting()
@@ -362,7 +354,6 @@ void CUser::MerchantItemBuy(Packet & pkt) {
 		|| m_bMerchantStatex)
 		return;
 
-
 	_MERCH_DATA *pMerch;
 	// Grab pointers to the items.
 	if (m_sMerchantsSocketID > MAX_USER)
@@ -374,8 +365,6 @@ void CUser::MerchantItemBuy(Packet & pkt) {
 	_ITEM_DATA *pItemRob;
 	if (m_sMerchantsSocketID < MAX_USER)
 		pItemRob = &pMerchant->m_sItemArray[pMerch->bOriginalSlot];
-
-
 
 	// Make sure the merchant actually has that item in that slot
 	// and that they have enough
@@ -419,7 +408,6 @@ void CUser::MerchantItemBuy(Packet & pkt) {
 	pMerch->sCount -= item_count;
 	pMerch->bCount -= item_count;
 
-
 	if (pMerch->sCount == 0 && pMerch->bCount == 0 && m_sMerchantsSocketID < MAX_USER)
 		memset(pItemRob, 0, sizeof(_ITEM_DATA));
 	else if (m_sMerchantsSocketID < MAX_USER)
@@ -436,7 +424,6 @@ void CUser::MerchantItemBuy(Packet & pkt) {
 		memset(pMerch, 0, sizeof(_MERCH_DATA));
 	else if (pMerch->sCount == 0) // Countable item protect.
 		pMerch->IsSoldOut = true;
-
 
 	Packet result(WIZ_MERCHANT, uint8(MERCHANT_ITEM_PURCHASED));
 	if (m_sMerchantsSocketID < MAX_USER) {
@@ -541,7 +528,6 @@ void CUser::MerchantInsert(Packet & pkt) {
 			else
 				myBot->MerchantChat.clear();
 
-
 			myBot->m_iLoyalty = uint32(UNIXTIME) - 110;
 			_MERCH_DATA * pMerch, *pMerchMe;
 			for (int i = 0; i < MAX_MERCH_ITEMS; i++) {
@@ -556,7 +542,6 @@ void CUser::MerchantInsert(Packet & pkt) {
 				pMerch->bOriginalSlot = pMerchMe->bOriginalSlot;
 				pMerch->IsSoldOut = false;
 				bResult = 1;
-
 			}
 			MerchantClose();
 			myBot->m_bPremiumMerchant = m_bPremiumMerchant;
@@ -571,13 +556,11 @@ void CUser::MerchantInsert(Packet & pkt) {
 				_MERCHANT_LIST * pList = new _MERCHANT_LIST;
 
 				for (int i = 0; i < MAX_MERCH_ITEMS; i++) {
-
 					pList->ItemID[i] = myBot->m_arSellMerchantItems[i].nNum;
 					pList->Price[i] = myBot->m_arSellMerchantItems[i].nPrice;
 					pList->strUserID = myBot->GetID();
 					pList->strUserName = myBot->m_strUserID;
 					pList->Type = 0;
-
 				}
 
 				g_pMain->m_MerchantListArray.PutData(pList->strUserID, pList);
@@ -591,13 +574,11 @@ void CUser::MerchantInsert(Packet & pkt) {
 		_MERCHANT_LIST * pList = new _MERCHANT_LIST;
 
 		for (int i = 0; i < MAX_MERCH_ITEMS; i++) {
-
 			pList->ItemID[i] = m_arSellMerchantItems[i].nNum;
 			pList->Price[i] = m_arSellMerchantItems[i].nPrice;
 			pList->strUserID = GetID();
 			pList->strUserName = m_strUserID;
 			pList->Type = 0;
-
 		}
 
 		g_pMain->m_MerchantListArray.PutData(pList->strUserID, pList);
@@ -648,8 +629,6 @@ void CUser::CancelMerchant() {
 	Packet result(WIZ_MERCHANT, uint8(MERCHANT_TRADE_CANCEL));
 	result << uint16(1);
 	Send(&result);
-
-
 }
 
 void CUser::BuyingMerchantOpen(Packet & pkt) {
@@ -683,7 +662,6 @@ void CUser::BuyingMerchantOpen(Packet & pkt) {
 }
 
 void CUser::BuyingMerchantClose() {
-
 	if (isMerchanting() && !isBuyingMerchant()) {
 		MerchantClose();
 		return;
@@ -718,7 +696,6 @@ void CUser::BuyingMerchantInsert(Packet & pkt) {
 
 	pkt >> amount_of_items;
 
-
 	if (isDead()
 		|| isTrading()
 		|| isMerchanting()
@@ -730,8 +707,6 @@ void CUser::BuyingMerchantInsert(Packet & pkt) {
 		return;
 
 	uint8 MerchantItemleri = 0;
-
-
 
 	for (int i = 0; i < amount_of_items; i++) {
 		pkt >> itemid >> item_count >> buying_price;
@@ -746,7 +721,6 @@ void CUser::BuyingMerchantInsert(Packet & pkt) {
 		m_arBuyMerchantItems[i].sDuration = pItem->m_sDuration;
 		totalamount += buying_price;
 		MerchantItemleri++;
-
 	}
 
 	if (MerchantItemleri == 0)
@@ -765,13 +739,11 @@ void CUser::BuyingMerchantInsert(Packet & pkt) {
 		_MERCHANT_LIST * pList = new _MERCHANT_LIST;
 
 		for (int i = 0; i < amount_of_items; i++) {
-
 			pList->ItemID[i] = m_arBuyMerchantItems[i].nNum;
 			pList->Price[i] = m_arBuyMerchantItems[i].nPrice;
 			pList->strUserID = GetID();
 			pList->strUserName = m_strUserID;
 			pList->Type = 1;
-
 		}
 
 		g_pMain->m_MerchantListArray.PutData(pList->strUserID, pList);
@@ -886,7 +858,6 @@ void CUser::BuyingMerchantBuy(Packet & pkt) {
 		|| !proto->m_bCountable && sStackSize != 1)
 		return;
 
-
 	// Do they have enough coins?
 	nPrice = pWantedItem->nPrice * sStackSize;
 	if (!pMerchant->hasCoins(nPrice))
@@ -946,7 +917,6 @@ void CUser::BuyingMerchantBuy(Packet & pkt) {
 	result << uint8(MERCHANT_BUY_BUY) << uint8(1);
 	Send(&result);
 
-
 	if (bMerchantListSlot < 4 && pWantedItem->sCount == 0) {
 		result.Initialize(WIZ_MERCHANT_INOUT);
 		result << uint8(2) << m_sMerchantsSocketID << uint8(1) << uint8(0) << bMerchantListSlot;
@@ -961,7 +931,6 @@ void CUser::BuyingMerchantBuy(Packet & pkt) {
 
 	if (nItemsRemaining == 0)
 		pMerchant->BuyingMerchantClose();
-
 }
 
 void CUser::RemoveFromMerchantLookers() {
@@ -1083,9 +1052,6 @@ void CUser::ListMoveProcess(Packet & pkt) {
 			Send(&error);
 			return;
 		}
-
-
-
 	} else if (!pBot) {
 		if (pUser) {
 			ZoneChange(pUser->GetZoneID(), pUser->GetX(), pUser->GetZ());
@@ -1096,6 +1062,4 @@ void CUser::ListMoveProcess(Packet & pkt) {
 			return;
 		}
 	}
-
-
 }

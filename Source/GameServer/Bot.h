@@ -6,15 +6,12 @@
 #include "Unit.h"
 #include "ChatHandler.h"
 
-
-
 #include "GameDefine.h"
 
 class CGameServerDlg;
 
 class CBot {
 public:
-
 
 	virtual uint16 GetID() { return m_sSid; }
 
@@ -107,7 +104,7 @@ public:
 
 	TeamColour	m_teamColour;
 public:
-	INLINE uint8 GetUniqueLevel() { return m_bRebStats[STAT_STR]; } // Char Rebirth mi 
+	INLINE uint8 GetUniqueLevel() { return m_bRebStats[STAT_STR]; } // Char Rebirth mi
 	INLINE uint8 GetRebLevel() { return m_reblvl; }
 	INLINE uint16 GetSPosX() { return uint16(GetX() * 10); };
 	INLINE uint16 GetSPosY() { return uint16(GetY() * 10); };
@@ -164,5 +161,4 @@ public:
 	virtual void Initialize();
 	~CBot() {}
 	CBot();
-
 };

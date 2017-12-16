@@ -149,7 +149,7 @@ public:
 	INLINE bool isDebuffed() {
 		Guard lock(_unitlock);
 
-		// As the 'buff' map contains both buffs and debuffs, if the number of buffs/debuffs in the map doesn't 
+		// As the 'buff' map contains both buffs and debuffs, if the number of buffs/debuffs in the map doesn't
 		// match the number of buffs we have, we can conclude we have some debuffs in there.
 		return (uint8) m_buffMap.size() != m_buffCount;
 	}
@@ -269,7 +269,6 @@ public:
 	int16	m_sAttackSpeedAmount;
 	uint8   m_bSpeedAmount;
 
-
 	int16	AbsorbedAmmount;
 
 	// Item calculated elemental resistances.
@@ -290,7 +289,7 @@ public:
 
 	uint8	m_bResistanceBonus;
 
-	BYTE    m_bMagicTypeLeftHand;			// The type of magic item in user's left hand  
+	BYTE    m_bMagicTypeLeftHand;			// The type of magic item in user's left hand
 	BYTE    m_bMagicTypeRightHand;			// The type of magic item in user's right hand
 	short   m_sMagicAmountLeftHand;         // The amount of magic item in user's left hand
 	short	m_sMagicAmountRightHand;        // The amount of magic item in user's left hand
@@ -321,7 +320,7 @@ public:
 		time_t	m_tHPLastTime;	// time when the durational skill last affected the unit
 		int16	m_sHPAmount;	// HP amount to affet the unit by (negative for damage, positive for HP recovery)
 		uint8	m_bHPInterval;	// interval (in seconds) between each durational skill effect
-		uint8	m_bTickCount;	// 
+		uint8	m_bTickCount;	//
 		uint8	m_bTickLimit;	// number of ticks required before the skill expires
 		uint16	m_sSourceID;	// ID of the unit that used this skill on the unit
 		uint8	m_byAttribute;	// skill attribute

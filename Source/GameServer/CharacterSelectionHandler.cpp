@@ -11,7 +11,6 @@ void CUser::Login(Packet & pkt) {
 	Send(&result);
 }
 
-
 void CUser::SelNationToAgent(Packet & pkt) {
 	Packet result(WIZ_SEL_NATION);
 	uint8 nation = pkt.read<uint8>();
@@ -197,9 +196,7 @@ void CUser::CharacterLocationRecv(Packet & pkt) {
 	Send(&result);
 }
 
-
 void CUser::ChangeHair(Packet & pkt) {
-
 	if (isDead()
 		|| isTrading()
 		|| isMerchanting()
@@ -223,13 +220,10 @@ void CUser::ChangeHair(Packet & pkt) {
 	pkt >> bOpcode >> strUserID >> bFace >> nHair;
 
 	if (m_bSelectedCharacter) {
-
 		if (CheckExistItem(810340000, 1)) {
-
 			m_bFace = bFace;
 			m_nHair = nHair;
 			RobItem(810340000, 1);
-
 		} else {
 			return;
 		}
@@ -281,7 +275,6 @@ void CUser::SelCharToAgent(Packet & pkt) {
 	std::string strUserID, strAccountID;
 	uint8 bInit;
 
-
 	pkt >> strAccountID >> strUserID >> bInit;
 	if (strAccountID.empty() || strAccountID.size() > MAX_ID_SIZE
 		|| strUserID.empty() || strUserID.size() > MAX_ID_SIZE
@@ -289,7 +282,6 @@ void CUser::SelCharToAgent(Packet & pkt) {
 		Disconnect();
 		return;
 	}
-
 
 	// Disconnect any currently logged in sessions.
 	CUser *pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER);
@@ -486,7 +478,7 @@ void CUser::GameStart(Packet & pkt) {
 		BlinkStart();
 		SetUserAbility();
 
-		// If we've relogged while dead, we need to make sure the client 
+		// If we've relogged while dead, we need to make sure the client
 		// is still given the option to revive.
 		if (isDead())
 			SendDeathAnimation();

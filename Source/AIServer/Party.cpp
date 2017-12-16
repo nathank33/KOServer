@@ -5,7 +5,6 @@
 CParty::CParty() {}
 
 CParty::~CParty() {
-
 }
 
 void CParty::Initialize() {}

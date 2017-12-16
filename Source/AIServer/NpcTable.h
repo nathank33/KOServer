@@ -32,13 +32,13 @@ public:
 	uint16	m_sEvadeRate;		// 회피성공률
 	uint16	m_sDamage;			// 기본 데미지
 	uint16	m_sAttackDelay;		// 공격딜레이
-	uint16	m_sSpeed;			// 이동속도	
+	uint16	m_sSpeed;			// 이동속도
 	uint8	m_bySpeed_1;		// 기본 이동 타입
 	uint8	m_bySpeed_2;		// 뛰는 이동 타입..
 	uint16	m_sStandTime;		// 서있는 시간
 	uint32	m_iMagic1;			// 사용마법 1
 	uint32	m_iMagic2;			// 사용마법 2
-	uint32	m_iMagic3;			// 사용마법 3	
+	uint32	m_iMagic3;			// 사용마법 3
 
 	uint16	m_byFireR;			// 화염 저항력
 	uint16	m_byColdR;			// 냉기 저항력

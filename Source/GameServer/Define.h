@@ -46,7 +46,6 @@
 #define ELMORAD_ARRAY (ELMORAD - 1)
 #define MONSTER_CHALLENGE_COUNT 32
 
-
 #define KING_RANK	1000
 #define	WAR_HEROES_RANK 0
 #define LADDER_RANK 100
@@ -58,7 +57,6 @@
 #define LONG_ATTACK			1
 #define MAGIC_ATTACK		2
 #define DURATION_ATTACK		3
-
 
 // Kurian/Portu Absorbed
 #define ABSORBED_TOTAL	-20000
@@ -194,7 +192,6 @@ enum InOutType {
 #define MAX_LEVEL_RONARK_LAND_BASE	69
 #define MIN_LEVEL_KROWAZ_DOMINION	70
 #define MIN_LEVEL_JURAD_MOUNTAIN	70
-
 
 // Where to respawn after dying in the Moradon arenas
 #define MINI_ARENA_RESPAWN_X		734

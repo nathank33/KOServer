@@ -82,7 +82,6 @@ DEFINE_LUA_CLASS
 	MAKE_LUA_METHOD(isPartyLeader)
 	MAKE_LUA_METHOD(isKing)
 
-
 	// Shortcuts for lazy people
 	MAKE_LUA_METHOD(hasCoins)
 	MAKE_LUA_METHOD(hasInnCoins)
@@ -183,7 +182,6 @@ DEFINE_LUA_CLASS
 );
 #undef LUA_CLASS
 
-
 /*
 Global functions
 */
@@ -237,7 +235,6 @@ LUA_FUNCTION(CheckLevel) {
 
 	if (bClassType == g_pMain->MAXLVLINI && pUser->m_iExp == pUser->m_iMaxExp && pUser->GetRebLevel() < 10)
 		bClassType = 84;
-
 
 	LUA_RETURN(bClassType);
 }

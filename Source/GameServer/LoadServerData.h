@@ -60,7 +60,6 @@ typedef CSTLMap <_ILEGAL_ITEMS>				IlegalItemsArray;
 
 typedef CSTLMap <_MERCHANT_LIST>				MerchantListArray;
 
-
 typedef std::map<std::string, _USER_RANK *>			UserNameRankMap;
 typedef std::map<uint8, _USER_RANK *>				UserRankMap;
 

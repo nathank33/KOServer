@@ -2,9 +2,8 @@
 #include "stdafx.h"
 #include "SocketMgr.h"
 
-Socket::Socket(SOCKET fd, uint32 sendbuffersize, uint32 recvbuffersize) 
-	: m_fd(fd), m_connected(false),	m_deleted(false), m_socketMgr(nullptr)
-{
+Socket::Socket(SOCKET fd, uint32 sendbuffersize, uint32 recvbuffersize)
+	: m_fd(fd), m_connected(false), m_deleted(false), m_socketMgr(nullptr) {
 	// Allocate buffers
 	readBuffer.Allocate(recvbuffersize);
 	writeBuffer.Allocate(sendbuffersize);
@@ -18,14 +17,13 @@ Socket::Socket(SOCKET fd, uint32 sendbuffersize, uint32 recvbuffersize)
 		m_fd = SocketOps::CreateTCPFileDescriptor();
 }
 
-bool Socket::Connect(const char * Address, uint32 Port)
-{
+bool Socket::Connect(const char * Address, uint32 Port) {
 	struct hostent * ci = gethostbyname(Address);
 	if (ci == 0)
 		return false;
 
 	m_client.sin_family = ci->h_addrtype;
-	m_client.sin_port = ntohs((u_short)Port);
+	m_client.sin_port = ntohs((u_short) Port);
 	memcpy(&m_client.sin_addr.s_addr, ci->h_addr_list[0], ci->h_length);
 
 	SocketOps::Blocking(m_fd);
@@ -33,7 +31,7 @@ bool Socket::Connect(const char * Address, uint32 Port)
 	if (m_fd == 0)
 		m_fd = SocketOps::CreateTCPFileDescriptor();
 
-	if (connect(m_fd, (const sockaddr*)&m_client, sizeof(m_client)) == -1)
+	if (connect(m_fd, (const sockaddr*) &m_client, sizeof(m_client)) == -1)
 		return false;
 
 	// at this point the connection was established
@@ -42,14 +40,12 @@ bool Socket::Connect(const char * Address, uint32 Port)
 	_OnConnect();
 	return true;
 }
-void Socket::Accept(sockaddr_in * address)
-{
+void Socket::Accept(sockaddr_in * address) {
 	memcpy(&m_client, address, sizeof(*address));
 	_OnConnect();
 }
 
-void Socket::_OnConnect()
-{
+void Socket::_OnConnect() {
 	// set common parameters on the file descriptor
 	m_connected = true;
 
@@ -68,8 +64,7 @@ void Socket::_OnConnect()
 	SetupReadEvent();
 }
 
-bool Socket::Send(const uint8 * Bytes, uint32 Size)
-{
+bool Socket::Send(const uint8 * Bytes, uint32 Size) {
 	bool rv;
 
 	// This is really just a wrapper for all the burst stuff.
@@ -82,23 +77,19 @@ bool Socket::Send(const uint8 * Bytes, uint32 Size)
 	return rv;
 }
 
-bool Socket::BurstSend(const uint8 * Bytes, uint32 Size)
-{
+bool Socket::BurstSend(const uint8 * Bytes, uint32 Size) {
 	return writeBuffer.Write(Bytes, Size);
 }
 
-std::string Socket::GetRemoteIP()
-{
-	char* ip = (char*)inet_ntoa(m_client.sin_addr);
+std::string Socket::GetRemoteIP() {
+	char* ip = (char*) inet_ntoa(m_client.sin_addr);
 	if (ip != nullptr)
 		return std::string(ip);
 
 	return std::string("noip");
 }
 
-void Socket::Disconnect()
-{
-
+void Socket::Disconnect() {
 	if (!IsConnected())
 		return;
 
@@ -122,19 +113,16 @@ void Socket::Disconnect()
 	GetWriteBuffer().Remove(GetWriteBuffer().GetSize());
 }
 
-void Socket::Delete()
-{
+void Socket::Delete() {
 	if (IsDeleted())
 		return;
 
 	m_deleted = true;
 
-	if (IsConnected()) 
+	if (IsConnected())
 		Disconnect();
 
 	delete this;
 }
 
-Socket::~Socket()
-{
-}
+Socket::~Socket() {}

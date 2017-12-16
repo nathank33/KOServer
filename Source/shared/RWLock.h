@@ -2,9 +2,8 @@
 
 #include "Condition.h"
 
-class RWLock
-{
-public: 
+class RWLock {
+public:
 	RWLock();
 	void AcquireReadLock();
 	void ReleaseReadLock();
@@ -15,4 +14,4 @@ private:
 	Condition _cond;
 	volatile unsigned int _readers;
 	volatile unsigned int _writers;
-}; 
+};

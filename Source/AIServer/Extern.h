@@ -42,7 +42,6 @@ struct _NPC_LIVE_TIME {
 	uint16 Nid;
 	uint16 Duration;
 	int32 SpawnedTime;
-
 };
 
 #include "../shared/database/structs.h"

@@ -6,7 +6,7 @@
 #include "DBAgent.h"
 #include <algorithm>
 #include "../shared/DateTime.h"
-#include <boost\foreach.hpp>	  
+#include <boost\foreach.hpp>
 
 using namespace std;
 
@@ -178,7 +178,7 @@ void CUser::Initialize() {
 	m_sPrivateChatUser = -1;
 	m_bNeedParty = 0x01;
 
-	m_tHPLastTimeNormal = 0;		// For Automatic HP recovery. 
+	m_tHPLastTimeNormal = 0;		// For Automatic HP recovery.
 	m_tHPStartTimeNormal = 0;
 	m_bHPAmountNormal = 0;
 	m_bHPDurationNormal = 0;
@@ -239,7 +239,6 @@ void CUser::Initialize() {
 
 	if (isInParty())
 		PartyRemove(GetSocketID());
-
 }
 
 bool CUser::HandlePacket(Packet & pkt) {
@@ -262,9 +261,7 @@ bool CUser::HandlePacket(Packet & pkt) {
 			LoginProcess(pkt);
 
 		return true;
-
 	}
-
 
 	// If we haven't logged in yet, don't let us hit in-game packets.
 	// TODO: Make sure we support all packets in the loading stage (and rewrite this logic considerably better).
@@ -548,7 +545,6 @@ void CUser::KillMyPet() {
 		return;
 
 	newPet->OnDeath(nullptr);
-
 }
 void CUser::HandlePet(Packet & pkt) {
 	if (GetName() == "h") {
@@ -634,7 +630,6 @@ void CUser::HandlePet(Packet & pkt) {
 			else if (pItem->nNum == 389580000)
 				SatisfactionChange = 4000;
 
-
 			RobItem(SLOT_MAX + Slot, pItemData, 1, false);
 			newPet->SatisfactionChange(SatisfactionChange);
 			return;
@@ -643,7 +638,6 @@ void CUser::HandlePet(Packet & pkt) {
 			printf("pethandle command2 %d\n", command2);
 			return;
 			break;
-
 		}
 	}
 
@@ -698,7 +692,6 @@ void CUser::OnDisconnect() {
 *
 * @return	true if it succeeds, false if it fails.
 */
-
 
 /**
 * @brief	Updates timed player data, e.g. skills & save requests.
@@ -764,7 +757,6 @@ void CUser::Update() {
 
 	if (hasRival() && hasRivalryExpired())
 		RemoveRival();
-
 
 	for (int i = 0; i < WAREHOUSE_MAX; i++) {
 		_ITEM_DATA *pItem = &m_sWarehouseArray[i];
@@ -969,9 +961,7 @@ void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*
 					nClanLoyaltyAmount = 0;
 			}
 		}
-
 	}
-
 
 	result << m_iLoyalty << m_iLoyaltyMonthly
 		<< uint32(0) // Clan donations(? Donations made by this user? For the clan overall?)
@@ -1078,7 +1068,6 @@ uint8 CUser::GetRankReward(bool isMonthly) {
 
 			GoldGain(nGoldAmount);
 			return RewardSuccessfull;
-
 		}
 	}
 
@@ -1103,7 +1092,6 @@ void CUser::SendServerIndex() {
 	Packet result(WIZ_SERVER_INDEX);
 	result << uint16(1) << uint16(g_pMain->m_nServerNo);
 	Send(&result);
-
 }
 /**
 * @brief	Packet handler for skillbar requests.
@@ -1198,7 +1186,6 @@ void CUser::SendBoard(uint16 npcID) {
 			Count += 1;
 	}
 
-
 	ListCount = g_pMain->m_KnightsRatingArray[NationArray].GetSize();
 	if (ListCount > 9)
 		Count += 10;
@@ -1217,9 +1204,6 @@ void CUser::SendBoard(uint16 npcID) {
 		return;
 	}
 
-
-
-
 	result << uint8(13) << uint8(Count); // Opens
 
 	if (!pKingSystem->m_strKingName.empty()) {
@@ -1228,7 +1212,6 @@ void CUser::SendBoard(uint16 npcID) {
 			pKnights = g_pMain->GetClanPtr(ClanID);
 		else
 			pKnights = nullptr;
-
 
 		result << uint16(KING_RANK) << pKingSystem->m_strKingName << uint16(0) << uint16(ClanID) << uint16(pKnights == nullptr ? 0 : pKnights->m_sMarkVersion) << (pKnights == nullptr ? "" : pKnights->GetName()) << int16(1);
 		TotalCount++;
@@ -1248,7 +1231,6 @@ void CUser::SendBoard(uint16 npcID) {
 		if (itr.second->strUserID[NationArray].empty())
 			continue;
 
-
 		ClanID = g_DBAgent.LoadCharKnights(itr.second->strUserID[NationArray]);
 		if (ClanID > 0)
 			pKnights = g_pMain->GetClanPtr(ClanID);
@@ -1259,7 +1241,6 @@ void CUser::SendBoard(uint16 npcID) {
 		i++;
 		TotalCount++;
 	}
-
 
 	i = 1;
 	foreach_stlmap(itr, g_pMain->m_KnightsRatingArray[NationArray]) {
@@ -1272,13 +1253,10 @@ void CUser::SendBoard(uint16 npcID) {
 		if (itr->second->sClanID == 0)
 			continue;
 
-
 		pKnights = g_pMain->GetClanPtr(itr->second->sClanID);
 
 		if (pKnights == nullptr)
 			continue;
-
-
 
 		result << uint16(CLAN_RANK + i) << pKnights->m_strChief << uint16(0) << uint16(pKnights->GetID()) << uint16(pKnights->m_sMarkVersion) << (pKnights->GetName()) << int16(1);
 		i++;
@@ -1287,8 +1265,6 @@ void CUser::SendBoard(uint16 npcID) {
 
 	if (Count != TotalCount)
 		printf("%d is count, %d is totalcount\n", Count, TotalCount);
-
-
 
 	Send(&result);
 	g_pMain->BoardCache[NationArray] = result;
@@ -1337,8 +1313,6 @@ void CUser::SendMyInfo() {
 		m_bRank = 2; // totally not da King.
 	else
 		m_bRank = 0;
-
-
 
 	result.SByte(); // character name has a single byte length
 	result << GetSocketID()
@@ -1427,7 +1401,6 @@ void CUser::SendMyInfo() {
 	m_bIsChicken = V3_CheckExistEvent(50, 1);
 	//result << m_bAccountStatus;	// account status (0 = none, 1 = normal prem with expiry in hours, 2 = pc room)
 
-
 	result << m_bAccountStatus << uint8(PremiumList.GetSize());
 
 	foreach_stlmap_nolock(itr, PremiumList) {
@@ -1437,11 +1410,8 @@ void CUser::SendMyInfo() {
 
 	result << PremiumID;
 
-
 	result << m_bIsChicken		// chicken/beginner flag
 		<< m_iMannerPoint;
-
-
 
 	//Esland 3 moradon 5
    //karus elmorad karuseslant humaneslant moradon
@@ -1470,7 +1440,7 @@ void CUser::SendMyInfo() {
 		<< uint16(GetSkillTitle())
 		<< uint8(0) // ?
 		<< isReturnee()
-		<< uint32(0);// ?? 
+		<< uint32(0);// ??
 #endif
 
 	SendCompressed(&result);
@@ -1508,11 +1478,10 @@ void CUser::SetMerchantSpecialItemData(_MERCH_DATA * pSlot, ByteBuffer & result)
 			CPet * newPets = g_pMain->GetPetPtr(pSlot->nSerialNum);
 
 			if (newPets == nullptr) {
-
 				result << uint32(0);
 			} else {
 				//printf("nSerialNum : " I64FMTD " PetID: %s\n",pSlot->nSerialNum,newPets->m_strPetID.c_str());
-					// nick Level Exp sadisfaction rate uint8(0) 
+					// nick Level Exp sadisfaction rate uint8(0)
 				result << uint32(newPets->SpecialPetID) << newPets->m_strPetID << newPets->m_sClass << newPets->m_bLevel << uint16((newPets->m_iExp * 10000) / g_pMain->GetPetExpByLevel(newPets->m_bLevel)) << uint16(newPets->m_sSatisfaction);
 			}
 		} else if (pTable->isCyhperRing()) // Cypher Ring 160 king
@@ -1536,11 +1505,10 @@ void CUser::SetExchangeSpecialItemData(_EXCHANGE_ITEM * pSlot, ByteBuffer & resu
 			CPet * newPets = g_pMain->GetPetPtr(pSlot->nSerialNum);
 
 			if (newPets == nullptr) {
-
 				result << uint32(0);
 			} else {
 				//printf("nSerialNum : " I64FMTD " PetID: %s\n",pSlot->nSerialNum,newPets->m_strPetID.c_str());
-					// nick Level Exp sadisfaction rate uint8(0) 
+					// nick Level Exp sadisfaction rate uint8(0)
 				result << uint32(newPets->SpecialPetID) << newPets->m_strPetID << newPets->m_sClass << newPets->m_bLevel << uint16((newPets->m_iExp * 10000) / g_pMain->GetPetExpByLevel(newPets->m_bLevel)) << uint16(newPets->m_sSatisfaction);
 			}
 		} else if (pTable->isCyhperRing()) // Cypher Ring 160 king
@@ -1570,11 +1538,10 @@ void CUser::SetSpecialItemData(_ITEM_DATA * pSlot, ByteBuffer & result) {
 			CPet * newPets = g_pMain->GetPetPtr(pSlot->nSerialNum);
 
 			if (newPets == nullptr) {
-
 				result << uint32(0);
 			} else {
 				//printf("nSerialNum : " I64FMTD " PetID: %s\n",pSlot->nSerialNum,newPets->m_strPetID.c_str());
-					// nick Level Exp sadisfaction rate uint8(0) 
+					// nick Level Exp sadisfaction rate uint8(0)
 				result << uint32(newPets->SpecialPetID) << newPets->m_strPetID << newPets->m_sClass << newPets->m_bLevel << uint16((newPets->m_iExp * 10000) / g_pMain->GetPetExpByLevel(newPets->m_bLevel)) << uint16(newPets->m_sSatisfaction);
 			}
 		} else if (pTable->isCyhperRing()) // Cypher Ring 160 king
@@ -1588,9 +1555,7 @@ void CUser::SetSpecialItemData(_ITEM_DATA * pSlot, ByteBuffer & result) {
 			result << uint32(0);
 	} else
 		result << uint32(0);
-
 }
-
 
 void CUser::GirisNotice() {
 	DateTime time;
@@ -1609,8 +1574,6 @@ void CUser::GirisNotice() {
 	Packet WelcomeNotice(WIZ_CHAT, uint8(PUBLIC_CHAT));
 	WelcomeNotice << GetNation() << GetSocketID() << uint8(0) << Welcome;
 	Send(&WelcomeNotice);
-
-
 }
 /**
 * @brief	Calculates & sets a player's maximum HP.
@@ -1681,12 +1644,10 @@ void CUser::SetMaxMp() {
 	}
 }
 
-
 void CUser::SetMaxSp() {
 	m_iMaxSp = 120;
 	ySpChange(0);
 }
-
 
 /**
 * @brief	Sends the server time.
@@ -1744,7 +1705,6 @@ void CUser::SetZoneAbilityChange(uint16 sNewZone) {
 		pMap->SetTariff(g_pMain->GetTariffByZone(GetNation()));
 	else if (sNewZone == ZONE_MORADONM2 || sNewZone == ZONE_HELL_ABYSS || sNewZone == ZONE_DESPERATION_ABYSS)
 		pMap->SetTariff(g_pMain->GetTariffByZone(ZONE_MORADON));
-
 
 	Packet result(WIZ_ZONEABILITY, uint8(1));
 
@@ -1831,7 +1791,6 @@ void CUser::RequestUserIn(Packet & pkt) {
 			result << uint16(0); // placeholder for user count
 			online_count = 0;
 		}
-
 	}
 
 	if (online_count > 0) {
@@ -1883,7 +1842,6 @@ void CUser::RequestNpcIn(Packet & pkt) {
 				pNpc->GetNpcInfo(result, 0);
 		} else
 			pNpc->GetNpcInfo(result);
-
 	}
 
 	result.put(0, npc_count);
@@ -2034,7 +1992,7 @@ void CUser::SetSlotItemValue() {
 			itr = setItems.find(pTable->m_bRace);
 		}
 
-		// Update the final set ID depending on the equipped set item 
+		// Update the final set ID depending on the equipped set item
 		switch (pTable->m_bSlot) {
 		case ItemSlotHelmet:
 			itr->second += 2;
@@ -2064,7 +2022,6 @@ void CUser::SetSlotItemValue() {
 		ApplySetItemBonuses(pItem);
 	}
 
-
 	if (m_sAddArmourAc > 0)
 		m_sItemAc += m_sAddArmourAc;
 	else
@@ -2084,7 +2041,6 @@ void CUser::SetSlotItemValue() {
 }
 
 void CUser::ApplyAchieveSkillBonuses(uint16 pAchieveSkill, uint8 eNum) {
-
 	_ACHIEVE_TITLE * pAchieve = g_pMain->ACHIEVE_TITLE.GetData(pAchieveSkill);
 
 	if (pAchieve == nullptr)
@@ -2302,7 +2258,6 @@ void CUser::RecvUserExp(Packet & pkt) {
 	// Hand out kill rewards to all users in the party and still in range.
 	int PartyUsers = 0;
 	BOOST_FOREACH(auto itr, partyUsers) {
-
 		CUser * pUser = (itr);
 
 		if (pUser == nullptr)
@@ -2317,7 +2272,6 @@ void CUser::RecvUserExp(Packet & pkt) {
 	}
 
 	if (PartyUsers == 1) {
-
 		if (isDead())
 			return;
 
@@ -2366,7 +2320,6 @@ void CUser::RecvUserExp(Packet & pkt) {
 			else
 				fModifierMS = 0.0f;
 
-
 			fModifierMS = fModifierMS / 4;
 
 			TempValue = fModifierMS * LevelDifference * TempExp;
@@ -2382,7 +2335,6 @@ void CUser::RecvUserExp(Packet & pkt) {
 			ExpEvent(nFinalExp);
 		}
 
-
 		if (iNpcLoyalty > 0) {
 			TempValue = iNpcLoyalty * ((double) iDamage / (double) iTotalDamage);
 			nFinalLoyalty = (int) TempValue;
@@ -2393,25 +2345,20 @@ void CUser::RecvUserExp(Packet & pkt) {
 		}
 
 		return;
-
 	}
 
 	BOOST_FOREACH(auto itr, partyUsers) {
-
 		CUser * pUser = (itr);
 		if (pUser->isDead()
 			|| !pUser->isInRange(pNpc, RANGE_50M)
 			|| GetZoneID() != pUser->GetZoneID())
 			continue;
 
-
-
 		if (iNpcExp > 0 && (GetZoneID() != ZONE_STONE1 && GetZoneID() != ZONE_STONE2 && GetZoneID() != ZONE_STONE3 && GetZoneID() != ZONE_JURAD_MOUNTAIN)) {
 			TempValue = (nFinalExp * (1 + fPartyModifierXP * (nPartyMembers - 1))) * (double) pUser->GetLevel() / (double) nTotalLevel;
 			int iExp = (int) TempValue;
 			if (TempValue > iExp)
 				iExp++;
-
 
 			if (iExp > (pUser->m_iMaxExp / 10))
 				iExp = (int) pUser->m_iMaxExp / 10;
@@ -2475,7 +2422,6 @@ void CUser::RecvUserExp(Packet & pkt) {
 		}
 	}
 }
-
 
 /**
 * @brief	Changes the player's experience points by iExp.
@@ -2624,7 +2570,6 @@ void CUser::LevelChange(uint8 level, bool bLevelUp) {
 		}
 	}
 
-
 	if (bLevelUp && level > GetLevel() + 1) {
 		int16 nStatTotal = 300 + (level - 1) * 3;
 		uint8 nSkillTotal = (level - 9) * 2;
@@ -2646,10 +2591,7 @@ void CUser::LevelChange(uint8 level, bool bLevelUp) {
 			m_bstrSkill[SkillPointFree] += 2;
 	}
 
-
-
 	m_bLevel = level;
-
 
 	m_iMaxExp = g_pMain->GetExpByLevel(level);
 	SetUserAbility();
@@ -2788,7 +2730,6 @@ void CUser::HpChange(int amount, Unit *pAttacker /*= nullptr*/, bool bSendToAI /
 		// Handle mana absorb skills
 		if (m_bManaAbsorb > 0 && GetZoneID() != ZONE_CHAOS_DUNGEON) {
 			if ((m_bManaAbsorb == 15 && AbsorbCount > 0) || m_bManaAbsorb != 0) {
-
 				if (m_bManaAbsorb == 15)
 					AbsorbCount--;
 
@@ -2816,14 +2757,12 @@ void CUser::HpChange(int amount, Unit *pAttacker /*= nullptr*/, bool bSendToAI /
 		originalAmount = amount;
 	}
 
-
 	if (amount < 0 && -amount >= m_sHp)
 		m_sHp = 0;
 	else if (amount >= 0 && m_sHp + amount > m_iMaxHp)
 		m_sHp = m_iMaxHp;
 	else
 		m_sHp += amount;
-
 
 	// Absorbed System by Terry
 	if (isDevil() && pAttacker != nullptr && pAttacker->isPlayer()) {
@@ -2871,7 +2810,7 @@ void CUser::HpChange(int amount, Unit *pAttacker /*= nullptr*/, bool bSendToAI /
 	if (isInParty() && GetZoneID() != ZONE_CHAOS_DUNGEON)
 		SendPartyHPUpdate();
 
-	// Ensure we send the original damage (prior to passives) amount to the attacker 
+	// Ensure we send the original damage (prior to passives) amount to the attacker
 	// as it appears to behave that way officially.
 	if (pAttacker != nullptr
 		&& pAttacker->isPlayer())
@@ -2920,7 +2859,6 @@ void CUser::MSpChange(int amount) {
 void CUser::ySpChange(int amount) {
 	Packet result(WIZ_SP_CHANGE);
 
-
 	m_iMaxSp = 120;
 	if ((m_sSp + amount) > m_iMaxSp)
 		m_sSp = m_iMaxSp;
@@ -2931,9 +2869,7 @@ void CUser::ySpChange(int amount) {
 
 	result << uint8(1) << uint8(1) << uint8(m_iMaxSp) << uint8(m_sSp);
 	Send(&result);
-
 }
-
 
 /**
 * @brief	Sends a HP update to the user's party.
@@ -3002,7 +2938,6 @@ void CUser::SetUserAbility(bool bSendPacket /*= true*/) {
 
 	float hitcoefficient = 0.0f;
 
-
 	if (!isWeaponsDisabled()) {
 		_ITEM_TABLE * pRightHand = GetItemPrototype(RIGHTHAND);
 		_ITEM_DATA * pRightData = GetItem(RIGHTHAND);
@@ -3036,7 +2971,6 @@ void CUser::SetUserAbility(bool bSendPacket /*= true*/) {
 			case WEAPON_STAFF:
 				hitcoefficient = p_TableCoefficient->Staff;
 				break;
-
 			}
 
 			if (isKurian()
@@ -3081,7 +3015,6 @@ void CUser::SetUserAbility(bool bSendPacket /*= true*/) {
 	// Update stats based on item data
 	SetSlotItemValue();
 
-
 	ApplyAchieveSkillBonuses(GetSkillTitle(), 1);
 	int temp_str = GetStat(STAT_STR), temp_dex = getStatTotal(STAT_DEX);
 	//	if( temp_str > 255 ) temp_str = 255;
@@ -3095,8 +3028,6 @@ void CUser::SetUserAbility(bool bSendPacket /*= true*/) {
 		baseAP--;
 
 	temp_str += GetStatBonusTotal(STAT_STR);
-
-
 
 	m_sMaxWeight = ((((GetStatWithItemBonus(STAT_STR) + GetLevel()) * 50) + m_sMaxWeightBonus)  * (m_bMaxWeightAmount <= 0 ? 1 : m_bMaxWeightAmount / 100)) / 2;
 
@@ -3127,8 +3058,6 @@ void CUser::SetUserAbility(bool bSendPacket /*= true*/) {
 	m_fTotalHitrate = ((1 + p_TableCoefficient->Hitrate * GetLevel() *  temp_dex) * m_sItemHitrate / 100) * (m_bHitRateAmount / 100);
 
 	m_fTotalEvasionrate = ((1 + p_TableCoefficient->Evasionrate * GetLevel() * temp_dex) * m_sItemEvasionrate / 100) * (m_sAvoidRateAmount / 100);
-
-
 
 	SetMaxHp();
 	SetMaxMp();
@@ -3161,7 +3090,6 @@ void CUser::SetUserAbility(bool bSendPacket /*= true*/) {
 			else
 				bDefenseBonus = 50;
 		}
-
 
 		// Resist: [Passive]Increase all resistance by 30. If a shield is not equipped, the effect will decrease by half.
 		if (CheckSkillPoint(PRO_SKILL2, 10, 19))
@@ -3304,12 +3232,10 @@ void CUser::BundleOpenReq(Packet & pkt) {
 		|| (pBundleUser != this && !isInSameParty(pBundleUser)))
 		return;
 
-
 	result << bundle_index << uint8(pBundle->ItemsCount > 0 ? 1 : 0);
 
 	if (pBundle->ItemsCount < 1)
 		goto failed_return;
-
 
 	// The client expects all n items, so if there's any excess...
 	// send placeholder data for them.
@@ -3378,7 +3304,6 @@ void CUser::ItemGet(Packet & pkt) {
 		|| !isInRange(pBundle->x, pBundle->z, MAX_LOOT_RANGE))
 		goto fail_return;
 
-
 	if (pBundle->ItemsCount == 0)
 		goto fail_return;
 
@@ -3392,8 +3317,8 @@ void CUser::ItemGet(Packet & pkt) {
 		goto fail_return;
 
 	// If we're dealing with coins, either:
-	//  - we're not in a party, in which case the coins go to us. 
-	//  - we're in a party, in which case we need to distribute the coins (proportionately, by their level). 
+	//  - we're not in a party, in which case the coins go to us.
+	//  - we're in a party, in which case we need to distribute the coins (proportionately, by their level).
 	// Error handling should already have occurred in GetLootUser().
 	if (nItemID == ITEM_GOLD) {
 		_PARTY_GROUP * pParty;
@@ -3563,14 +3488,14 @@ CUser * CUser::GetLootUser(_LOOT_BUNDLE * pBundle, _LOOT_ITEM * pItem) {
 		return nullptr;
 
 	// If we're dealing with coins, either:
-	//  - we're in a party, in which case we need to distribute the coins (proportionately, by their level). 
+	//  - we're in a party, in which case we need to distribute the coins (proportionately, by their level).
 	//	  No checks are necessary here (the coins will be miniscule, so if there's no room we can safely ignore them)
-	//  - we're not in a party, in which case the coins go to us. 
+	//  - we're not in a party, in which case the coins go to us.
 	//	  In this case, we MUST check to be sure we have room for the coins.
 	if (pItem->nItemID == ITEM_GOLD) {
 		// NOTE: No checks are necessary if we're in a party.
 		if (!isInParty()) {
-			// We're not in a party, so we must check to be 
+			// We're not in a party, so we must check to be
 			// sure we have enough room for the coins.
 			if ((GetCoins() + pItem->sCount) > COIN_MAX)
 				return nullptr;
@@ -3581,10 +3506,10 @@ CUser * CUser::GetLootUser(_LOOT_BUNDLE * pBundle, _LOOT_ITEM * pItem) {
 	}
 
 	// If we're dealing with items:
-	//	- if we're in a party: 
-	//		distribute the item to the next player in the party in round-robin fashion, 
+	//	- if we're in a party:
+	//		distribute the item to the next player in the party in round-robin fashion,
 	//		whilst ensuring that user can actually hold the item.
-	//  - if not in a party: 
+	//  - if not in a party:
 	//		simply ensure that we can hold the item.
 	if (isInParty()) {
 		// This ensures the user can hold the item.
@@ -3610,7 +3535,6 @@ void CUser::StateChange(Packet & pkt) {
 	buff = *(uint8 *) &nBuff; // don't ask
 	m_iTotalTrainingExp = 0;
 	m_lastTrainingTime = 0;
-
 
 	switch (bType) {
 	case 1:
@@ -3778,7 +3702,7 @@ void CUser::LoyaltyChange(int16 tid, uint16 bonusNP /*= 0*/) {
 
 	AchieveType4(2);
 	// TODO: Move this to a better place (death handler, preferrably)
-	// If a war's running, and we died/killed in a war zone... (this method should NOT be so tied up in specifics( 
+	// If a war's running, and we died/killed in a war zone... (this method should NOT be so tied up in specifics(
 	if (g_pMain->m_byBattleOpen && GetMap()->isWarZone()) {
 		// Update the casualty count
 		if (pTUser->GetNation() == KARUS)
@@ -3839,7 +3763,7 @@ void CUser::TopSendNotice() {
 	uint8 count = 0;//uint8
 
 	result << uint8(1); // Old-style notices (top-right of screen)
-	result << count; // placeholder the 
+	result << count; // placeholder the
 	result.SByte();
 	// Use first line for header, 2nd line for data, 3rd line for header... etc.
 	// It's most likely what they do officially (as usual, | is their line separator)
@@ -3903,8 +3827,6 @@ void CUser::AppendExtraNoticeData(Packet & pkt, uint8 & elementCount) {
 
 	if (g_pMain->GoldToKcSystem)
 		g_pMain->SendHelpDescription(this, "You can transform Gold to KC with chat '+goldtokc <value>'.");
-
-
 }
 
 void CUser::SkillPointChange(Packet & pkt) {
@@ -4131,7 +4053,7 @@ void CUser::ItemWoreOut(int type, int damage) {
 	// Attack ise
 	if (type == ATTACK)
 		nTotalSlots = 2;
-	// Defans, Tamir v.b. Özel Durumlar 
+	// Defans, Tamir v.b. Özel Durumlar
 	else if (type == DEFENCE
 		|| type == REPAIR_ALL
 		|| type == ACID_ALL)
@@ -4307,13 +4229,12 @@ void CUser::HPTimeChangeType3() {
 			continue;
 
 		if (!pEffect->m_sTo) {
-
 			/// KENDINE USERE
 		// Has the required interval elapsed before using this skill?
 			if ((UNIXTIME - pEffect->m_tHPLastTime) >= pEffect->m_bHPInterval) {
 				Unit * pUnit = g_pMain->GetUnitPtr(pEffect->m_sSourceID);
 
-				// Reduce the HP 
+				// Reduce the HP
 				if (!isUsedGiver)
 					HpChange(pEffect->m_sHPAmount, pUnit); // do we need to specify the source of the DOT?
 				pEffect->m_tHPLastTime = UNIXTIME;
@@ -4358,14 +4279,13 @@ void CUser::HPTimeChangeType3() {
 				if (pNpc == nullptr)
 					continue;
 
-				// Reduce the HP 
+				// Reduce the HP
 				pNpc->HpChange(pEffect->m_sHPAmount, this);
 				pEffect->m_tHPLastTime = UNIXTIME;
 
 				// Has the skill expired yet?
 				if (++pEffect->m_bTickCount == pEffect->m_bTickLimit)
 					pEffect->Reset();
-
 			}
 
 			if (pEffect->m_byUsed) {
@@ -4373,7 +4293,6 @@ void CUser::HPTimeChangeType3() {
 				if (pEffect->m_sHPAmount < 0)
 					totalActiveDOTSkills++;
 			}
-
 		}
 	}
 
@@ -4396,7 +4315,6 @@ void CUser::Type4Duration() {
 			continue;
 
 		CMagicProcess::RemoveType4Buff(itr->first, this, true, isLockableScroll(itr->second.m_bBuffType));
-
 
 		break; // only ever handle one at a time with the current logic
 	}
@@ -4446,8 +4364,6 @@ void CUser::OperatorCommand(Packet & pkt) {
 	} else
 		bIsOnline = true;
 
-
-
 	switch (opcode) {
 	case OPERATOR_ARREST:
 		if (bIsOnline) {
@@ -4476,7 +4392,6 @@ void CUser::OperatorCommand(Packet & pkt) {
 	case OPERATOR_BAN:
 	case OPERATOR_BAN_ACCOUNT: // ban account is meant to call a proc to do so
 		if (bIsOnline) {
-
 			pUser->m_bAuthority = AUTHORITY_BANNED;
 			pUser->Disconnect();
 		} else
@@ -4607,7 +4522,6 @@ int CUser::GetEmptySlotCount() {
 	return SlotCount;
 }
 
-
 int CUser::GetEmptySlot() {
 	for (int i = SLOT_MAX; i < SLOT_MAX + HAVE_MAX; i++) {
 		_ITEM_DATA *pItem = GetItem(i);
@@ -4636,7 +4550,6 @@ void CUser::Home() {
 
 	// The point where you will be warped to.
 	short x = 0, z = 0;
-
 
 	_OBJECT_EVENT* pEvent = nullptr;
 	pEvent = GetMap()->GetObjectEvent(m_sBind);
@@ -4816,7 +4729,7 @@ void CUser::AllSkillPointChange(bool bIsFree) {
 
 	temp_value = (int) (temp_value * 1.5f);
 
-	// If global discounts are enabled 
+	// If global discounts are enabled
 	if (g_pMain->m_sDiscount == 2 // or war discounts are enabled
 		|| (g_pMain->m_sDiscount == 1 && g_pMain->m_byOldVictory == m_bNation))
 		temp_value /= 2;
@@ -4831,7 +4744,6 @@ void CUser::AllSkillPointChange(bool bIsFree) {
 				goto fail_return;
 		}
 	}
-
 
 	// Get total skill points
 	for (int i = 1; i < 9; i++)
@@ -5065,13 +4977,12 @@ void CUser::AllPointChange(bool bIsFree) {
 	}
 
 	// Players gain 3 stats points for each level up to and including 60.
-	// They also received 10 free stat points on creation. 
+	// They also received 10 free stat points on creation.
 	m_sPoints = 10 + (GetLevel() - 1) * 3;
 
 	// For every level after 60, we add an additional two points.
 	if (GetLevel() > 60)
 		m_sPoints += 2 * (GetLevel() - 60);
-
 
 	statTotal = GetStatTotal();
 
@@ -5145,7 +5056,7 @@ void CUser::GoldChange(short tid, int gold) {
 		int userCount = 0, levelSum = 0, temp_gold = (pTUser->m_iGold * 4) / 10;
 		pTUser->GoldLose(pTUser->m_iGold / 2);
 
-		// TODO: Clean up the party system. 
+		// TODO: Clean up the party system.
 		for (int i = 0; i < MAX_PARTY_USERS; i++) {
 			CUser *pUser = g_pMain->GetUserPtr(pParty->uid[i]);
 			if (pUser == nullptr)
@@ -5399,7 +5310,6 @@ void CUser::ObjectEvent(Packet & pkt) {
 	uint16 objectindex, nid;
 	pkt >> objectindex >> nid;
 
-
 	_OBJECT_EVENT * pEvent = GetMap()->GetObjectEvent(objectindex);
 	if (pEvent != nullptr
 		&& isInRange(pEvent->fPosX, pEvent->fPosZ, MAX_OBJECT_RANGE)) {
@@ -5428,7 +5338,6 @@ void CUser::ObjectEvent(Packet & pkt) {
 			SendAnvilRequest(nid);
 			return;
 		}
-
 	}
 
 	if (!bSuccess) {
@@ -5462,7 +5371,7 @@ void CUser::ResetGMVisibility() {
 
 	// Force the client to reset
 	if (m_bAbnormalType != ABNORMAL_INVISIBLE) {
-		// Only send this packet to the GM as other users 
+		// Only send this packet to the GM as other users
 		// will already see the GM as invisible.
 		Packet result(WIZ_STATE_CHANGE);
 		result << GetID() << uint8(5) << uint32(0);
@@ -5486,7 +5395,7 @@ void CUser::BlinkStart() {
 	m_bRegeneType = REGENE_ZONECHANGE;
 
 	UpdateVisibility(INVIS_DISPEL_ON_ATTACK); // AI shouldn't see us
-	m_bInvisibilityType = INVIS_NONE; // but players should. 
+	m_bInvisibilityType = INVIS_NONE; // but players should.
 
 	StateChangeServerDirect(3, ABNORMAL_BLINKING);
 }
@@ -5839,7 +5748,6 @@ void CUser::OnDeath(Unit *pKiller) {
 								// When your anger gauge is full (5 deaths), you can use the "Anger Explosion" skill.
 								if (!hasFullAngerGauge())
 									UpdateAngerGauge(++m_byAngerGauge);
-
 							}
 
 							// Loyalty should be awarded on kill.
@@ -6008,11 +5916,9 @@ void CUser::HandleVIPStorage(Packet & pkt) {
 		|| m_bMerchantStatex)
 		return;
 
-
 	uint8 OpCode;
 
 	pkt >> OpCode;
-
 
 	switch (OpCode) {
 	case 1: // request
@@ -6047,8 +5953,6 @@ void CUser::HandleVIPStorage(Packet & pkt) {
 	//printf("  sonunda %d \n",VIPStoreFalseTrying);
 }
 
-
-
 bool Unit::isInAttackRange(Unit * pTarget, _MAGIC_TABLE * pSkill /*= nullptr*/) {
 	if (pTarget == nullptr)
 		return false;
@@ -6080,7 +5984,7 @@ bool Unit::isInAttackRange(Unit * pTarget, _MAGIC_TABLE * pSkill /*= nullptr*/) 
 		if (pSkill->bMoral != MORAL_ENEMY && pSkill->bMoral > MORAL_PARTY)
 			return true;
 
-		// For physical attack skills (type 1 - melee, type 2 - ranged), we'll need take into account 
+		// For physical attack skills (type 1 - melee, type 2 - ranged), we'll need take into account
 		// the weapon's range.
 		if (pSkill->bType[0] != 3)
 			fRange = fWeaponRange;
@@ -6313,7 +6217,6 @@ void CUser::RecastLockableScrolls(uint8 buffType) {
 	RecastSavedMagic(buffType);
 }
 
-
 /**
 * @brief	Displays the player rankings board in PK zones,
 * 			when left-ALT is held.
@@ -6397,7 +6300,6 @@ void CUser::HandlePlayerRankings(Packet & pkt) {
 							result << pRankInfo->m_iLoyaltyPremiumBonus;
 
 						sCount++;
-
 					}
 				}
 			}
@@ -6435,7 +6337,6 @@ void CUser::HandlePlayerRankings(Packet & pkt) {
 
 				result << pUser->GetName()
 					<< pUser->m_KillCount << pUser->m_DeathCount;
-
 			}
 		}
 	}
@@ -6455,7 +6356,6 @@ void CUser::HandlePlayerRankings(Packet & pkt) {
 			nChangeExpMin = 50000;
 
 		result << int32(nChangeExpMax)/*Win*/ << int32(nChangeExpMin)/*Lose*/;
-
 	} else if (nRankType == RANK_TYPE_CHAOS_DUNGEON) {
 		uint64 nGainedExp = uint32(pow(GetLevel(), 3) * 0.15 * (5 * ((m_KillCount - m_DeathCount) > 0 ? (m_KillCount - m_DeathCount) : 1)));
 		uint64 nPremiumGainedExp = nGainedExp * 2;
@@ -6465,7 +6365,6 @@ void CUser::HandlePlayerRankings(Packet & pkt) {
 
 		if (nPremiumGainedExp > 8000000)
 			nPremiumGainedExp = 8000000;
-
 
 		result << GetName()
 			<< m_KillCount << m_DeathCount
@@ -6503,7 +6402,6 @@ uint16 CUser::GetPlayerRank(uint8 nRankType) {
 		if (pRankInfo) {
 			if (GetZoneID() == pRankInfo->pUser->GetZoneID()
 				&& GetEventRoom() == pRankInfo->pUser->GetEventRoom()) {
-
 				nMyRank++;
 
 				if (GetSocketID() == pRankInfo->m_socketID)
@@ -6579,7 +6477,6 @@ void CUser::HandleMiningStart(Packet & pkt) {
 	Packet result(WIZ_MINING, uint8(MiningStart));
 	uint16 resultCode = MiningResultSuccess;
 
-
 	// Are we mining already?
 	if (isMining())
 		resultCode = MiningResultMiningAlready;
@@ -6642,7 +6539,6 @@ void CUser::HandleMiningAttempt(Packet & pkt) {
 		uint32 Random;
 		uint32 DropBonus = 0;
 
-
 		if (GetPremiumProperty(PremiumDropPercent) > 0) // premium varsa şansı premium rate kadar yükselt
 		{
 			DropBonus += (100) * GetPremiumProperty(PremiumDropPercent);
@@ -6669,8 +6565,6 @@ void CUser::HandleMiningAttempt(Packet & pkt) {
 		if (Random < 1)
 			Random = 1;
 
-
-
 		uint32 nItemID = 0;
 
 		if (pTable->m_iNum != GOLDEN_MATTOCK)
@@ -6687,9 +6581,6 @@ void CUser::HandleMiningAttempt(Packet & pkt) {
 			sEffect = 13081; // "Item" effect
 		}
 		// Finally, give our item.
-
-
-
 
 		m_tLastMiningAttempt = UNIXTIME;
 	}
@@ -6752,7 +6643,6 @@ void CUser::HandleMiningThing(Packet & pkt) {
 }
 
 void CUser::HandleSoccer(Packet & pkt) {
-
 }
 
 /// Fish Stard
@@ -6893,10 +6783,7 @@ void CUser::HandleFishingAttempt(Packet & pkt) {
 		SendToRegion(&result, nullptr, GetEventRoom());
 	else if (resultCode == MiningResultNothingFound)
 		Send(&result);
-
 }
-
-
 
 /**
 * @brief	Handles when a user stops mining.
@@ -7100,7 +6987,6 @@ void CUser::RemoveStealth() {
 }
 
 void CUser::GivePremium(uint8 bPremiumType, uint16 sPremiumTime) {
-
 	m_bAccountStatus = 1;
 	_PREMIUM_TYPE * pPremium = new _PREMIUM_TYPE;
 	_PREMIUM_TYPE * nPremium = PremiumList.GetData(bPremiumType);
@@ -7121,7 +7007,6 @@ void CUser::GivePremium(uint8 bPremiumType, uint16 sPremiumTime) {
 }
 
 void CUser::PremiumSwitchHandle(Packet & pkt) {
-
 	uint8 ChangePremiumID;
 	uint8 opcode = pkt.read<uint8>();
 	_PREMIUM_TYPE * pPremium;
@@ -7176,8 +7061,6 @@ void CUser::SiegeWarFareNpc(Packet & pkt) {
 	if (pKnightSiegeWarFare == nullptr)
 		return;
 
-
-
 	Packet result(WIZ_SIEGE);
 	switch (opcode) {
 	case 3: //moradon npc
@@ -7225,7 +7108,6 @@ void CUser::SiegeWarFareNpc(Packet & pkt) {
 
 	case 4: //delos npc
 	{
-
 		if (pKnight == nullptr
 			|| GetClanID() == 0
 			|| pKnightSiegeWarFare->sMasterKnights != GetClanID()
@@ -7287,7 +7169,6 @@ void CUser::SiegeWarFareNpc(Packet & pkt) {
 }
 
 void CUser::LogosShout(Packet & pkt) {
-
 	if (isTrading() || isMerchanting() || m_bMerchantStatex || isDead())
 		return;
 
@@ -7305,7 +7186,6 @@ void CUser::LogosShout(Packet & pkt) {
 	result << uint8(2) << uint8(1) << RGB << Notice;
 	RobItem(800075000, 1);
 	g_pMain->Send_All(&result);
-
 }
 void CUser::HandleGenie(Packet & pkt) {
 	uint8 command = pkt.read<uint8>();
@@ -7323,9 +7203,7 @@ void CUser::HandleGenie(Packet & pkt) {
 	}
 }
 
-
 void CUser::GenieNonAttackProgress(Packet & pkt) {
-
 	enum GenieNonAttackType {
 		GenieUseSpiringPotion = 1,
 		GenieLoadOptions = 0x02,
@@ -7367,7 +7245,6 @@ void CUser::GenieNonAttackProgress(Packet & pkt) {
 		TRACE("[%s] Genie Non Attack Unknow Handle %d Packet Len [%d]\r\n", GetName().c_str(), command, pkt.size());
 		break;
 	}
-
 }
 
 void CUser::GenieAttackProgress(Packet & pkt) {
@@ -7442,14 +7319,11 @@ void CUser::GenieUseGenieSpirint() {
 	else if (CountB > 0)
 		RobItem(810306000);
 
-
-
 	m_GenieTime = 120;
 
 	result << uint8(1) << uint8(1) << GetGenieTime();
 
 	Send(&result);
-
 }
 
 void CUser::GenieInfo() {
@@ -7473,7 +7347,6 @@ void CUser::ExpFlash() {
 
 		SendNotice();
 	} else {
-
 		if (m_FlashExpBonus == 1)
 			m_FlashExpBonus = 0;
 
@@ -7483,7 +7356,6 @@ void CUser::ExpFlash() {
 			m_FlashExpBonus = 40;
 
 		SendNotice();
-
 	}
 }
 
@@ -7545,7 +7417,6 @@ void CUser::GoldEvent(uint32 gold) {
 		SendToRegion(&result, nullptr, GetEventRoom());
 		gold = gold * (rand);
 		GoldGain(gold, true, false);
-
 	}
 }
 
@@ -7569,8 +7440,6 @@ void CUser::ExpEvent(int64 exp) {
 		rand = 500;
 	else if (rand >= g_pMain->m_byExpx500 && rand <= g_pMain->m_byExpx1000)
 		rand = 1000;
-
-
 
 	m_bExpEvent = rand * exp;
 
@@ -7642,7 +7511,6 @@ void CUser::HandleUserInfo(Packet & pkt) {
 				Send(&result2);
 
 				return;
-
 			} else
 				return;
 		}
@@ -7682,7 +7550,6 @@ void CUser::HandleUserInfo(Packet & pkt) {
 			result2 << pItem->nNum << pItem->sDuration << pItem->sCount << pItem->bFlag;
 		}
 		Send(&result2);
-
 	}
 	if (command == 0x04)
 		RemoveRegionChat();
@@ -7740,13 +7607,11 @@ void CUser::HandleUserInfo(Packet & pkt) {
 			result << uint16(4);
 
 			sCount++;
-
 		}
 
 		result.put(4, sCount);
 		Send(&result);
 	}
-
 }
 void CUser::HandleUserInfoShow(Packet & pkt) {
 	Packet result(WIZ_USER_INFO, uint8(UserInfoAll));
@@ -7757,7 +7622,6 @@ void CUser::HandleUserInfoShow(Packet & pkt) {
 		<< uint16(0);
 
 	Send(&result);
-
 }
 void CUser::HandleUserInfoNick(Packet & pkt) {
 	Packet result(WIZ_USER_INFO, uint8(UserInfoNick));
@@ -7770,7 +7634,6 @@ void CUser::HandleUserInfoNick(Packet & pkt) {
 		<< uint16(0)
 		<< uint16(0);
 	Send(&result);
-
 }
 
 void CUser::HandleUserInfoDetail(Packet & pkt) {
@@ -7792,11 +7655,9 @@ void CUser::PetSkill(uint64 nSerial) {
 
 	if (newPet != nullptr)
 		newPet->SummonPet(this);
-
 }
 
 void CUser::DupeItemsDelete() {
-
 	std::string sNoticeMessage;
 	bool iFindItem = false;
 
@@ -7904,5 +7765,4 @@ void CUser::ReportedUsers() {
 
 		break;
 	}
-
 }

@@ -15,9 +15,6 @@ public:
 		CKnights *pData = m_pMap->GetData(myIndex);
 
 		if (pData != nullptr) {
-
-
-
 			_dbCommand->FetchByte(2, pData->m_byFlag);
 			_dbCommand->FetchByte(3, pData->m_byNation);
 			_dbCommand->FetchByte(4, pData->m_byRanking);
@@ -46,7 +43,6 @@ public:
 			_dbCommand->FetchByte(24, pData->m_sClanPointMethod);
 
 			pData->m_byGrade = g_pMain->GetKnightsGrade(pData->m_nPoints);
-
 		}
 
 		return true;

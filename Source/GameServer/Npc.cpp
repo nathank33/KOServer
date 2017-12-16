@@ -9,7 +9,6 @@ CNpc::CNpc() : Unit(UnitNPC) {
 	Initialize();
 }
 
-
 CNpc::~CNpc() {}
 
 /**
@@ -182,11 +181,11 @@ void CNpc::SendInOut(uint8 bType, float fX, float fZ, float fY) {
 			<< uint8(mPet->m_sFireR) << uint8(mPet->m_sColdR) << uint8(mPet->m_sLightningR)
 			<< uint8(mPet->m_sMagicR) << uint8(mPet->m_sDiseaseR) << uint8(mPet->m_sPoisonR);
 
-		for (int i = 0; i < PET_MAX; i++) // pet cıkar görürsün de ne sorcaksan sor cıkıcam valla kanka 2 minik sorum var :D 
+		for (int i = 0; i < PET_MAX; i++) // pet cıkar görürsün de ne sorcaksan sor cıkıcam valla kanka 2 minik sorum var :D
 		{
 			_ITEM_DATA * pItem = &mPet->m_sItemArray[i];
 
-			//if(pItem->nNum > 0) 
+			//if(pItem->nNum > 0)
 			pet << pItem->nNum << pItem->sDuration << pItem->sCount << pItem->bFlag << uint32(0) << pItem->nExpirationTime;
 			//else
 			//pet << uint32(0) << uint16(0) << uint16(0) << uint8(0) << uint16(0) << uint32(0) << uint32(0);
@@ -223,7 +222,6 @@ void CNpc::GetNpcInfo(Packet & pkt, uint8 myNation) {
 			<< pUser->GetNation() << newPet->m_bLevel
 			<< newPet->GetSPosX() << newPet->GetSPosZ() << newPet->GetSPosY()
 			<< uint32(0) << uint8(0) << uint32(0) << int16(newPet->m_byDirection);
-
 	}
 	pkt.SByte();
 #if (__VERSION >= 1950)
@@ -237,7 +235,7 @@ void CNpc::GetNpcInfo(Packet & pkt, uint8 myNation) {
 		pkt << GetType();
 	pkt << uint32(0)
 		<< m_sSize
-		<< uint32(m_iWeapon_1) << uint32(m_iWeapon_2); // isPet() ? string 
+		<< uint32(m_iWeapon_1) << uint32(m_iWeapon_2); // isPet() ? string
 	if (nIsPet && m_bIsEventNpc)
 		pkt << strUserName << strPetName;
 	if (myNation == uint8(-1))
@@ -292,7 +290,6 @@ void CNpc::SendGateFlag(uint8 bFlag /*= -1*/, bool bSendAI /*= true*/) {
 	if (GetProtoID() == 8110)
 		objectType = OBJECT_GATE;
 
-
 	Packet result(WIZ_OBJECT_EVENT, objectType);
 
 	if (GetProtoID() == 8110) {
@@ -301,7 +298,6 @@ void CNpc::SendGateFlag(uint8 bFlag /*= -1*/, bool bSendAI /*= true*/) {
 		result << uint8(1) << GetID() << bFlag;
 		SendToRegion(&result);
 	} else {
-
 		// If there's a flag to set, set it now.
 		if (bFlag >= 0)
 			m_byGateOpen = (bFlag == 1);
@@ -393,7 +389,6 @@ void CNpc::SendHpChangeToAI(uint16 sTargetID, int amount, AttributeType attribut
 * @param	amount	The amount to adjust the mana by.
 */
 void CNpc::MSpChange(int amount) {
-
 }
 
 bool CNpc::CastSkill(Unit * pTarget, uint32 nSkillID) {
@@ -533,12 +528,10 @@ void CNpc::OnDeathProcess(Unit *pKiller) {
 
 		else if (g_pMain->m_MonsterRespawnListArray.GetData(GetProtoID()) != nullptr && pUser->isInPKZone()) {
 			g_pMain->SpawnEventNpc(g_pMain->m_MonsterRespawnListArray.GetData(GetProtoID())->sSid, true, GetZoneID(), GetX(), GetY(), GetZ(), g_pMain->m_MonsterRespawnListArray.GetData(GetProtoID())->sCount);
-
 		} else if (g_pMain->pTempleEvent.ActiveEvent == TEMPLE_EVENT_JURAD_MOUNTAIN) {
 			if (JuraidTempleEventZone()) {
 				if (g_pMain->m_MonsterRespawnListArray.GetData(GetProtoID()) != nullptr)
 					g_pMain->SpawnEventNpc(g_pMain->m_MonsterRespawnListArray.GetData(GetProtoID())->sSid, true, GetZoneID(), GetX(), GetY(), GetZ(), g_pMain->m_MonsterRespawnListArray.GetData(GetProtoID())->sCount, 5, 60 * 60, 0, GetNation(), pUser->GetSocketID(), pUser->GetEventRoom());
-
 
 				if (GetProtoID() == 8100 || GetProtoID() == 8102) {
 					pUser->GetNation() == KARUS ? g_pMain->pTempleEvent.KarusDeathRoom1[pUser->GetEventRoom()]++ : g_pMain->pTempleEvent.ElmoDeathRoom1[pUser->GetEventRoom()]++;
@@ -613,7 +606,6 @@ void CNpc::OnDeathProcess(Unit *pKiller) {
 					g_pMain->pTempleEvent.isDevaFlag[GetEventRoom()] = true;
 					g_pMain->pTempleEvent.DevaNation[GetEventRoom()] = pUser->GetNation();
 				}
-
 			}
 		} else if (m_tNpcType == NPC_CHAOS_STONE && pUser->isInPKZone()) {
 			ChaosStoneProcess(pUser, 5);
@@ -828,7 +820,6 @@ void CNpc::BattleMonumentProcess(CUser *pUser) {
 
 			if (g_pMain->m_sKilledElmoNpc == 3 && g_pMain->m_sKarusMonuments >= 7)
 				g_pMain->BattleZoneResult(pUser->GetNation());
-
 		} else {
 			g_pMain->m_sElmoMonumentPoint += 2;
 			g_pMain->m_sElmoMonuments++;
@@ -848,7 +839,6 @@ void CNpc::BattleMonumentProcess(CUser *pUser) {
 		}
 
 		g_pMain->NereidsMonumentEvent(m_byTrapNumber, pUser->GetNation(), nullptr);
-
 	}
 }
 
@@ -923,7 +913,6 @@ void CNpc::CZMonumentProcess(CUser *pUser) {
 	}
 }
 
-
 void CNpc::HPTimeChangeType3() {
 	if (isDead()
 		|| !m_bType3Flag || isPlayer())
@@ -948,7 +937,7 @@ void CNpc::HPTimeChangeType3() {
 			if (!isInRangeSlow(pUnit, 50.0f))
 				m_bType3Flag = false;
 
-			// Reduce the HP 
+			// Reduce the HP
 			HpChange(pEffect->m_sHPAmount, pUnit); // do we need to specify the source of the DOT?
 			pEffect->m_tHPLastTime = UNIXTIME;
 
@@ -996,4 +985,3 @@ void CNpc::Type4Duration() {
 		break; // only ever handle one at a time with the current logic
 	}
 }
-

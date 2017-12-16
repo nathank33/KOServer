@@ -1,8 +1,7 @@
 #pragma once
 
 template <typename T>
-class Atomic
-{
+class Atomic {
 public:
 	Atomic() {}
 	Atomic(T value) : m_atomic(value) {}
@@ -22,12 +21,12 @@ public:
 #pragma warning(push)
 #pragma warning(disable: 4018)
 
-	ATOMIC_COMPARISON(>)
-		ATOMIC_COMPARISON(>=)
-		ATOMIC_COMPARISON(<)
-		ATOMIC_COMPARISON(<=)
-		ATOMIC_COMPARISON(==)
-		ATOMIC_COMPARISON(!=)
+	ATOMIC_COMPARISON(> )
+		ATOMIC_COMPARISON(>= )
+		ATOMIC_COMPARISON(< )
+		ATOMIC_COMPARISON(<= )
+		ATOMIC_COMPARISON(== )
+		ATOMIC_COMPARISON(!= )
 
 #pragma warning(pop)
 #undef ATOMIC_COMPARISON

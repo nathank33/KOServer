@@ -2,25 +2,20 @@
 #include <cstdarg>
 #include "OdbcConnection.h"
 
-OdbcConnection::OdbcConnection() : m_envHandle(nullptr), m_connHandle(nullptr), m_lock(new std::recursive_mutex()), m_bMarsEnabled(false)
-{
-
+OdbcConnection::OdbcConnection() : m_envHandle(nullptr), m_connHandle(nullptr), m_lock(new std::recursive_mutex()), m_bMarsEnabled(false) {
 }
 
-bool OdbcConnection::isConnected() 
-{
+bool OdbcConnection::isConnected() {
 	Guard lock(m_lock);
 	return (m_connHandle != nullptr);
 }
 
-bool OdbcConnection::isError() 
-{
+bool OdbcConnection::isError() {
 	Guard lock(m_lock);
 	return (!m_odbcErrors.empty());
 }
 
-bool OdbcConnection::Connect(tstring & szDSN, tstring & szUser, tstring & szPass, bool bMarsEnabled)
-{
+bool OdbcConnection::Connect(tstring & szDSN, tstring & szUser, tstring & szPass, bool bMarsEnabled) {
 	m_szDSN = szDSN;
 	m_szUser = szUser;
 	m_szPass = szPass;
@@ -30,8 +25,7 @@ bool OdbcConnection::Connect(tstring & szDSN, tstring & szUser, tstring & szPass
 	return Connect();
 }
 
-bool OdbcConnection::Connect()
-{
+bool OdbcConnection::Connect() {
 	if (m_szDSN.empty())
 		return false;
 
@@ -43,37 +37,31 @@ bool OdbcConnection::Connect()
 		Disconnect();
 
 	// Allocate enviroment handle
-	if (!SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &m_envHandle)))
-	{
+	if (!SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &m_envHandle))) {
 		ReportSQLError(SQL_HANDLE_ENV, m_envHandle, _T("SQLAllocHandle"), _T("Unable to allocate environment handle."));
 		goto error_handler;
 	}
 
 	// Request ODBC3 support
-	if (!SQL_SUCCEEDED(SQLSetEnvAttr(m_envHandle, SQL_ATTR_ODBC_VERSION, (void *)SQL_OV_ODBC3, 0)))
-	{
+	if (!SQL_SUCCEEDED(SQLSetEnvAttr(m_envHandle, SQL_ATTR_ODBC_VERSION, (void *) SQL_OV_ODBC3, 0))) {
 		ReportSQLError(SQL_HANDLE_ENV, m_envHandle, _T("SQLSetEnvAttr"), _T("Unable to set environment attribute (SQL_ATTR_ODBC_VERSION)."));
 		goto error_handler;
 	}
 
 	// Allocate the connection handle
-	if (!SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_DBC, m_envHandle, &m_connHandle)))
-	{
+	if (!SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_DBC, m_envHandle, &m_connHandle))) {
 		ReportSQLError(SQL_HANDLE_ENV, m_envHandle, _T("SQLAllocHandle"), _T("Unable to allocate connection handle."));
 		goto error_handler;
 	}
 
-	if (m_szUser.length())
-	{
+	if (m_szUser.length()) {
 		szConn += _T("UID=") + m_szUser + _T(";");
 		if (m_szPass.length())
 			szConn += _T("PWD=") + m_szPass + _T(";");
 	}
 
-	if (m_bMarsEnabled)
-	{
-		if (!SQL_SUCCEEDED(SQLSetConnectAttr(m_connHandle, SQL_COPT_SS_MARS_ENABLED, SQL_MARS_ENABLED_YES, SQL_IS_UINTEGER)))
-		{
+	if (m_bMarsEnabled) {
+		if (!SQL_SUCCEEDED(SQLSetConnectAttr(m_connHandle, SQL_COPT_SS_MARS_ENABLED, SQL_MARS_ENABLED_YES, SQL_IS_UINTEGER))) {
 			printf("** WARNING **\n\n");
 			printf("Attempted to used MARS (Multiple Active Result Sets), but this\n");
 			printf("feature is not supported by your ODBC driver or SQL Server version.\n\n");
@@ -84,8 +72,7 @@ bool OdbcConnection::Connect()
 		}
 	}
 
-	if (!SQL_SUCCEEDED(SQLDriverConnect(m_connHandle, SQL_NULL_HANDLE, (SQLTCHAR *)szConn.c_str(), SQL_NTS, 0, 0, 0, 0)))
-	{
+	if (!SQL_SUCCEEDED(SQLDriverConnect(m_connHandle, SQL_NULL_HANDLE, (SQLTCHAR *) szConn.c_str(), SQL_NTS, 0, 0, 0, 0))) {
 		ReportSQLError(SQL_HANDLE_DBC, m_connHandle, _T("SQLDriverConnect"), _T("Unable to establish connection."));
 		goto error_handler;
 	}
@@ -100,8 +87,7 @@ error_handler:
 	return false;
 }
 
-OdbcCommand *OdbcConnection::CreateCommand()
-{
+OdbcCommand *OdbcConnection::CreateCommand() {
 	if (!isConnected()
 		&& !Connect())
 		return nullptr;
@@ -109,39 +95,33 @@ OdbcCommand *OdbcConnection::CreateCommand()
 	return new OdbcCommand(this);
 }
 
-void OdbcConnection::AddCommand(OdbcCommand *dbCommand)
-{
+void OdbcConnection::AddCommand(OdbcCommand *dbCommand) {
 	Guard lock(m_lock);
 	m_commandSet.insert(dbCommand);
 }
 
-void OdbcConnection::RemoveCommand(OdbcCommand *dbCommand)
-{
+void OdbcConnection::RemoveCommand(OdbcCommand *dbCommand) {
 	Guard lock(m_lock);
 	m_commandSet.erase(dbCommand);
 }
 
 // Used to internally reset handles. Should ONLY be used in special cases, otherwise we'll break the state of the connection.
-void OdbcConnection::ResetHandles()
-{
+void OdbcConnection::ResetHandles() {
 	// Free the connection handle if it's allocated
-	if (m_connHandle != nullptr)
-	{
+	if (m_connHandle != nullptr) {
 		SQLFreeHandle(SQL_HANDLE_DBC, m_connHandle);
 		m_connHandle = nullptr;
 	}
 
 	// Free the environment handle if it's allocated
-	if (m_envHandle != nullptr)
-	{
+	if (m_envHandle != nullptr) {
 		SQLFreeHandle(SQL_HANDLE_ENV, m_envHandle);
 		m_envHandle = nullptr;
 	}
 }
 
 tstring OdbcConnection::ReportSQLError(SQLSMALLINT handleType, SQLHANDLE handle,
-									   const TCHAR *szSource, const TCHAR *szError, ...)
-{
+	const TCHAR *szSource, const TCHAR *szError, ...) {
 	Guard lock(m_lock);
 	TCHAR szErrorBuffer[256];
 	OdbcError *error = new OdbcError();
@@ -156,8 +136,7 @@ tstring OdbcConnection::ReportSQLError(SQLSMALLINT handleType, SQLHANDLE handle,
 
 	m_odbcErrors.push_back(error);
 
-	if (handle != nullptr)
-	{
+	if (handle != nullptr) {
 		error->ExtendedErrorMessage = GetSQLError(handleType, handle);
 		if (!error->ExtendedErrorMessage.empty())
 			return error->ExtendedErrorMessage;
@@ -166,22 +145,20 @@ tstring OdbcConnection::ReportSQLError(SQLSMALLINT handleType, SQLHANDLE handle,
 	return szErrorBuffer;
 }
 
-tstring OdbcConnection::GetSQLError(SQLSMALLINT handleType, SQLHANDLE handle)
-{
+tstring OdbcConnection::GetSQLError(SQLSMALLINT handleType, SQLHANDLE handle) {
 	tstring result;
 	SQLTCHAR SqlState[256], SqlMessage[256];
 	SQLINTEGER NativeError;
 	SQLSMALLINT TextLength;
 
-	if (!SQL_SUCCEEDED(SQLGetDiagRec(handleType, handle, 1, (SQLTCHAR *)&SqlState, &NativeError, (SQLTCHAR *)&SqlMessage, sizeof(SqlMessage), &TextLength)))
+	if (!SQL_SUCCEEDED(SQLGetDiagRec(handleType, handle, 1, (SQLTCHAR *) &SqlState, &NativeError, (SQLTCHAR *) &SqlMessage, sizeof(SqlMessage), &TextLength)))
 		return result;
 
-	result = (TCHAR *)SqlMessage;
+	result = (TCHAR *) SqlMessage;
 	return result;
 }
 
-OdbcError *OdbcConnection::GetError()
-{
+OdbcError *OdbcConnection::GetError() {
 	Guard lock(m_lock);
 	if (m_odbcErrors.empty())
 		return nullptr;
@@ -191,8 +168,7 @@ OdbcError *OdbcConnection::GetError()
 	return pError;
 }
 
-void OdbcConnection::ResetErrors()
-{
+void OdbcConnection::ResetErrors() {
 	if (!isError())
 		return;
 
@@ -202,18 +178,15 @@ void OdbcConnection::ResetErrors()
 		delete pError;
 }
 
-void OdbcConnection::Disconnect()
-{
+void OdbcConnection::Disconnect() {
 	// Make sure our handles are open. If not, there's nothing to do.
 	if (!isConnected())
 		return;
 
 	Guard lock(m_lock);
 	// Kill off open statements
-	if (m_commandSet.size())
-	{
-		for (auto itr = m_commandSet.begin(); itr != m_commandSet.end(); itr++)
-		{
+	if (m_commandSet.size()) {
+		for (auto itr = m_commandSet.begin(); itr != m_commandSet.end(); itr++) {
 			// Detach from the connection first so we don't try to remove it from the set (while we're using it!)
 			(*itr)->Detach();
 
@@ -228,8 +201,7 @@ void OdbcConnection::Disconnect()
 	Close();
 }
 
-void OdbcConnection::Close()
-{
+void OdbcConnection::Close() {
 	// Disconnect from server.
 	SQLDisconnect(m_connHandle);
 
@@ -237,8 +209,7 @@ void OdbcConnection::Close()
 	ResetHandles();
 }
 
-OdbcConnection::~OdbcConnection()
-{
+OdbcConnection::~OdbcConnection() {
 	Disconnect();
 	ResetErrors();
 	delete m_lock;

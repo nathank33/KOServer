@@ -5,7 +5,6 @@ unsigned char  opcode[29];
 // tmm reyiz
 
 void iGuardLoad() {// böyte iþlemesi lazým ama servera res lazým
-
 	radd[0] = 0x004A90D3;
 	opcode[0] = 0x2B;
 	thadd[0] = 0x015E1600;

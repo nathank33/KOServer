@@ -46,7 +46,6 @@ void CUser::ChatRoomHandle(Packet & pkt) {
 	}
 }
 
-
 void CUser::ChatRoomList(Packet & pkt) {
 	Packet result(WIZ_NATION_CHAT, uint8(0x0B));
 
@@ -192,7 +191,7 @@ void CUser::ChatroomLeave(Packet & pkt) {
 	if (pRoom == nullptr)
 		return;
 
-	// Kullanıcıları odadan atma 
+	// Kullanıcıları odadan atma
 
 	if (pRoom->isAdministrator(GetName()) == 2)
 		g_pMain->m_ChatRoomArray.DeleteData(RoomID);
@@ -214,8 +213,6 @@ void CUser::ChatRoomChat(std::string * strMessage, std::string strSender) {
 	result.DByte();
 	result << uint8(0) << pUser->GetSocketID() << pUser->GetName() << *strMessage << pUser->GetZoneID();
 	//10 21 00 0701 0B00 7370656369616C6C697374 0600 74656B726172 15
-
-
 
 	SendChatRoom(result);
 }
@@ -245,7 +242,6 @@ void CUser::ChatroomAdmin(Packet & pkt) {
 			continue;
 
 		result << uint8(0x18) << uint8(pRoom->isAdministrator(pSendUser->GetName())) << pSendUser->GetName();
-
 	}
 
 	Send(&result);

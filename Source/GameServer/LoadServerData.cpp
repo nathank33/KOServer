@@ -137,7 +137,6 @@ bool CGameServerDlg::LoadItemExchangeExpTable() {
 }
 
 uint8 CGameServerDlg::GetTariffByZone(int zoneid) {
-
 	_KNIGHTS_SIEGE_WARFARE *pSiegeWar = g_pMain->GetSiegeMasterKnightsPtr(1);
 	CKingSystem *pKingSystemK = g_pMain->m_KingSystemArray.GetData(1);
 	CKingSystem *pKingSystemH = g_pMain->m_KingSystemArray.GetData(2);
@@ -186,7 +185,6 @@ uint8 CGameServerDlg::GetTariffByZone(int zoneid) {
 	return 0;
 }
 bool CGameServerDlg::LoadItemMiningTable() {
-
 	memset(&bRandArrayNormalMattock, 0, sizeof(bRandArrayNormalMattock));
 	memset(&bRandArrayGoldenMattock, 0, sizeof(bRandArrayGoldenMattock));
 
@@ -195,13 +193,11 @@ bool CGameServerDlg::LoadItemMiningTable() {
 
 	LOAD_TABLE(CItemMiningSet, g_DBAgent.m_GameDB, &m_ItemMiningArray, true, false);
 
-
 	if (g_pMain->TotalMiningExchangeRate != 10000)
 		printf("WARNING : Total Mining Exchange Rate(ITEM_MINING) have to be [10000]!\n");
 
 	if (g_pMain->TotalGoldenMiningExchangeRate != 10000)
 		printf("WARNING : Total Golden Mining Exchange Rate(ITEM_MINING) have to be [10000]!\n");
-
 }
 
 bool CGameServerDlg::LoadItemUpgradeTable() {
@@ -329,7 +325,6 @@ bool CGameServerDlg::LoadUserRankings() {
 			continue;
 
 		GetUserRank(pUser);
-
 	}
 
 	foreach(itr, m_UserPersonalRankMap) {
@@ -395,7 +390,6 @@ bool CGameServerDlg::LoadKnightsRankTable(bool bWarTime /*= false*/, bool bIsSli
 
 	BoardCache[0].clear();
 	BoardCache[1].clear();
-
 
 	if (!bWarTime)
 		return true;

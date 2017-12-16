@@ -57,13 +57,10 @@ void CBot::Initialize() {
 	m_sPrivateChatUser = -1;
 	m_bNeedParty = 0x01;
 
-
 	m_bAbnormalType = ABNORMAL_NORMAL;	// User starts out in normal size.
 	m_nOldAbnormalType = m_bAbnormalType;
 
-
 	m_teamColour = TeamColourNone;
-
 }
 
 bool CBot::RegisterRegion() {
@@ -123,7 +120,6 @@ void CBot::StateChangeServerDirect(uint8 bType, uint32 nBuff) {
 	case 3:
 		m_nOldAbnormalType = m_bAbnormalType;
 
-
 		m_bAbnormalType = nBuff;
 		break;
 
@@ -177,7 +173,6 @@ void CBot::UserInOut(uint8 bType) {
 		std::string upperName = GetName();
 		STRTOUPPER(upperName);
 		g_pMain->m_BotcharacterNameMap[upperName] = this;
-
 	}
 	SendToRegion(&result);
 }
@@ -187,7 +182,6 @@ void CBot::SendToRegion(Packet *pkt) {
 }
 
 void CBot::GetUserInfo(Packet & pkt) {
-
 	pkt.SByte();
 	pkt << GetName()
 		<< uint16(m_bNation) << GetClanID() << m_bFame;
@@ -202,9 +196,9 @@ void CBot::GetUserInfo(Packet & pkt) {
 			<< pKnights->m_strName
 			<< pKnights->m_byGrade << pKnights->m_byRanking
 			<< uint16(pKnights->m_sMarkVersion) // symbol/mark version
-			<< pKnights->GetCapeID(aKnights) // cape ID 
+			<< pKnights->GetCapeID(aKnights) // cape ID
 			<< pKnights->m_bCapeR << pKnights->m_bCapeG << pKnights->m_bCapeB << uint8(0) // this is stored in 4 bytes after all.
-			// not sure what this is, but it (just?) enables the clan symbol on the cape 
+			// not sure what this is, but it (just?) enables the clan symbol on the cape
 			// value in dump was 9, but everything tested seems to behave as equally well...
 			// we'll probably have to implement logic to respect requirements.
 			<< uint8(1);
@@ -223,12 +217,11 @@ void CBot::GetUserInfo(Packet & pkt) {
 		<< bInvisibilityType // visibility state
 		<< uint8(m_teamColour) // team colour (i.e. in soccer, 0=none, 1=blue, 2=red)
 		<< m_bIsHidingHelmet << m_bIsHidingCospre // either this is correct and items are super buggy, or it causes baldness. You choose.
-		<< m_sDirection // direction 
+		<< m_sDirection // direction
 		<< m_bIsChicken // chicken/beginner flag
 		<< m_bRank // king flag
 		<< uint16(0)
 		<< int8(-1) << int8(-1); // NP ranks (total, monthly)
-
 
 	uint8 equippedItems[] =
 	{
@@ -244,8 +237,5 @@ void CBot::GetUserInfo(Packet & pkt) {
 		pkt << pItem->nNum << pItem->sDuration << pItem->bFlag;
 	}
 
-
-
 	pkt << m_bZone << uint8(-1) << uint8(-1) << uint16(0) << uint16(0) << uint16(0) << m_bIsHidingCospre << uint8(0) << uint8(GetRebLevel()) << uint16(m_sAchieveCoverTitle) << uint16(0) << uint8(0) << uint8(0);
-
 }

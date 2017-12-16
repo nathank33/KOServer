@@ -18,12 +18,10 @@ void CRegion::Add(CBot * pBot) {
 	m_RegionBotArray.insert(pBot->GetID());
 }
 
-
 void CRegion::Remove(CBot * pBot) {
 	Guard lock(m_lock);
 	m_RegionBotArray.erase(pBot->GetID());
 }
-
 
 /**
 * @brief	Removes the given user instance from the region.
@@ -44,8 +42,6 @@ void CRegion::Add(CNpc * pNpc) {
 	Guard lock(m_lock);
 	m_RegionNpcArray.insert(pNpc->GetID());
 }
-
-
 
 /**
 * @brief	Removes the given NPC from the region.

@@ -189,7 +189,7 @@ void CKingSystem::CheckKingTimer() {
 		}
 	} break;
 
-	case 2: // 2 days (48 hours) after the impeachment time, set the impeachment type to 3 
+	case 2: // 2 days (48 hours) after the impeachment time, set the impeachment type to 3
 		// and send IDS_KING_IMPEACHMENT_ELECTION_MESSAGE as WAR_SYSTEM_CHAT
 	{
 		DateTime dt(m_sImYear, m_byImMonth, m_byImDay, m_byImHour, m_byImMinute);
@@ -203,7 +203,7 @@ void CKingSystem::CheckKingTimer() {
 		}
 	} break;
 
-	case 3: // 3 days (72 hours) after the impeachment time, set the impeachment type to 4 
+	case 3: // 3 days (72 hours) after the impeachment time, set the impeachment type to 4
 		// and call GetImpeachmentElectionResult()
 	{
 		DateTime dt(m_sImYear, m_byImMonth, m_byImDay, m_byImHour, m_byImMinute);
@@ -307,12 +307,12 @@ void CKingSystem::CheckSpecialEvent() {
 			m_sExpEvent_Duration = 0;
 
 			// TODO: Tell other servers that the event expired (i.e. via UDP)
-			// TODO: Update the bonuses on the AI server's side (which we don't have implemented). 
+			// TODO: Update the bonuses on the AI server's side (which we don't have implemented).
 			// TODO: Update the KING_SYSTEM table to reset the stored event data there too.
 
 			g_pMain->SendFormattedResource(IDS_KING_EXP_BONUS_EVENT_STOP, m_byNation, false);
 
-			// KingNotifyMessage(IDS_KING_EXP_BONUS_EVENT_STOP, m_byNation, WAR_SYSTEM_CHAT); 
+			// KingNotifyMessage(IDS_KING_EXP_BONUS_EVENT_STOP, m_byNation, WAR_SYSTEM_CHAT);
 			// 31 translates to a resource ID of 230, other args: 0, 0, 0, 0
 		}
 	}
@@ -332,7 +332,7 @@ void CKingSystem::CheckSpecialEvent() {
 			m_sNoahEvent_Duration = 0;
 
 			// TODO: Tell other servers that the event expired (i.e. via UDP)
-			// TODO: Update the bonuses on the AI server's side (which we don't have implemented). 
+			// TODO: Update the bonuses on the AI server's side (which we don't have implemented).
 			// TODO: Update the KING_SYSTEM table to reset the stored event data there too.
 			g_pMain->SendFormattedResource(IDS_KING_NOAH_BONUS_EVENT_STOP, m_byNation, false);
 
@@ -617,7 +617,6 @@ void CKingSystem::CandidacyRecommend(CUser * pUser, Packet & pkt) {
 * @param	strNominee	The nominee.
 */
 void CKingSystem::InsertNominee(std::string & strNominee) {
-
 	// All nominees must be senators.
 	// No need to create duplicate data, so just find & reuse the same data.
 	KingElectionList::iterator senatorItr = m_senatorList.find(strNominee);
@@ -631,7 +630,7 @@ void CKingSystem::InsertNominee(std::string & strNominee) {
 		return;
 
 	// Copy the information we need from our senator list entry
-	// NOTE: This is fairly dumb, so we should work this out when the system's functional and 
+	// NOTE: This is fairly dumb, so we should work this out when the system's functional and
 	// we're open to straying from official table designs.
 	_KING_ELECTION_LIST * pEntry = new _KING_ELECTION_LIST;
 	memcpy(pEntry, senatorItr->second, sizeof(_KING_ELECTION_LIST));
@@ -695,7 +694,7 @@ void CKingSystem::CandidacyNoticeBoard(CUser * pUser, Packet & pkt) {
 		result << int16(1);
 		pUser->Send(&result);
 
-		// Now reuse the packet for the database request; 
+		// Now reuse the packet for the database request;
 		// overwrite the result sent to the client, so we don't need to send it.
 		result.put(wpos, strNotice.c_str(), strNotice.length());
 
@@ -765,7 +764,7 @@ void CKingSystem::CandidacyNoticeBoard(CUser * pUser, Packet & pkt) {
 			if (1 == 2)
 				break;
 
-			// 
+			//
 			bSuccess = true;
 		}
 		break;
@@ -776,7 +775,6 @@ void CKingSystem::CandidacyNoticeBoard(CUser * pUser, Packet & pkt) {
 			|| m_byType == ELECTION_TYPE_ELECTION)
 			bSuccess = true;
 		break;
-
 
 	default:
 		return;
@@ -850,8 +848,6 @@ void CKingSystem::ElectionPoll(CUser * pUser, Packet & pkt) {
 			pUser->Send(&result);
 			return;
 		}
-
-
 
 		UpdateElectionList(4,						// voted for King
 			false,					// registering our vote, not deleting.
@@ -1085,7 +1081,6 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt) {
 	switch (opcode) {
 	case KING_EVENT_NOAH: // Noah event
 	{
-
 		uint8 bAmount = pkt.read<uint8>();
 		if (bAmount < 1 || bAmount > 3)
 			return;
@@ -1106,7 +1101,7 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt) {
 
 		m_sNoahEvent_Duration = 30; // event expires in 30 minutes
 
-		// %d%% increased coin rate 
+		// %d%% increased coin rate
 		g_pMain->SendFormattedResource(m_byNation == KARUS ? IDS_KING_KARUS_NOAH_BONUS_EVENT : IDS_KING_ELMO_NOAH_BONUS_EVENT,
 			m_byNation, false, bAmount);
 
@@ -1120,7 +1115,6 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt) {
 
 	case KING_EVENT_EXP: // EXP event
 	{
-
 		uint8 bAmount = pkt.read<uint8>();
 		if (bAmount != 10 && bAmount != 30 && bAmount != 50)
 			return;
@@ -1141,7 +1135,7 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt) {
 
 		m_sExpEvent_Duration = 30; // event expires in 30 minutes
 
-		// %d%% increased coin rate 
+		// %d%% increased coin rate
 		g_pMain->SendFormattedResource(m_byNation == KARUS ? IDS_KING_KARUS_EXP_BONUS_EVENT : IDS_KING_ELMO_EXP_BONUS_EVENT,
 			m_byNation, false, bAmount);
 
@@ -1155,13 +1149,12 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt) {
 
 	case KING_EVENT_PRIZE:
 	{
-
 		uint32 nCoins;
 		std::string strUserID;
 		pkt.SByte();
 		pkt >> nCoins >> strUserID;
 
-		// If the user submitted invalid input, chances are 
+		// If the user submitted invalid input, chances are
 		// the coins will end up 0. We can safely ignore it.
 		if (nCoins == 0)
 			return;
@@ -1194,7 +1187,6 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt) {
 		// Update the database
 		result << m_byNation << nCoins << strUserID;
 		g_pMain->AddDatabaseRequest(result);
-
 	} break;
 
 	case KING_EVENT_FUGITIVE: // not sure what this is exactly, but it seems to work pretty much the same as the /prize command
@@ -1202,7 +1194,6 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt) {
 
 	case KING_EVENT_WEATHER: // Weather
 	{
-
 		uint8 bType, bAmount;
 		pkt >> bType >> bAmount;
 		if (bAmount == 0 || bAmount > 100
@@ -1262,7 +1253,6 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt) {
 * @brief	Resets the election lists.
 */
 void CKingSystem::ResetElectionLists() {
-
 	foreach(itr, m_senatorList)
 		delete itr->second;
 	m_senatorList.clear();

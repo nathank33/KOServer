@@ -144,7 +144,6 @@ void CAISocket::RecvNpcInfoAll(Packet & pkt) {
 			>> pNpc->m_sFireR >> pNpc->m_sColdR >> pNpc->m_sLightningR
 			>> pNpc->m_sMagicR >> pNpc->m_sDiseaseR >> pNpc->m_sPoisonR >> pNpc->m_bIsEventNpc >> pNpc->nIsPet >> pNpc->strPetName >> pNpc->strUserName >> pNpc->nSerial >> pNpc->UserId;
 
-
 		pNpc->SetNPCEventRoom(EventRoom);
 		pNpc->SetUnitEventRoom(EventRoom);
 
@@ -192,7 +191,7 @@ void CAISocket::RecvNpcInfoAll(Packet & pkt) {
 }
 
 void CAISocket::RecvNpcMoveResult(Packet & pkt) {
-	uint8 flag;			// 01(INFO_MODIFY), 02(INFO_DELETE)	
+	uint8 flag;			// 01(INFO_MODIFY), 02(INFO_DELETE)
 	uint16 sNid;
 	float fX, fY, fZ, fSecForMetor;
 	pkt >> flag >> sNid >> fX >> fZ >> fY >> fSecForMetor;
@@ -206,7 +205,6 @@ void CAISocket::RecvNpcMoveResult(Packet & pkt) {
 		result << sNid << pNpc->m_iHP;
 		Send(&result);
 	}
-
 
 	pNpc->MoveResult(fX, fY, fZ, (float) 1000 / 1000);
 }
@@ -283,8 +281,6 @@ void CAISocket::RecvNpcInfo(Packet & pkt) {
 		>> pNpc->m_sFireR >> pNpc->m_sColdR >> pNpc->m_sLightningR
 		>> pNpc->m_sMagicR >> pNpc->m_sDiseaseR >> pNpc->m_sPoisonR >> pNpc->m_bIsEventNpc >> pNpc->nIsPet >> pNpc->strPetName >> pNpc->strUserName >> pNpc->nSerial >> pNpc->UserId;
 
-
-
 	if (pNpc->GetProtoID() == 8110)
 		pNpc->m_JuraidGateOpen = 1;
 
@@ -347,7 +343,6 @@ void CAISocket::RecvNpcInfo(Packet & pkt) {
 					pNpc->m_sSid = pRandom->sSid;
 					pNpc->m_sPid = pRandom->sPid;
 					pNpc->m_strName = pRandom->strName;
-
 				} else if (pNpc->GetProtoID() != 7003
 					&& pRandom->isBoss == 0) {
 					RandomMap[i] = pRandom->sIndex;
@@ -363,7 +358,6 @@ void CAISocket::RecvNpcInfo(Packet & pkt) {
 					pNpc->m_sPid = kRandom->sPid;
 					pNpc->m_strName = kRandom->strName;
 				}
-
 			}
 		}
 	}
@@ -400,7 +394,6 @@ void CAISocket::RecvNpcInfo(Packet & pkt) {
 					pNpc->m_sSid = pRandom->sSid;
 					pNpc->m_sPid = pRandom->sPid;
 					pNpc->m_strName = pRandom->strName;
-
 				} else if (pNpc->GetProtoID() != 7008
 					&& pRandom->isBoss == 0) {
 					RandomMap[i] = pRandom->sIndex;
@@ -416,7 +409,6 @@ void CAISocket::RecvNpcInfo(Packet & pkt) {
 					pNpc->m_sPid = kRandom->sPid;
 					pNpc->m_strName = kRandom->strName;
 				}
-
 			}
 		}
 	}
@@ -452,7 +444,6 @@ void CAISocket::RecvNpcInfo(Packet & pkt) {
 					pNpc->m_sSid = pRandom->sSid;
 					pNpc->m_sPid = pRandom->sPid;
 					pNpc->m_strName = pRandom->strName;
-
 				} else if (pNpc->GetProtoID() != 7013
 					&& pRandom->isBoss == 0) {
 					RandomMap[i] = pRandom->sIndex;
@@ -468,7 +459,6 @@ void CAISocket::RecvNpcInfo(Packet & pkt) {
 					pNpc->m_sPid = kRandom->sPid;
 					pNpc->m_strName = kRandom->strName;
 				}
-
 			}
 		}
 	}
@@ -483,7 +473,6 @@ void CAISocket::RecvNpcInfo(Packet & pkt) {
 			mPet->mode = 4;
 			pNpc->m_iMaxHP = mPet->m_sMaxHp;
 			pNpc->m_iHP = mPet->m_sHp;
-
 		} else
 			return;
 	}
@@ -524,7 +513,6 @@ void CAISocket::RecvNpcInfo(Packet & pkt) {
 
 	if (g_pMain->m_byBattleSiegeWarOpen && pNpc->m_sSid == 541)
 		g_pMain->KickOutZoneUsers(ZONE_DELOS, ZONE_DELOS);
-
 }
 
 void CAISocket::RecvNpcRegionUpdate(Packet & pkt) {
@@ -617,25 +605,19 @@ void CAISocket::RecvNpcGiveItem(Packet & pkt) {
 
 			pBundle->Items[nSlotIndex[i]] = pItem; // emplace_back() would be so much more useful here, but requires C++11.
 			pBundle->ItemsCount++;
-
-
 		}
 	}
-
-
 
 	if (!pMap->RegionItemAdd(regionx, regionz, pBundle)) {
 		delete pBundle;
 		return;
 	}
 
-
 	result << sNid << pBundle->nBundleID << uint8(2);
 
 	pBundle->LooterID = pUser->GetID();
 
 	if (!pUser->isInParty()) {
-
 		pUser->Send(&result);
 
 		if (pUser->isSummonPet && pUser->SummonPetID > 0) {
@@ -670,7 +652,6 @@ void CAISocket::RecvNpcGiveItem(Packet & pkt) {
 				}
 			}*/
 		}
-
 	} else {
 		g_pMain->Send_PartyMember(pUser->GetPartyID(), &result);
 
@@ -720,7 +701,6 @@ void CAISocket::RecvNpcGiveItem(Packet & pkt) {
 			}
 		}
 	}
-
 }
 
 void CAISocket::RecvCheckAlive(Packet & pkt) {
@@ -732,7 +712,6 @@ void CAISocket::RecvCheckAlive(Packet & pkt) {
 		CBot * pBot = itr->second;
 		if (pBot != nullptr) {
 			if (pBot->isInGame()) {
-
 				if ((pBot->m_bResHpType == USER_MINING || pBot->m_bResHpType == USER_FLASHING) && pBot->m_iGold + 15 < uint32(UNIXTIME)) {
 					Packet result(WIZ_MINING, uint8(MiningAttempt));
 					uint16 resultCode = MiningResultSuccess, Random = myrand(0, 10000);
@@ -747,15 +726,11 @@ void CAISocket::RecvCheckAlive(Packet & pkt) {
 					pBot->SendToRegion(&result);
 					pBot->m_iGold = uint32(UNIXTIME);
 				} else if (pBot->isMerchanting() && !pBot->MerchantChat.empty() && pBot->m_iLoyalty < uint32(UNIXTIME) - 99) {
-
 					Packet result(WIZ_CHAT);
-
 
 					ChatPacket::Construct(&result, MERCHANT_CHAT, &pBot->MerchantChat, &pBot->GetName(), pBot->m_bNation, pBot->GetID());
 					pBot->SendToRegion(&result);
 					pBot->m_iLoyalty = uint32(UNIXTIME);
-
-
 				}
 			}
 		}

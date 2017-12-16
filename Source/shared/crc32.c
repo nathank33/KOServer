@@ -10,50 +10,50 @@
  * $Endlog$
  */
 
-/* The implementation here was originally done by Gary S. Brown.  I have
-   borrowed the tables directly, and made some minor changes to the
-   crc32-function (including changing the interface). //ylo */
+ /* The implementation here was originally done by Gary S. Brown.  I have
+	borrowed the tables directly, and made some minor changes to the
+	crc32-function (including changing the interface). //ylo */
 #include "crc32.h"
 
-  /* ============================================================= */
-  /*  COPYRIGHT (C) 1986 Gary S. Brown.  You may use this program, or	   */
-  /*  code or tables extracted from it, as desired without restriction.	 */
-  /*																		*/
-  /*  First, the polynomial itself and its table of feedback terms.  The	*/
-  /*  polynomial is														 */
-  /*  X^32+X^26+X^23+X^22+X^16+X^12+X^11+X^10+X^8+X^7+X^5+X^4+X^2+X^1+X^0   */
-  /*																		*/
-  /*  Note that we take it "backwards" and put the highest-order term in	*/
-  /*  the lowest-order bit.  The X^32 term is "implied"; the LSB is the	 */
-  /*  X^31 term, etc.  The X^0 term (usually shown as "+1") results in	  */
-  /*  the MSB being 1.													  */
-  /*																		*/
-  /*  Note that the usual hardware shift register implementation, which	 */
-  /*  is what we're using (we're merely optimizing it by doing eight-bit	*/
-  /*  chunks at a time) shifts bits into the lowest-order term.  In our	 */
-  /*  implementation, that means shifting towards the right.  Why do we	 */
-  /*  do it this way?  Because the calculated CRC must be transmitted in	*/
-  /*  order from highest-order term to lowest-order term.  UARTs transmit   */
-  /*  characters in order from LSB to MSB.  By storing the CRC this way,	*/
-  /*  we hand it to the UART in the order low-byte to high-byte; the UART   */
-  /*  sends each low-bit to hight-bit; and the result is transmission bit   */
-  /*  by bit from highest- to lowest-order term without requiring any bit   */
-  /*  shuffling on our part.  Reception works similarly.					*/
-  /*																		*/
-  /*  The feedback terms table consists of 256, 32-bit entries.  Notes:	 */
-  /*																		*/
-  /*	  The table can be generated at runtime if desired; code to do so   */
-  /*	  is shown later.  It might not be obvious, but the feedback		*/
-  /*	  terms simply represent the results of eight shift/xor opera-	  */
-  /*	  tions for all combinations of data and CRC register values.	   */
-  /*																		*/
-  /*	  The values must be right-shifted by eight bits by the "updcrc"	*/
-  /*	  logic; the shift must be unsigned (bring in zeroes).  On some	 */
-  /*	  hardware you could probably optimize the shift in assembler by	*/
-  /*	  using byte-swap instructions.									 */
-  /*	  polynomial $edb88320											  */
-  /*																		*/
-  /*  --------------------------------------------------------------------  */
+	/* ============================================================= */
+	/*  COPYRIGHT (C) 1986 Gary S. Brown.  You may use this program, or	   */
+	/*  code or tables extracted from it, as desired without restriction.	 */
+	/*																		*/
+	/*  First, the polynomial itself and its table of feedback terms.  The	*/
+	/*  polynomial is														 */
+	/*  X^32+X^26+X^23+X^22+X^16+X^12+X^11+X^10+X^8+X^7+X^5+X^4+X^2+X^1+X^0   */
+	/*																		*/
+	/*  Note that we take it "backwards" and put the highest-order term in	*/
+	/*  the lowest-order bit.  The X^32 term is "implied"; the LSB is the	 */
+	/*  X^31 term, etc.  The X^0 term (usually shown as "+1") results in	  */
+	/*  the MSB being 1.													  */
+	/*																		*/
+	/*  Note that the usual hardware shift register implementation, which	 */
+	/*  is what we're using (we're merely optimizing it by doing eight-bit	*/
+	/*  chunks at a time) shifts bits into the lowest-order term.  In our	 */
+	/*  implementation, that means shifting towards the right.  Why do we	 */
+	/*  do it this way?  Because the calculated CRC must be transmitted in	*/
+	/*  order from highest-order term to lowest-order term.  UARTs transmit   */
+	/*  characters in order from LSB to MSB.  By storing the CRC this way,	*/
+	/*  we hand it to the UART in the order low-byte to high-byte; the UART   */
+	/*  sends each low-bit to hight-bit; and the result is transmission bit   */
+	/*  by bit from highest- to lowest-order term without requiring any bit   */
+	/*  shuffling on our part.  Reception works similarly.					*/
+	/*																		*/
+	/*  The feedback terms table consists of 256, 32-bit entries.  Notes:	 */
+	/*																		*/
+	/*	  The table can be generated at runtime if desired; code to do so   */
+	/*	  is shown later.  It might not be obvious, but the feedback		*/
+	/*	  terms simply represent the results of eight shift/xor opera-	  */
+	/*	  tions for all combinations of data and CRC register values.	   */
+	/*																		*/
+	/*	  The values must be right-shifted by eight bits by the "updcrc"	*/
+	/*	  logic; the shift must be unsigned (bring in zeroes).  On some	 */
+	/*	  hardware you could probably optimize the shift in assembler by	*/
+	/*	  using byte-swap instructions.									 */
+	/*	  polynomial $edb88320											  */
+	/*																		*/
+	/*  --------------------------------------------------------------------  */
 
 static unsigned int crc32_tab[] = {
 	  0x00000000L, 0x77073096L, 0xee0e612cL, 0x990951baL, 0x076dc419L,
@@ -108,12 +108,11 @@ static unsigned int crc32_tab[] = {
 	  0xcdd70693L, 0x54de5729L, 0x23d967bfL, 0xb3667a2eL, 0xc4614ab8L,
 	  0x5d681b02L, 0x2a6f2b94L, 0xb40bbe37L, 0xc30c8ea1L, 0x5a05df1bL,
 	  0x2d02ef8dL
-   };
+};
 
 /* Return a 32-bit CRC of the contents of the buffer. */
 
-unsigned int crc32(const unsigned char *s, unsigned int len, unsigned int startVal)
-{
+unsigned int crc32(const unsigned char *s, unsigned int len, unsigned int startVal) {
 	unsigned int i, crc32val = startVal;
 	for (i = 0; i < len; i++)
 		crc32val = crc32_tab[(crc32val ^ s[i]) & 0xff] ^ (crc32val >> 8);

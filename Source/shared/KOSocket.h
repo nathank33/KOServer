@@ -6,17 +6,16 @@
 
 extern "C"
 {
-	#include "lzf.h"
+#include "lzf.h"
 }
 
 // KO sockets time out after at least 30 seconds of inactivity. 6.1.2016
-#define KOSOCKET_TIMEOUT (60) 
+#define KOSOCKET_TIMEOUT (60)
 
 // Allow up to 30 minutes for the player to create their character / the client to load.
 #define KOSOCKET_LOADING_TIMEOUT (30 * 60)
 
-class KOSocket : public Socket
-{
+class KOSocket : public Socket {
 public:
 	KOSocket(uint16 socketID, SocketMgr * mgr, SOCKET fd, uint32 sendBufferSize, uint32 recvBufferSize);
 

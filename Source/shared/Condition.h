@@ -3,8 +3,7 @@
 #include <condition_variable>
 #include <deque>
 
-class Condition
-{
+class Condition {
 public:
 	Condition();
 	~Condition();

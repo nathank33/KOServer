@@ -3,7 +3,6 @@
 
 #pragma region Nation Transfer
 
-
 void CUser::SendNationChange() {
 	if (isDead()
 		|| isTrading()
@@ -77,11 +76,9 @@ void CUser::SendNationChange() {
 		result << uint16(3) << strCharID4 << uint8(0) << uint8(0) << uint16(GetNation() == 1 ? (Class4 + 100) : (Class4 - 100)) << uint8(0) << uint32(0);
 
 	Send(&result);
-
 }
 
 void CUser::NationChangeHandle(Packet & pkt) {
-
 	uint8 opcode = pkt.read<uint8>();
 
 	switch (opcode) {
@@ -91,7 +88,6 @@ void CUser::NationChangeHandle(Packet & pkt) {
 	default:
 		break;
 	}
-
 }
 
 void CUser::NationChange(Packet & pkt) {
@@ -110,7 +106,6 @@ void CUser::NationChange(Packet & pkt) {
 
 	if (opcode == 0)
 		return;
-
 
 	Packet result(WIZ_NATION_CHANGE);
 
@@ -162,7 +157,6 @@ void CUser::NationChange(Packet & pkt) {
 	nRace[2] = 0;
 	nRace[3] = 0;
 
-
 	pkt >> Count;
 
 	if (Count == 0) {
@@ -183,9 +177,7 @@ void CUser::NationChange(Packet & pkt) {
 			Send(&result);
 			return;
 		}
-
 	}
-
 
 	uint8 nRet = g_DBAgent.NationTransfer(GetAccountName(), nRace[0], nRace[1], nRace[2], nRace[3]);
 
@@ -204,8 +196,6 @@ void CUser::NationChange(Packet & pkt) {
 	}
 
 	RobItem(ITEM_NATION_TRANSFER);
-
-
 
 	m_bRank = 0;
 	m_bTitle = 0;
@@ -238,7 +228,6 @@ void CUser::NationChange(Packet & pkt) {
 }
 
 uint8 CUser::GetNewRace() {
-
 	uint8 nNewRace = 0;
 
 	if (GetNation() == KARUS) {
@@ -333,7 +322,6 @@ void CUser::GenderChange(Packet & pkt) {
 	if (newRace > 5 && GetNation() == 1)
 		goto fail_return;
 
-
 	m_bRace = newRace;
 	m_nHair = newHair;
 	m_bFace = newFace;
@@ -362,7 +350,6 @@ fail_return:
 #pragma region Job Change
 
 uint8 CUser::JobChange(uint8 NewJob /*= 0*/) {
-
 	if (isDead()
 		|| isTrading()
 		|| isMerchanting()
@@ -631,7 +618,6 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/) {
 			bResult = NewJob;
 	}
 
-
 	// If selected a new job Kurian
 	if (NewJob == 5 || NewJob == 6) {
 		if (GetNation() == KARUS) {
@@ -672,7 +658,6 @@ uint8 CUser::JobChange(uint8 NewJob /*= 0*/) {
 		if (bNewClass == 0 || bNewRace == 0)
 			bResult = NewJob;
 	}
-
 
 	if (bResult == 0) {
 		RobItem(ITEM_JOB_CHANGE, 1, true);

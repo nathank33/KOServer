@@ -11,7 +11,6 @@ LoginServer::LoginServer() : m_sLastVersion(__VERSION), m_fpLoginServer(nullptr)
 bool LoginServer::Startup() {
 	GetInfoFromIni();
 
-
 	DateTime time;
 	printf("SrGame LoginServer started in %02d-%02d-%04d at %02d:%02d\n\n", time.GetDay(), time.GetMonth(), time.GetYear(), time.GetHour(), time.GetMinute());
 	printf("Project 2125\n");
@@ -205,7 +204,6 @@ void LoginServer::GetInfoFromIni() {
 	if (m_news.Size)
 		memcpy(&m_news.Content, ss.str().c_str(), m_news.Size);
 }
-
 
 void LoginServer::WriteLogFile(string & logMessage) {
 	Guard lock(m_lock);

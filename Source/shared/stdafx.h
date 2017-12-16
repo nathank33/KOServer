@@ -24,7 +24,7 @@
 #	define ASSERT assert
 #	define TRACE FormattedDebugString
 
-//	Enables tracing to stdout. 
+//	Enables tracing to stdout.
 //	Preferable with the VS debugger (is thrown in the "output" window), but
 //	it can be spammy otherwise (especially if you don't need it enabled).
 #	define USE_SQL_TRACE
@@ -39,8 +39,8 @@
 #	endif
 
 #else
-#	define ASSERT 
-#	define TRACE 
+#	define ASSERT
+#	define TRACE
 #endif
 
 // Ignore the warning "nonstandard extension used: enum '<enum name>' used in qualified name"
@@ -55,10 +55,9 @@
 #include <atomic>
 #include <mutex>
 
-class Guard
-{
+class Guard {
 public:
-	Guard(std::recursive_mutex& mutex) : target(mutex)  { target.lock(); }
+	Guard(std::recursive_mutex& mutex) : target(mutex) { target.lock(); }
 	Guard(std::recursive_mutex* mutex) : target(*mutex) { target.lock(); }
 	~Guard() { target.unlock(); }
 

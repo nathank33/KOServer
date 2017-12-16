@@ -31,7 +31,6 @@ public:
 		for (int j = 0; j < ITEMS_IN_EXCHANGE_GROUP; j++) {
 			_dbCommand->FetchUInt32(i++, pData->nExchangeItemNum[j]);
 			_dbCommand->FetchUInt32(i++, pData->sExchangeItemCount[j]);
-
 		}
 		_dbCommand->FetchUInt32(i++, pData->Unk2);
 		_dbCommand->FetchUInt32(i++, pData->Unk3);

@@ -9,8 +9,7 @@ typedef CSTLMapOnlyLoad <_REGENE_EVENT>		ObjectRegeneArray;
 typedef	CSTLMapOnlyLoad <_WARP_INFO>		WarpArray;
 
 class CN3ShapeMgr;
-class SMDFile : public ReferenceObject
-{
+class SMDFile : public ReferenceObject {
 public:
 	SMDFile();
 
@@ -25,7 +24,7 @@ public:
 	void LoadWarpList(FILE *fp);
 
 	bool IsValidPosition(float x, float z, float y);
-	bool CheckEvent( float x, float z, CUser* pUser = nullptr );
+	bool CheckEvent(float x, float z, CUser* pUser = nullptr);
 
 	int GetEventID(int x, int z);
 

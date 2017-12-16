@@ -11,12 +11,9 @@ void InitPacketHandlers(void) {
 	PacketHandlers[LS_NEWS] = &LoginSession::HandleNews;
 	PacketHandlers[LS_CRYPTION] = &LoginSession::HandleSetEncryptionPublicKey;
 	PacketHandlers[LS_UNKF7] = &LoginSession::HandleUnkF7;
-
 }
 
 LoginSession::LoginSession(uint16 socketID, SocketMgr *mgr) : KOSocket(socketID, mgr, -1, 2048, 64) {}
-
-
 
 bool LoginSession::HandlePacket(Packet & pkt) {
 	uint8 opcode = pkt.GetOpcode();

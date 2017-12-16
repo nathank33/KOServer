@@ -202,7 +202,6 @@ void CUser::ExchangeAdd(Packet & pkt) {
 		else
 			pSrcItem->sCount = 0;
 
-
 		duration = pSrcItem->sDuration;
 		nSerialNum = pSrcItem->nSerialNum;
 	} else
@@ -310,7 +309,6 @@ void CUser::ExchangeDecide() {
 			<< uint16(m_ExchangeItemList.size());
 
 		foreach(itr, m_ExchangeItemList) {
-
 			result << (*itr)->bDstPos << (*itr)->nItemID
 				<< uint16((*itr)->nCount) << (*itr)->sDurability;
 			SetExchangeSpecialItemData((*itr), result);
@@ -403,7 +401,6 @@ bool CUser::CheckExchange() {
 		|| isMerchanting()
 		|| m_bMerchantStatex)
 		return false;
-
 
 	// Get the total number of free slots in the player's inventory
 	uint8 bFreeSlots = 0, bItemCount = 0;
@@ -504,7 +501,6 @@ bool CUser::ExecuteExchange() {
 		// Set destination position for use in packet to client
 		// to let them know where the item is.
 		(*Iter)->bDstPos = (uint8) (nSlot - SLOT_MAX);
-
 
 		string errorMessage = string_format(_T("TRADE_FINISH uId-%s- tId-%s- I-%d- Z-%d- X-%d- Y-%d-"),
 			GetName().c_str(), pUser->GetName().c_str(), pSrcItem->nNum, GetZoneID(), uint16(GetX()), uint16(GetZ()));

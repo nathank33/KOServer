@@ -79,7 +79,6 @@ void CUser::ItemUpgradeProcess(Packet & pkt) {
 	case ITEM_DISASSEMBLING:
 		ItemDisassembling(pkt);
 		break;
-
 	}
 }
 
@@ -160,27 +159,18 @@ void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType) {
 			if (pUpgrade->sOriginItem != nReqOriginItem)
 				continue;
 
-
-
 			if (((nItemID[0] / MIN_ITEM_ID) != 11) &&
 				(nItemID[0] / MIN_ITEM_ID) != pUpgrade->nIndex / 100000 && pUpgrade->nIndex < 300000)
 				continue;
-
-
-
 
 			if (nItemID[1] == TRINA_PIECE || nItemID[2] == TRINA_PIECE)
 				Trina = true;
 			if (nItemID[1] == KRAVDIS_PIECE || nItemID[2] == KRAVDIS_PIECE)
 				Karivdis = true;
 
-
-
-
 			if (((nItemID[1] == TRINA_PIECE || nItemID[2] == TRINA_PIECE) && (pUpgrade->bRateType == 4))
 				|| (nItemID[1] == KRAVDIS_PIECE || nItemID[2] == KRAVDIS_PIECE) && (pUpgrade->bRateType != 4))
 				continue;
-
 
 			if (pUpgrade->bRateType == 1)
 				if (nItemID[1] == 379221000 ||
@@ -305,7 +295,6 @@ void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType) {
 				else
 					continue;
 
-
 			if (proto->ItemClass == 8) {
 				Accessories = true;
 				if (pUpgrade->bRateType != 8
@@ -327,7 +316,6 @@ void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType) {
 					|| nItemID[2] == 379256000))
 				goto fail_return;
 
-
 			if (bPos[0] == bPos[1]
 				|| bPos[1] == bPos[2]
 				|| bPos[0] == bPos[2])
@@ -336,9 +324,6 @@ void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType) {
 			if (!(proto->ItemClass <= ItemClass)
 				&& !Accessories)
 				continue;
-
-
-
 
 			if (pUpgrade->bOriginType != -1
 				&& pUpgrade->nIndex < 200000 && pUpgrade->nIndex >= 100000) {
@@ -420,17 +405,11 @@ void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType) {
 				}
 			}
 
-
-
-
 			if ((nItemID[0] / MIN_ITEM_ID) != (pUpgrade->nIndex / 100000)
 				&& ((nItemID[0] / MIN_ITEM_ID) != 11 && (pUpgrade->nIndex / 100000) == 1)
 				&& ((pUpgrade->nIndex / 100000) == 1
 					|| (pUpgrade->nIndex / 100000) == 2))
 				continue;
-
-
-
 
 			bool isValidMatch = true;
 			// Does our upgrade attempt match the requirements for this upgrade entry?
@@ -467,7 +446,6 @@ void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType) {
 				bResult = UpgradeNoMatch;
 				goto fail_return;
 			}
-
 
 			int nNewItemID = pOriginItem->nNum + pUpgrade->nGiveItem;
 
@@ -605,8 +583,6 @@ void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType) {
 				break;
 			}
 
-
-
 			if (nUpgradeType == ITEM_UPGRADE_REBIRTH) {
 				if (bResult == UpgradeFailed)
 					g_pMain->WriteUpgradeLogFile(string_format("[ ItemRebirthUpgrade - %d:%d:%d ] %s :  Failed = %s ( Zone =%d, X=%d, Z=%d )\n", time.GetHour(), time.GetMinute(), time.GetSecond(), GetName().c_str(), proto->m_sName.c_str(), GetZoneID(), uint16(GetX()), uint16(GetZ())));
@@ -618,7 +594,6 @@ void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType) {
 					g_pMain->WriteUpgradeLogFile(string_format("[ ItemUpgrade - %d:%d:%d ] %s :  Failed = %s ( Zone =%d, X=%d, Z=%d )\n", time.GetHour(), time.GetMinute(), time.GetSecond(), GetName().c_str(), proto->m_sName.c_str(), GetZoneID(), uint16(GetX()), uint16(GetZ())));
 			}
 		} else {
-
 			if (isDead()
 				|| isTrading()
 				|| isStoreOpen()
@@ -674,14 +649,12 @@ void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType) {
 			nItemID[0] = nNewItemID;
 		}
 
-		// Remove the source item 
+		// Remove the source item
 		if (bType != UpgradeTypePreview) {
 			// Remove all required items, if applicable.
 			for (int i = 0; i < 10; i++) {
-
 				if (bPos[i] == -1 || bPos[i] >= HAVE_MAX || nItemID[i] < 1)
 					continue;
-
 
 				_ITEM_DATA * pItem = GetItem(SLOT_MAX + bPos[i]);
 
@@ -725,7 +698,6 @@ fail_return:
 	Send(&result);
 }
 
-
 /**
 * @brief	Upgrade notice.
 *
@@ -762,7 +734,6 @@ void CUser::ItemUpgradeAccessories(Packet & pkt) {
 }
 
 void CUser::ItemUpgradePet(Packet & pkt) {
-
 	Packet result(WIZ_ITEM_UPGRADE, uint8(ITEM_PET));
 	uint16 unknown;
 	uint32 ItemID;
@@ -798,7 +769,6 @@ void CUser::ItemUpgradePet(Packet & pkt) {
 		Error = 2;
 		goto fail_return;
 	}
-
 
 	CPet * pData = new CPet();
 	pData->m_Serial = Serial;
@@ -919,7 +889,6 @@ void CUser::BifrostPieceProcess(Packet & pkt) {
 				RobItem(pExchange->nOriginItemNum[0], 1);
 				GiveItem(nItemID, 1);
 
-
 				_ITEM_TABLE *pItem = g_pMain->m_ItemtableArray.GetData(nItemID);
 
 				if (pItem != nullptr) {
@@ -1024,7 +993,6 @@ void CUser::SpecialItemExchange(Packet & pkt) {
 	{
 		if (g_pMain->m_ItemMixArray.GetSize() > 0) {
 			foreach_stlmap_nolock(itr, g_pMain->m_ItemMixArray) {
-
 				uint8 nOriginItemCount = 0;
 				uint8 nMatchCount = 0;
 				bool bAddArray = false;
@@ -1132,8 +1100,6 @@ void CUser::SpecialItemExchange(Packet & pkt) {
 						*itr = 0;
 					}
 				}
-
-
 			}
 			if (NeedCount != MatchingCase)
 				bContinueExchange = false;
@@ -1181,7 +1147,6 @@ void CUser::SpecialItemExchange(Packet & pkt) {
 						if (pExchange->nOriginItemNum[i] != 0)
 							RobItem(pExchange->nOriginItemNum[i], pExchange->sOriginItemCount[i], false);
 					}
-
 				}
 			}
 		}
@@ -1257,12 +1222,10 @@ void CUser::ItemDisassembling(Packet & pkt) {
 				continue;
 			} else
 				return;
-
 		}
 	}
 
 	if (ExchangeIndexCrashList.size() > 0) {
-
 		uint32 randIndex[nExchangeIndexID3];
 		uint32 nExchangeID[nExchangeIndexID3];
 
@@ -1307,4 +1270,3 @@ void CUser::ItemDisassembling(Packet & pkt) {
 	}
 	Send(&result);
 }
-

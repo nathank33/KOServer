@@ -4,8 +4,7 @@
 class OdbcConnection;
 class OdbcCommand;
 
-class OdbcRecordset
-{
+class OdbcRecordset {
 public:
 	OdbcRecordset(OdbcConnection * dbConnection);
 

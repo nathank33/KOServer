@@ -1,13 +1,11 @@
 #pragma once
 
-
 #define	INI_SECTION_START	'['
 #define	INI_SECTION_END		']'
 #define	INI_KEY_SEPARATOR	'='
 #define	INI_NEWLINE			"\n"
 
-class CIni
-{
+class CIni {
 private:
 	std::string m_szFileName;
 	// Defines key/value pairs within sections

@@ -27,7 +27,7 @@ public:
 			return true;
 
 		std::string strUserID;
-		char strNotice[1024];	// strNotice is always a 1024 byte binary field 
+		char strNotice[1024];	// strNotice is always a 1024 byte binary field
 		// which we implicitly create a variable sized std::string from to save memory.
 
 		_dbCommand->FetchString(2, strUserID);

@@ -1,12 +1,10 @@
 #pragma once
 class SocketMgr;
-class Socket
-{
+class Socket {
 public:
-	// Constructor. If fd = 0, it will be assigned 
+	// Constructor. If fd = 0, it will be assigned
 	Socket(SOCKET fd, uint32 sendbuffersize, uint32 recvbuffersize);
 
-	
 	// Open a connection to another machine.
 	bool Connect(const char * Address, uint32 Port);
 
@@ -112,8 +110,7 @@ private:
 public:
 	/* Atomic wrapper functions for increasing read/write locks */
 	INLINE void DecSendLock() { --m_writeLock; }
-	INLINE bool AcquireSendLock()
-	{
+	INLINE bool AcquireSendLock() {
 		if (m_writeLock != 0)
 			return false;
 

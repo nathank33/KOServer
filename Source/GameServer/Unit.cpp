@@ -20,7 +20,6 @@ void Unit::Initialize() {
 	m_pMap = nullptr;
 	m_pRegion = nullptr;
 
-
 	m_reblvl = 0;
 
 	SetPosition(0.0f, 0.0f, 0.0f);
@@ -243,7 +242,7 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 #ifdef GAMESERVER
 	// Apply player vs player AC/AP bonuses.
 	if (pTarget->isPlayer()) {
-		CUser * pTUser = TO_USER(pTarget);	// NOTE: using a = a*v instead of a *= v because the compiler assumes different 
+		CUser * pTUser = TO_USER(pTarget);	// NOTE: using a = a*v instead of a *= v because the compiler assumes different
 		// types being multiplied, which results in these calcs not behaving correctly.
 
 		// adjust player AP by percent, for skills like "Critical Point"
@@ -256,16 +255,16 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 #endif
 
 	// Allow for complete physical damage blocks.
-	// NOTE: Unsure if we need to count skill usage as magic damage or if we 
+	// NOTE: Unsure if we need to count skill usage as magic damage or if we
 	// should only block that in explicit magic damage skills (CMagicProcess::GetMagicDamage()).
 	if (pTarget->m_bBlockPhysical)
 		return 0;
 
 	temp_hit_B = (int) ((temp_ap * 200 / 100) / (temp_ac + 240));
 
-	// Skill/arrow hit.    
+	// Skill/arrow hit.
 	if (pSkill != nullptr) {
-		// SKILL HIT! YEAH!	                                
+		// SKILL HIT! YEAH!
 		if (pSkill->bType[0] == 1) {
 			_MAGIC_TYPE1 *pType1 = g_pMain->m_Magictype1Array.GetData(pSkill->iNum);
 			if (pType1 == nullptr)
@@ -303,7 +302,7 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 				temp_hit = (int32) (temp_hit_B * (pType2->sAddDamage / 100.0f));
 		}
 	}
-	// Normal hit (R attack)     
+	// Normal hit (R attack)
 	else {
 		temp_hit = temp_ap / 100;
 		result = GetHitRate(m_fTotalHitrate / pTarget->m_fTotalEvasionrate);
@@ -321,7 +320,6 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 			else
 				damage = (short) (((temp_hit * 0.6f) + 1.0f * random) + 0.99f);
 		} else {	// Normal Hit.
-
 #ifdef GAMESERVER
 			if (isGM() && !pTarget->isPlayer()) {
 				if (g_pMain->m_nGameMasterRHitDamage != 0) {
@@ -339,7 +337,6 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 		break;
 	case FAIL:
 		if (pSkill != nullptr) {	 // Skill Hit.
-
 		} else { // Normal Hit.
 #ifdef GAMESERVER
 			if (isGM() && !pTarget->isPlayer()) {
@@ -355,10 +352,10 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 
 	// These two only apply to players
 	if (pTarget->isPlayer()) {
-		damage = GetACDamage(damage, pTarget);		// 3. Additional AC calculation....	
+		damage = GetACDamage(damage, pTarget);		// 3. Additional AC calculation....
 
 		// Give increased damage in war zones (as per official 1.298~1.325)
-		// This may need to be revised to use the last nation to win the war, or more accurately, 
+		// This may need to be revised to use the last nation to win the war, or more accurately,
 		// the nation that last won the war 3 times in a row (whether official behaves this way now is unknown).
 		if (GetMap()->isWarZone())
 			damage /= 2;
@@ -370,7 +367,6 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 	if (damage > MAX_DAMAGE)
 		damage = MAX_DAMAGE;
 
-
 	if (pTarget->GetID() > NPC_BAND) {
 		switch (TO_NPC(pTarget)->GetType()) {
 		case NPC_FOSSIL:
@@ -381,7 +377,6 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 			break;
 		}
 	}
-
 
 	return damage;
 }
@@ -395,7 +390,7 @@ void CUser::OnAttack(Unit * pTarget, AttackType attackType) {
 	// Trigger weapon procs for the attacker on attack
 	static const uint8 itemSlots[] = {RIGHTHAND, LEFTHAND};
 	foreach_array(i, itemSlots) {
-		// If we hit an applicable weapon, don't try proc'ing the other weapon. 
+		// If we hit an applicable weapon, don't try proc'ing the other weapon.
 		// It is only ever meant to proc on the dominant weapon.
 		if (TriggerProcItem(itemSlots[i], pTarget, TriggerTypeAttack))
 			break;
@@ -426,7 +421,7 @@ bool CUser::TriggerProcItem(uint8 bSlot, Unit * pTarget, ItemTriggerType trigger
 	if (triggerType == TriggerTypeAttack && isWeaponsDisabled())
 		return false;
 
-	// Ensure there's an item in this slot, 
+	// Ensure there's an item in this slot,
 	_ITEM_DATA * pItem = GetItem(bSlot);
 	if (pItem == nullptr
 		// and that it doesn't need to be repaired.
@@ -821,7 +816,7 @@ bool Unit::CanAttack(Unit * pTarget) {
 	if (GetZoneID() != pTarget->GetZoneID())
 		return false;
 
-	// We cannot attack our target if we are incapacitated 
+	// We cannot attack our target if we are incapacitated
 	// (should include debuffs & being blinded)
 	if (isIncapacitated()
 		// or if our target is in a state in which
@@ -952,7 +947,6 @@ void KOMap::SetZoneAttributes(int zoneNumber) {
 #endif
 	m_byMinLevel = 1;
 	m_byMaxLevel = 83;
-
 
 	switch (zoneNumber) {
 	case ZONE_KARUS:
@@ -1157,7 +1151,6 @@ bool CNpc::isHostileTo(Unit * pTarget) {
 		&& GetNation() != pTarget->GetNation())
 		return true;
 
-
 	// Only players can attack these targets.
 	if (pTarget->isPlayer()) {
 		// Scarecrows are NPCs that the client allows us to attack
@@ -1196,8 +1189,6 @@ bool CNpc::isHostileTo(Unit * pTarget) {
 		pSiegeWars = g_pMain->GetSiegeMasterKnightsPtr(1);
 	}
 
-
-
 	if (g_pMain->m_byBattleSiegeWarOpen && GetZoneID() == ZONE_DELOS && pKnights->GetID() != pSiegeWars->sMasterKnights && m_sSid == 541 && GetType() == NPC_DESTROYED_ARTIFACT)
 		return true;// CSW Açık Kale sahibi clanda değil atack yapabilir
 	else if (!g_pMain->m_byBattleSiegeWarOpen && GetZoneID() == ZONE_DELOS)
@@ -1234,8 +1225,6 @@ bool CNpc::isHostileTo(Unit * pTarget) {
 bool CUser::isHostileTo(Unit * pTarget) {
 	if (pTarget == nullptr)
 		return false;
-
-
 
 	// For non-player hostility checks, refer to the appropriate override.
 	if (!pTarget->isPlayer())
@@ -1276,7 +1265,6 @@ bool CUser::isHostileTo(Unit * pTarget) {
 
 #if GAMESERVER
 	if (g_pMain->m_byBattleSiegeWarOpen && GetZoneID() == ZONE_DELOS) {
-
 		CUser *pUser = g_pMain->GetUserPtr(GetName(), TYPE_CHARACTER);
 		CUser *pTargetUser = g_pMain->GetUserPtr(TO_USER(pTarget)->m_strUserID, TYPE_CHARACTER);
 
@@ -1295,7 +1283,6 @@ bool CUser::isHostileTo(Unit * pTarget) {
 	// Players cannot attack other players in any other circumstance.
 	return false;
 }
-
 
 /**
 * @brief	Determine if this user is in an arena area.
@@ -1340,7 +1327,6 @@ bool CUser::isInPartyArena() {
 	// Moradon outside arena spawn bounds.
 	return ((GetX() < 735.0f && GetX() > 684.0f)
 		&& (GetZ() < 411.0f && GetZ() > 360.0f));
-
 }
 /**
 * @brief	Determine if this user is in a normal PVP zone.

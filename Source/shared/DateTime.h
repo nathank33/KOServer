@@ -2,26 +2,22 @@
 
 #include <ctime>
 
-class DateTime
-{
+class DateTime {
 public:
 	// Uses the current time by default
-	DateTime()
-	{
+	DateTime() {
 		time_t now;
 		time(&now);
 		_tm = localtime(&now);
 	}
 
 	// Uses the timestamp specified
-	DateTime(time_t timestamp)
-	{
+	DateTime(time_t timestamp) {
 		_tm = localtime(&timestamp);
 	}
 
 	// Constructs a date/time using the specified date parts.
-	DateTime(uint16 sYear, uint8 bMonth, uint8 bDay, uint8 bHour = 0, uint8 bMinute = 0, uint8 bSecond = 0)
-	{
+	DateTime(uint16 sYear, uint8 bMonth, uint8 bDay, uint8 bHour = 0, uint8 bMinute = 0, uint8 bSecond = 0) {
 		// Get the current time
 		time_t now;
 		time(&now);
@@ -40,8 +36,7 @@ public:
 	}
 
 	// Uses the specified time struct
-	DateTime(struct tm * _tm)
-	{
+	DateTime(struct tm * _tm) {
 		this->_tm = _tm;
 	}
 
@@ -57,43 +52,36 @@ public:
 	// NOTE: If any of these overflow, they'll be handled by mktime() accordingly.
 	// This makes our life *much* easier; date/time logic is not pretty.
 
-	void INLINE AddYears(int iYears)
-	{
+	void INLINE AddYears(int iYears) {
 		_tm->tm_year += iYears;
 		Update();
 	}
 
-	void INLINE AddMonths(int iMonths)
-	{
+	void INLINE AddMonths(int iMonths) {
 		_tm->tm_mon += iMonths;
 		Update();
 	}
 
-	void INLINE AddWeeks(int iWeeks)
-	{
+	void INLINE AddWeeks(int iWeeks) {
 		AddDays(iWeeks * 7);
 	}
 
-	void INLINE AddDays(int iDays)
-	{
+	void INLINE AddDays(int iDays) {
 		_tm->tm_mday += iDays;
 		Update();
 	}
 
-	void INLINE AddHours(int iHours)
-	{
+	void INLINE AddHours(int iHours) {
 		_tm->tm_hour += iHours;
 		Update();
 	}
 
-	void INLINE AddMinutes(int iMinutes)
-	{
+	void INLINE AddMinutes(int iMinutes) {
 		_tm->tm_min += iMinutes;
 		Update();
 	}
 
-	void INLINE AddSeconds(int iSeconds)
-	{
+	void INLINE AddSeconds(int iSeconds) {
 		_tm->tm_sec += iSeconds;
 		Update();
 	}

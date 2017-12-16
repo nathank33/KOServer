@@ -15,7 +15,6 @@ public:
 		_dbCommand->FetchUInt32(2, pData->d_ItemID);
 		_dbCommand->FetchUInt64(3, pData->d_Serial);
 
-
 		if (!m_pMap->PutData(pData->n_Index, pData))
 			delete pData;
 

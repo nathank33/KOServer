@@ -134,7 +134,6 @@ bool CRoomEvent::RunEvent(int event_num) {
 		nOption_1 = m_Exec[m_byLogicNumber - 1].sOption_1;
 		pNpc = GetNpcPtr(nOption_1);
 		if (pNpc) {
-
 		} else {
 			TRACE("### RunEvent Error : 문 담당 몬스터 출현 할 수 없당 = %d, logic=%d ###\n", nOption_1, m_byLogicNumber);
 		}
@@ -246,7 +245,7 @@ void CRoomEvent::InitializeRoom() {
 	m_tDelayTime = 0;
 	m_byLogicNumber = 1;
 
-	CheckMonsterCount(0, 0, 4);	// 몬스터의 m_byChangeType=0으로 초기화 
+	CheckMonsterCount(0, 0, 4);	// 몬스터의 m_byChangeType=0으로 초기화
 }
 
 void CRoomEvent::EndEventSay(int option1, int option2) {

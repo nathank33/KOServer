@@ -32,7 +32,6 @@ public:
 			g_pMain->TotalGoldenMiningExchangeRate += pData->sExchangeItemRate;
 		}
 
-
 		if (!m_pMap->PutData(pData->nMiningID, pData))
 			delete pData;
 

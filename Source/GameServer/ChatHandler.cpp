@@ -143,7 +143,6 @@ void CUser::Chat(Packet & pkt) {
 	DateTime time;
 	DWORD checknow = GetTickCount();
 
-
 	if (!isGM()) {
 		if (m_mutetime > checknow) return;//süren dolmamış
 
@@ -162,7 +161,7 @@ void CUser::Chat(Packet & pkt) {
 		} else floodcounter = 0;
 		m_lastflood = checknow;// tamam abi
 	}
-	//reyiz biz 1 saniyenin altında 5 
+	//reyiz biz 1 saniyenin altında 5
 	bool isAnnouncement = false;
 
 	if (isMuted() || (GetZoneID() == ZONE_PRISON && !isGM()))
@@ -203,7 +202,6 @@ void CUser::Chat(Packet & pkt) {
 		g_pMain->GetServerResource(IDP_ANNOUNCEMENT, &finalstr, chatstr.c_str());
 		isAnnouncement = true;
 	}
-
 
 	if (isAnnouncement) {
 		// GM notice/announcements show no name, so don't bother setting it.
@@ -355,7 +353,6 @@ void CUser::ChatTargetSelect(Packet & pkt) {
 		if (strUserID.empty() || strUserID.size() > MAX_ID_SIZE)
 			return;
 
-
 		CUser *pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER);
 		if (pUser == this)
 			result << int16(0);
@@ -368,8 +365,6 @@ void CUser::ChatTargetSelect(Packet & pkt) {
 				result << int16(1) << pBot->GetName();
 			else
 				result << int16(0);
-
-
 		} else if (pUser->isBlockingPrivateChat())
 			result << int16(-1) << pUser->GetName();
 		else {
@@ -560,7 +555,6 @@ COMMAND_HANDLER(CGameServerDlg::HandleGiveItemCommand) {
 	if (!vargs.empty())
 		Time = atoi(vargs.front().c_str());
 
-
 	if (!pUser->GiveItem(nItemID, sCount, true, Time)) {
 		// send error message saying the item couldn't be added
 	}
@@ -605,7 +599,6 @@ COMMAND_HANDLER(CUser::HandleGiveItemCommand) {
 	uint32 Time = 0;
 	if (!vargs.empty())
 		Time = atoi(vargs.front().c_str());
-
 
 	if (!pUser->GiveItem(nItemID, sCount, true, Time))
 		g_pMain->SendHelpDescription(this, "Error : Item couldn't be added");
@@ -668,7 +661,6 @@ COMMAND_HANDLER(CUser::HandleMonsterSummonCommand) {
 		sCount = atoi(vargs.front().c_str());
 	}
 
-
 	g_pMain->SpawnEventNpc(sSid, true, GetZoneID(), GetX(), GetY(), GetZ(), sCount, 2);
 
 	return true;
@@ -696,7 +688,6 @@ COMMAND_HANDLER(CUser::HandleBotSummonCommand) {
 
 	minlevel = atoi(vargs.front().c_str());
 
-
 	if (!g_pMain->SpawnBot(Minute, GetZoneID(), GetX(), GetY(), GetZ(), Restie, minlevel)) {
 		// send description
 		g_pMain->SendHelpDescription(this, "There isn't any available bot.");
@@ -705,8 +696,6 @@ COMMAND_HANDLER(CUser::HandleBotSummonCommand) {
 	g_pMain->SendHelpDescription(this, "Bot yollandi..");
 	return true;
 }
-
-
 
 COMMAND_HANDLER(CUser::HandleNPCSummonCommand) {
 	if (!isGM())
@@ -804,7 +793,6 @@ COMMAND_HANDLER(CGameServerDlg::HandleKillUserCommand) {
 	return true;
 }
 
-
 COMMAND_HANDLER(CUser::HandleWar1OpenCommand) { return !isGM() ? false : g_pMain->HandleWar1OpenCommand(vargs, args, description); }
 COMMAND_HANDLER(CGameServerDlg::HandleWar1OpenCommand) {
 	BattleZoneOpen(BATTLEZONE_OPEN, 1);
@@ -874,7 +862,6 @@ COMMAND_HANDLER(CGameServerDlg::HandleCloseCZEventCommand) {
 	CZEventZoneClose();
 	return true;
 }
-
 
 COMMAND_HANDLER(CUser::HandleSnowWarOpenCommand) { return !isGM() ? false : g_pMain->HandleSnowWarOpenCommand(vargs, args, description); }
 COMMAND_HANDLER(CGameServerDlg::HandleSnowWarOpenCommand) {
@@ -953,7 +940,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleRemoveGmCommand) {
 }
 
 COMMAND_HANDLER(CGameServerDlg::HandleOpenEventCommand) {
-	// Event name 
+	// Event name
 	if (vargs.size() < 1) {
 		// send description
 		printf("Using Sample : /open_event EventName\n");
@@ -970,7 +957,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleOpenEventCommand) {
 }
 
 COMMAND_HANDLER(CGameServerDlg::HandleCloseEventCommand) {
-	// Event name 
+	// Event name
 	if (vargs.size() < 1) {
 		// send description
 		printf("Using Sample : /close_event EventName\n");
@@ -989,7 +976,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleCloseEventCommand) {
 COMMAND_HANDLER(CUser::HandleBorderDefenseWarOpenCommand) {
 	if (!isGM()) {
 		return false;
-	// Time until start (seconds)
+		// Time until start (seconds)
 	} else if (vargs.size() < 1) {
 		g_pMain->SendHelpDescription(this, "/open_bdw <seconds> Example: /open_bdw 600");
 		return true;
@@ -1213,7 +1200,6 @@ COMMAND_HANDLER(CGameServerDlg::HandleExpAddCommand) {
 	if (vargs.empty())
 		return true;
 
-
 	g_pMain->m_byExpEventAmount = (uint8) atoi(vargs.front().c_str());
 
 	// Don't send the announcement if we're turning the event off.
@@ -1269,7 +1255,6 @@ COMMAND_HANDLER(CGameServerDlg::HandleMonSummonCommand) {
 	int nX = 0;
 	int nZ = 0;
 	int nR = 0;
-
 
 	if (vargs.size() == 1)
 		sSid = atoi(vargs.front().c_str());
@@ -1442,9 +1427,7 @@ COMMAND_HANDLER(CUser::HandleNPtoKCCommand) {
 	} else if (vargs.size() > 1) {
 		g_pMain->SendHelpDescription(this, "Example: +nptokc 1000");
 		return true;
-
 	}
-
 
 	uint32 nLoyalty = atoi(vargs.front().c_str());
 
@@ -1469,7 +1452,6 @@ COMMAND_HANDLER(CUser::HandleNPtoKCCommand) {
 		g_pMain->SendHelpDescription(this, "You can only exchange 1000,2000 or x000 NP.");
 		return true;
 	}
-
 
 	int32 ExchangeKC = (CLoyalty / 1000) * (g_pMain->KcToThousandNp);
 
@@ -1504,9 +1486,7 @@ COMMAND_HANDLER(CUser::HandleGoldtoKCCommand) {
 	} else if (vargs.size() > 1) {
 		g_pMain->SendHelpDescription(this, "Example: +goldtokc 1000");
 		return true;
-
 	}
-
 
 	uint32 nGold = atoi(vargs.front().c_str());
 
@@ -1532,7 +1512,6 @@ COMMAND_HANDLER(CUser::HandleGoldtoKCCommand) {
 		return true;
 	}
 
-
 	int32 ExchangeKC = (CGold / 100000000) * (g_pMain->KcToGoldBar);
 
 	if (GoldExchangeAsk && GoldExchangeValue == CGold) {
@@ -1550,7 +1529,6 @@ COMMAND_HANDLER(CUser::HandleGoldtoKCCommand) {
 
 	return true;
 }
-
 
 COMMAND_HANDLER(CUser::HandleResetPlayerRankingCommand) {
 	if (!isGM())
@@ -1571,8 +1549,6 @@ COMMAND_HANDLER(CUser::HandleResetPlayerRankingCommand) {
 
 	return true;
 }
-
-
 
 COMMAND_HANDLER(CGameServerDlg::HandleShutdownCommand) {
 	printf("Server shutdown, %d users kicked out.\n", KickOutAllUsers());

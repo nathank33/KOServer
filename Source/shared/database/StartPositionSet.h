@@ -23,7 +23,6 @@ public:
 		_dbCommand->FetchUInt16(10, pData->sElmoradGateX);
 		_dbCommand->FetchUInt16(11, pData->sElmoradGateZ);
 
-
 		if (!m_pMap->PutData(pData->ZoneID, pData))
 			delete pData;
 

@@ -122,7 +122,7 @@ bool CGameSocket::HandlePacket(Packet & pkt) {
 }
 
 void CGameSocket::RecvNpcMoveResult(Packet & pkt) {
-	uint8 flag;			// 01(INFO_MODIFY), 02(INFO_DELETE)	
+	uint8 flag;			// 01(INFO_MODIFY), 02(INFO_DELETE)
 	uint16 sNid;
 	float fX, fY, fZ, fSecForMetor;
 	pkt >> flag >> sNid >> fX >> fZ >> fY >> fSecForMetor;
@@ -136,7 +136,6 @@ void CGameSocket::RecvNpcMoveResult(Packet & pkt) {
 void CGameSocket::RecvServerConnect(Packet & pkt) {
 	uint8 byReconnect = pkt.read<uint8>();
 	printf("Game Server connected - %s\n", GetRemoteIP().c_str());
-
 
 	Packet result(AI_SERVER_CONNECT, byReconnect);
 	Send(&result);
@@ -304,7 +303,7 @@ bool CGameSocket::SetUid(float x, float z, int id, int speed) {
 		if (pUser->isDead())
 			return false;
 
-		///// attack ~ 
+		///// attack ~
 		if (speed != 0) {
 			pUser->m_curx = pUser->m_fWill_x;
 			pUser->m_curz = pUser->m_fWill_z;
@@ -314,7 +313,7 @@ bool CGameSocket::SetUid(float x, float z, int id, int speed) {
 			pUser->m_curx = pUser->m_fWill_x = x;
 			pUser->m_curz = pUser->m_fWill_z = z;
 		}
-		/////~ attack 
+		/////~ attack
 
 		if (pUser->m_sRegionX != nRX || pUser->m_sRegionZ != nRZ) {
 			pMap->RegionUserRemove(pUser->m_sRegionX, pUser->m_sRegionZ, id);
@@ -542,7 +541,6 @@ void CGameSocket::RecvNpcSpawnRequest(Packet & pkt) {
 	fX = sX / 10.0f;
 	fY = sY / 10.0f;
 	fZ = sZ / 10.0f;
-
 
 	for (uint16 i = 0; i < sCount; i++)
 		g_pMain->SpawnEventNpc(sSid, bIsMonster,
