@@ -983,6 +983,12 @@ void CGameServerDlg::KillNpc(uint16 sNid) {
 	Send_AIServer(&result);
 }
 
+void CGameServerDlg::KillNpcType(uint16 sSid) {
+	Packet result(AG_NPC_KILL_TYPE_REQ);
+	result << sSid;
+	Send_AIServer(&result);
+}
+
 void CGameServerDlg::NpcUpdate(uint16 sSid, bool bIsMonster, uint8 byGroup, uint16 sPid) {
 	Packet result(AG_NPC_UPDATE);
 	result << sSid << bIsMonster << byGroup << sPid;

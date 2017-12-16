@@ -40,6 +40,7 @@ public:
 	void RecvBattleEvent(Packet & pkt);
 	void RecvNpcSpawnRequest(Packet & pkt);
 	void RecvNpcKillRequest(Packet & pkt);
+	void RecvNpcKillTypeRequest(Packet & pkt);
 	void RecvNpcUpdate(Packet & pkt);
 
 	bool SetUid(float x, float z, int id, int speed);

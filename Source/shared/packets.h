@@ -760,7 +760,8 @@ const uint8	AG_NPC_HP_REQ		= 13;
 const uint8 AG_NPC_SPAWN_REQ	= 14;	// spawns an NPC/monster at the desired location
 const uint8 AG_NPC_REGION_UPDATE	= 15;
 const uint8 AG_NPC_UPDATE	= 16;
-const uint8 AG_NPC_KILL_REQ	= 17;
+const uint8 AG_NPC_KILL_REQ	= 17; // kills monsters belonging to a user
+const uint8 AG_NPC_KILL_TYPE_REQ = 18; // kills monsters based on their sSid
 
 // ---------------------------------------------------------------------
 // AI Server¿Í °ÔÀÓ¼­¹ö°£ÀÇ User, Npc °øÅë °ü·ÃµÈ ÆÐÅ¶Àº 50¹ø~100¹ø 

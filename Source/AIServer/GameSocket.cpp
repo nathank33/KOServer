@@ -85,6 +85,8 @@ bool CGameSocket::HandlePacket(Packet & pkt) {
 	case AG_NPC_KILL_REQ:
 		RecvNpcKillRequest(pkt);
 		break;
+	case AG_NPC_KILL_TYPE_REQ:
+		RecvNpcKillTypeRequest(pkt);
 	case AG_MAGIC_ATTACK_REQ:
 		CMagicProcess::MagicPacket(pkt);
 		break;
@@ -569,6 +571,20 @@ void CGameSocket::RecvNpcKillRequest(Packet & pkt) {
 
 		if (pNpc != nullptr)
 			pNpc->Dead();
+	}
+}
+
+void CGameSocket::RecvNpcKillTypeRequest(Packet & pkt) {
+	uint16 sSid;
+	pkt >> sSid;
+
+	foreach_stlmap(itr, g_pMain->m_arNpc) {
+		CNpc *pNpc = itr->second;
+		if (pNpc == nullptr || pNpc->GetProto()->m_sSid != sSid) {
+			continue;
+		}
+		pNpc->m_oSocketID = -1;
+		pNpc->Dead();
 	}
 }
 

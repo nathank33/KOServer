@@ -33,7 +33,7 @@ bool CWorldEvent::Start() {
 }
 
 bool CWorldEvent::Stop() {
-	m_gameServer->KillNpc(MON_GREED);
+	m_gameServer->KillNpcType(MON_GREED);
 	return true;
 }
 
@@ -45,7 +45,6 @@ bool CWorldEvent::SendStartNotification() {
 			continue;
 		}
 		pUser->V3_QuestEvent(QUEST_START, STATE_SAVE_MOBS);
-
 	}
 	return true;
 }

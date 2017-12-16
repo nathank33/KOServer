@@ -389,6 +389,9 @@ public:
 	// Kill a Npc/Monster
 	void KillNpc(uint16 sNid);
 
+	// Kill a Npc/Monster based on sSid
+	void KillNpcType(uint16 sSid);
+
 	// Change NPC/Monster properties for Respawn
 	void NpcUpdate(uint16 sSid, bool bIsMonster, uint8 byGroup = 0, uint16 sPid = 0);
 
