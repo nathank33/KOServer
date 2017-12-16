@@ -641,7 +641,7 @@ bool CNpc::SetLive() {
 
 	CNpc* pNpc = nullptr;
 
-	if (m_bIsEventNpc && !m_bFirstLive) {
+	if (m_bIsEventNpc && !m_bFirstLive && m_sRegenTime == 0) {
 		m_bDelete = true;
 		return true;
 	}
