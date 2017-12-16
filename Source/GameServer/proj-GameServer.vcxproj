@@ -686,6 +686,8 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release-XP|x64'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="VIP.cpp" />
+    <ClCompile Include="WorldEvent.cpp" />
+    <ClCompile Include="WorldEventManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\N3BASE\My_3DStruct.h" />
@@ -784,6 +786,8 @@
     <ClInclude Include="Unit.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="WorldEvent.h" />
+    <ClInclude Include="WorldEventManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\GameServer.ico" />

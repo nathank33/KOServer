@@ -25,6 +25,9 @@
     <Filter Include="Scripting">
       <UniqueIdentifier>{7b685819-91d6-429e-b8e5-467471921bed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="WorldEvents">
+      <UniqueIdentifier>{037fd5e3-4936-4372-aba4-0a21b40f3a99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameServerDlg.cpp">
@@ -167,6 +170,12 @@
     </ClCompile>
     <ClCompile Include="ChatRoomHandler.cpp">
       <Filter>Source Files\Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldEventManager.cpp">
+      <Filter>WorldEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldEvent.cpp">
+      <Filter>WorldEvents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -457,6 +466,12 @@
     </ClInclude>
     <ClInclude Include="..\shared\database\ItemExchangeExpSet.h">
       <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldEventManager.h">
+      <Filter>WorldEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldEvent.h">
+      <Filter>WorldEvents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
