@@ -65,7 +65,10 @@ void CUser::SendSkillQuestFinish() {
 void CUser::V3_QuestProcess(Packet & pkt) {
 	uint8 opcode = pkt.read<uint8>();
 	uint32 nQuestID = pkt.read<uint32>();
+	V3_QuestProcessHelper(opcode, nQuestID);
+}
 
+void CUser::V3_QuestProcessHelper(uint8 opcode, uint32 nQuestID) {
 	CNpc *pNpc = g_pMain->GetNpcPtr(m_sEventNid);
 	_QUEST_HELPER * pQuestHelper = g_pMain->m_QuestHelperArray.GetData(nQuestID);
 	// Does this quest helper exist?
@@ -78,6 +81,8 @@ void CUser::V3_QuestProcess(Packet & pkt) {
 	// do we have the min. required XP? Seems kind of silly, but OK..
 	if (pQuestHelper->bLevel == GetLevel() && pQuestHelper->nExp > m_iExp)
 		return;
+
+	printf("V3_QuestProcess nQuestID = %d, opcode = %d\n", nQuestID, opcode);
 
 	switch (opcode) {
 	case 3:
@@ -183,7 +188,7 @@ void CUser::V3_QuestEvent(uint16 sQuestID, uint8 bQuestState) {
 					}
 
 					RunExchange(jIndex);*/
-
+		printf("V3_QuestEvent, NpcId = %d, state = %d: Clearing monster data\n", sQuestID, bQuestState);
 		V3_QuestMonsterDataDeleteAll(sQuestID);
 		V3_QuestMonsterDataRequest(sQuestID);
 	}
@@ -201,7 +206,7 @@ void CUser::V3_QuestEvent(uint16 sQuestID, uint8 bQuestState) {
 			nQuest->dCKills[3] = 0;
 			m_QuestMonMap.insert(std::make_pair(sQuestID, nQuest));
 		}
-
+		printf("V3_QuestEvent, NpcId = %d, state = %d: Saving monster data\n", sQuestID, bQuestState);
 		V3_QuestMonsterDataRequest(sQuestID);
 	}
 }
@@ -307,7 +312,8 @@ bool CUser::V3_QuestRunEvent(_QUEST_HELPER * pQuestHelper, uint32 nEventID, int8
 		return false;
 
 	// Lookup the corresponding NPC.
-	if (pQuestHelper->strLuaFilename == "01_main.lua") {
+	if (pQuestHelper->strLuaFilename == "01_main.lua" 
+			|| pQuestHelper->strLuaFilename == "World_Events.lua") {
 		m_sEventNid = 10000;
 	}
 
@@ -322,6 +328,7 @@ bool CUser::V3_QuestRunEvent(_QUEST_HELPER * pQuestHelper, uint32 nEventID, int8
 	pNpc->IncRef();
 
 	m_nQuestHelperID = pQuestHelper->nIndex;
+	printf("QuestRunEvent, Executing script on eventId = %d, reward = %d\n", nEventID, bSelectedReward);
 	result = g_pMain->GetLuaEngine()->ExecuteScript(this, pNpc, nEventID, bSelectedReward,
 		pQuestHelper->strLuaFilename.c_str());
 

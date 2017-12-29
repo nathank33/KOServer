@@ -6,6 +6,9 @@ CWorldEventManager::CWorldEventManager(CGameServerDlg* gameServer) {
 }
 
 void CWorldEventManager::Tick() {
+	for (auto eventPair : m_events) {
+		eventPair.second->Tick();
+	}
 }
 
 bool CWorldEventManager::AddEvent(uint8 eventId, std::shared_ptr<CWorldEvent> event) {

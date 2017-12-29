@@ -422,12 +422,6 @@ void CUser::SelectMsg(uint8 bFlag, int32 nQuestID, int32 menuHeaderText,
 	Packet result(WIZ_SELECT_MSG);
 	result.SByte();
 
-	// There seems to be a problem with bFlags and the packet format.
-	// A packet with value 4 often doesn't get sent
-	if (bFlag == 4) {
-		bFlag = 4;
-	}
-
 	result << m_sEventSid << bFlag << nQuestID << menuHeaderText;
 	foreach_array_n(i, menuButtonText, MAX_MESSAGE_EVENT)
 		result << menuButtonText[i];

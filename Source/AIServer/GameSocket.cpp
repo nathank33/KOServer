@@ -585,6 +585,7 @@ void CGameSocket::RecvNpcKillTypeRequest(Packet & pkt) {
 		}
 		pNpc->m_oSocketID = -1;
 		pNpc->Dead();
+		pNpc->m_bDelete = true;
 	}
 }
 

@@ -17,10 +17,18 @@ const uint16 SPAWN_NATION = 0;
 const uint16 SPAWN_REGEN = 30 * SECOND;
 
 const uint16 QUEST_START = 20000;
-const uint16 QUEST_END = 20010;
+const uint16 QUEST_EXCHANGE = 20005;
+const uint16 QUEST_END = 20000;
 
 const uint8 STATE_SAVE_MOBS = 1;
+const uint8 STATE_EXCHANGE = 3;
 const uint8 STATE_CLEAR_MOBS = 2;
+
+const uint8 QUEST_START_OPCODE = 7;
+const uint8 QUEST_EXCHANGE_OPCODE = 7;
+const uint8 QUEST_END_OPCODE = 5;
+
+const std::chrono::seconds QUEST_SUBMISSION_DELAY(5);
 
 CWorldEvent::CWorldEvent(CGameServerDlg* gameServer) {
 	m_gameServer = gameServer;
@@ -29,11 +37,14 @@ CWorldEvent::CWorldEvent(CGameServerDlg* gameServer) {
 
 bool CWorldEvent::Start() {
 	m_gameServer->SpawnEventNpc(MON_GREED, true, ZONE_RONARK_LAND, 1769, 0, 1160, SPAWN_COUNT, 50, SPAWN_DURATION, SPAWN_REGEN, SPAWN_NATION);
+	m_lastQuestSubmissionTime = std::chrono::system_clock::now();
+	m_started = true;
 	return true;
 }
 
 bool CWorldEvent::Stop() {
 	m_gameServer->KillNpcType(MON_GREED);
+	m_started = false;
 	return true;
 }
 
@@ -44,7 +55,8 @@ bool CWorldEvent::SendStartNotification() {
 		if (!pUser->isInGame()) {
 			continue;
 		}
-		pUser->V3_QuestEvent(QUEST_START, STATE_SAVE_MOBS);
+		pUser->V3_QuestProcessHelper(QUEST_END_OPCODE, QUEST_END);
+		pUser->V3_QuestProcessHelper(QUEST_START_OPCODE, QUEST_START);
 	}
 	return true;
 }
@@ -56,7 +68,25 @@ bool CWorldEvent::SendStopNotification() {
 		if (!pUser->isInGame()) {
 			continue;
 		}
-		pUser->V3_QuestEvent(QUEST_END, STATE_CLEAR_MOBS);
+		pUser->V3_QuestProcessHelper(QUEST_END_OPCODE, QUEST_END);
 	}
 	return true;
+}
+
+void CWorldEvent::Tick() {
+	if (m_started) {
+		if (m_lastQuestSubmissionTime + QUEST_SUBMISSION_DELAY
+			<= std::chrono::system_clock::now()) {
+			m_lastQuestSubmissionTime = std::chrono::system_clock::now();
+
+			SessionMap sessMap = m_gameServer->m_socketMgr.GetActiveSessionMap();
+			for (auto sessNum : sessMap) {
+				CUser *pUser = TO_USER(sessNum.second);
+				if (!pUser->isInGame()) {
+					continue;
+				}
+				pUser->V3_QuestProcessHelper(QUEST_EXCHANGE_OPCODE, QUEST_EXCHANGE);
+			}
+		}
+	}
 }
