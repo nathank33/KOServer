@@ -13,13 +13,11 @@ ExpReward = 10000000
 
 -- Should auto accept the quest and track bifrost monsters
 if (EVENT == 1000) then
-    print("In Lua 1000");
     SaveEvent(UID, 20000);
 end
 
 -- Check if they killed enough monsters
 if (EVENT == 1010) then
-    print("In Lua 1010");
 	MonsterCount1 = CountMonsterQuestSub(UID, QuestId, 1);
     MonsterCount2 = CountMonsterQuestSub(UID, QuestId, 2);
     MonsterCount3 = CountMonsterQuestSub(UID, QuestId, 3);
@@ -30,13 +28,11 @@ end
 
 -- Tell the client that the quest is ready to be submitted, then go back to event 1010.
 if (EVENT == 1015) then
-    print("In Lua 1015");
 	SaveEvent(UID, 20005);
 end
 
 -- Grant them their reward
 if (EVENT == 1020) then
-    print("In Lua 1020");
     CanExchange = CheckExchange(UID, ExchangeId);
     if CanExchange == true then
       RunExchange(UID, ExchangeId);

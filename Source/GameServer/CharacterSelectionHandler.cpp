@@ -489,6 +489,9 @@ void CUser::GameStart(Packet & pkt) {
 
 		m_LastX = GetX();
 		m_LastZ = GetZ();
+
+		// Refresh any World Events that were leftover from the user's previous session
+		g_pMain->m_pWorldEventManager->RefreshEvents(this);
 	}
 	_KNIGHTS_SIEGE_WARFARE *pKnightSiege = g_pMain->GetSiegeMasterKnightsPtr(1);
 	CKnights *pKnights = g_pMain->GetClanPtr(pKnightSiege->sMasterKnights);

@@ -6642,8 +6642,7 @@ void CUser::HandleMiningThing(Packet & pkt) {
 	}
 }
 
-void CUser::HandleSoccer(Packet & pkt) {
-}
+void CUser::HandleSoccer(Packet & pkt) {}
 
 /// Fish Stard
 void CUser::HandleFishingStart(Packet & pkt) {

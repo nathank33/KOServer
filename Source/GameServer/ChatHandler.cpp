@@ -951,7 +951,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleOpenEventCommand) {
 	vargs.pop_front();
 
 	if (boost::iequals(eventName, "bifrost")) {
-		return g_pMain->m_pWorldEventManager->AddBifrostEvent();
+		return g_pMain->m_pWorldEventManager->StartBifrostEvent();
 	}
 	return false;
 }
@@ -968,7 +968,7 @@ COMMAND_HANDLER(CGameServerDlg::HandleCloseEventCommand) {
 	vargs.pop_front();
 
 	if (boost::iequals(eventName, "bifrost")) {
-		return g_pMain->m_pWorldEventManager->RemoveBifrostEvent();
+		return g_pMain->m_pWorldEventManager->StopBifrostEvent();
 	}
 	return false;
 }

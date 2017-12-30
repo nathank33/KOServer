@@ -1,44 +1,94 @@
+#include <random>
 #include "stdafx.h"
 #include "WorldEventManager.h"
 
+std::default_random_engine s_randEngine;
+
 CWorldEventManager::CWorldEventManager(CGameServerDlg* gameServer) {
 	m_gameServer = gameServer;
+	m_events.insert(std::make_pair(WORLD_EVENT_BIFROST, std::make_shared<CWorldEvent>(m_gameServer)));
+	m_lastEventStartTime = std::chrono::system_clock::time_point::min();
 }
 
 void CWorldEventManager::Tick() {
-	for (auto eventPair : m_events) {
+	// Try to start a new event.
+	if (m_startedEvents.size() == 0
+		&& std::chrono::system_clock::now() >= m_lastEventStartTime + WORLD_EVENT_DELAY) {
+		StartEvent(GetRandomEvent());
+	}
+	// Try to stop any started events. This needs to be a range-based for loop
+	// because the stop method may delete elements.
+	for (auto it = m_startedEvents.begin(); it != m_startedEvents.end();) {
+		auto eventId = it->first;
+		auto event = it->second;
+		if (std::chrono::system_clock::now() >= event->GetStartTime() + WORLD_EVENT_DURATION) {
+			StopEvent(eventId);
+		} else {
+			it++;
+		}
+	}
+
+	// Tick any started events.
+	for (auto eventPair : m_startedEvents) {
 		eventPair.second->Tick();
 	}
 }
 
-bool CWorldEventManager::AddEvent(uint8 eventId, std::shared_ptr<CWorldEvent> event) {
-	if (m_events.find(eventId) != m_events.end()) {
+bool CWorldEventManager::StartEvent(uint8 eventId) {
+	auto eventsIter = m_events.find(eventId);
+	if (eventsIter == m_events.end()) {
+		// The event was never created in the constructor.
+		printf("CWorldEventManager::StartEvent could not find eventId %d\n", eventId);
+		return false;
+	} else if (m_startedEvents.find(eventId) != m_startedEvents.end()) {
 		// One of these types of events has already been started.
 		return false;
 	}
-	m_events.insert(std::make_pair(eventId, event));
+
+	auto event = eventsIter->second;
+	m_startedEvents.insert(std::make_pair(eventId, event));
 	event->Start();
-	event->SendStartNotification();
+	m_lastEventStartTime = std::chrono::system_clock::now();
+	printf("CWorldManager Starting Event %d\n", eventId);
 	return true;
 }
 
-bool CWorldEventManager::RemoveEvent(uint8 eventId) {
-	auto iter = m_events.find(eventId);
-	if (iter == m_events.end()) {
+bool CWorldEventManager::StopEvent(uint8 eventId) {
+	auto iter = m_startedEvents.find(eventId);
+	if (iter == m_startedEvents.end()) {
 		// Could not find the event.
 		return false;
 	}
 	auto event = iter->second;
 	event->Stop();
-	event->SendStopNotification();
-	m_events.erase(iter);
+	m_startedEvents.erase(iter);
 	return true;
 }
 
-bool CWorldEventManager::AddBifrostEvent() {
-	return AddEvent(WORLD_EVENT_BIFROST, std::make_shared<CWorldEvent>(m_gameServer));
+bool CWorldEventManager::StartBifrostEvent() {
+	return StartEvent(WORLD_EVENT_BIFROST);
 }
 
-bool CWorldEventManager::RemoveBifrostEvent() {
-	return RemoveEvent(WORLD_EVENT_BIFROST);
+bool CWorldEventManager::StopBifrostEvent() {
+	return StopEvent(WORLD_EVENT_BIFROST);
+}
+
+uint8 CWorldEventManager::GetRandomEvent() {
+	std::uniform_int_distribution<int> randDistribution(0, m_events.size() - 1);
+	auto randomInt = randDistribution(s_randEngine);
+	auto randomIter = std::next(std::begin(m_events), randomInt);
+	return randomIter->first;
+}
+
+void CWorldEventManager::RefreshEvents(CUser* pUser) {
+	for (auto eventPair : m_events) {
+		if (m_startedEvents.find(eventPair.first) == m_startedEvents.end()) {
+			// The event has not been started, so we should make sure this event is
+			// cleared up for this user.
+			eventPair.second->StopUser(pUser);
+		} else {
+			// The event was started, make sure they can do it as well.
+			eventPair.second->StartUser(pUser);
+		}
+	}
 }

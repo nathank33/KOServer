@@ -37,39 +37,44 @@ CWorldEvent::CWorldEvent(CGameServerDlg* gameServer) {
 
 bool CWorldEvent::Start() {
 	m_gameServer->SpawnEventNpc(MON_GREED, true, ZONE_RONARK_LAND, 1769, 0, 1160, SPAWN_COUNT, 50, SPAWN_DURATION, SPAWN_REGEN, SPAWN_NATION);
+	m_startTime = std::chrono::system_clock::now();
 	m_lastQuestSubmissionTime = std::chrono::system_clock::now();
 	m_started = true;
+
+	SessionMap sessMap = m_gameServer->m_socketMgr.GetActiveSessionMap();
+	for (auto sessNum : sessMap) {
+		CUser *pUser = TO_USER(sessNum.second);
+		StartUser(pUser);
+	}
 	return true;
 }
 
 bool CWorldEvent::Stop() {
 	m_gameServer->KillNpcType(MON_GREED);
 	m_started = false;
-	return true;
-}
 
-bool CWorldEvent::SendStartNotification() {
 	SessionMap sessMap = m_gameServer->m_socketMgr.GetActiveSessionMap();
 	for (auto sessNum : sessMap) {
 		CUser *pUser = TO_USER(sessNum.second);
-		if (!pUser->isInGame()) {
-			continue;
-		}
-		pUser->V3_QuestProcessHelper(QUEST_END_OPCODE, QUEST_END);
-		pUser->V3_QuestProcessHelper(QUEST_START_OPCODE, QUEST_START);
+		StopUser(pUser);
 	}
 	return true;
 }
 
-bool CWorldEvent::SendStopNotification() {
-	SessionMap sessMap = m_gameServer->m_socketMgr.GetActiveSessionMap();
-	for (auto sessNum : sessMap) {
-		CUser *pUser = TO_USER(sessNum.second);
-		if (!pUser->isInGame()) {
-			continue;
-		}
-		pUser->V3_QuestProcessHelper(QUEST_END_OPCODE, QUEST_END);
+bool CWorldEvent::StartUser(CUser* pUser) {
+	if (!pUser->isInGame()) {
+		return false;
 	}
+	pUser->V3_QuestProcessHelper(QUEST_END_OPCODE, QUEST_END);
+	pUser->V3_QuestProcessHelper(QUEST_START_OPCODE, QUEST_START);
+	return true;
+}
+
+bool CWorldEvent::StopUser(CUser* pUser) {
+	if (!pUser->isInGame()) {
+		return false;
+	}
+	pUser->V3_QuestProcessHelper(QUEST_END_OPCODE, QUEST_END);
 	return true;
 }
 
