@@ -1,12 +1,13 @@
 #include <random>
 #include "stdafx.h"
 #include "WorldEventManager.h"
+#include "BifrostEvents.h"
 
 std::default_random_engine s_randEngine;
 
 CWorldEventManager::CWorldEventManager(CGameServerDlg* gameServer) {
 	m_gameServer = gameServer;
-	m_events.insert(std::make_pair(WORLD_EVENT_BIFROST, std::make_shared<CWorldEvent>(m_gameServer)));
+	m_events.insert(std::make_pair(WORLD_EVENT_BIFROST_EASY, std::make_shared<CBifrostEventEasy>(m_gameServer)));
 	m_lastEventStartTime = std::chrono::system_clock::time_point::min();
 }
 
@@ -14,7 +15,9 @@ void CWorldEventManager::Tick() {
 	// Try to start a new event.
 	if (m_startedEvents.size() == 0
 		&& std::chrono::system_clock::now() >= m_lastEventStartTime + WORLD_EVENT_DELAY) {
-		StartEvent(GetRandomEvent());
+		// TODO: Fix this timing issue. The AIServer may not be ready to event stuff.
+		// We need to wait until everything is loaded up.
+		// StartEvent(GetRandomEvent());
 	}
 	// Try to stop any started events. This needs to be a range-based for loop
 	// because the stop method may delete elements.
@@ -66,11 +69,11 @@ bool CWorldEventManager::StopEvent(uint8 eventId) {
 }
 
 bool CWorldEventManager::StartBifrostEvent() {
-	return StartEvent(WORLD_EVENT_BIFROST);
+	return StartEvent(WORLD_EVENT_BIFROST_EASY);
 }
 
 bool CWorldEventManager::StopBifrostEvent() {
-	return StopEvent(WORLD_EVENT_BIFROST);
+	return StopEvent(WORLD_EVENT_BIFROST_EASY);
 }
 
 uint8 CWorldEventManager::GetRandomEvent() {

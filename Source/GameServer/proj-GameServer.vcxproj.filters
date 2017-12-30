@@ -177,6 +177,9 @@
     <ClCompile Include="WorldEvent.cpp">
       <Filter>WorldEvents</Filter>
     </ClCompile>
+    <ClCompile Include="BifrostEvents.cpp">
+      <Filter>WorldEvents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Define.h">
@@ -471,6 +474,9 @@
       <Filter>WorldEvents</Filter>
     </ClInclude>
     <ClInclude Include="WorldEvent.h">
+      <Filter>WorldEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="BifrostEvents.h">
       <Filter>WorldEvents</Filter>
     </ClInclude>
   </ItemGroup>

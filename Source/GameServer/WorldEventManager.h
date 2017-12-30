@@ -4,7 +4,9 @@
 #include "WorldEvent.h"
 #include "GameServerDlg.h"
 
-#define WORLD_EVENT_BIFROST 1
+#define WORLD_EVENT_BIFROST_EASY 1
+#define WORLD_EVENT_BIFROST_MEDIUM 2
+#define WORLD_EVENT_BIFROST_HARD 3
 
 const std::chrono::minutes WORLD_EVENT_DELAY(45);
 const std::chrono::minutes WORLD_EVENT_DURATION(30);

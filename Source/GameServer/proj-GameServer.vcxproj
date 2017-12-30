@@ -563,6 +563,7 @@
     </ClCompile>
     <ClCompile Include="ArenaHandler.cpp" />
     <ClCompile Include="AttackHandler.cpp" />
+    <ClCompile Include="BifrostEvents.cpp" />
     <ClCompile Include="Bot.cpp" />
     <ClCompile Include="CharacterSelectionHandler.cpp" />
     <ClCompile Include="CharacterMovementHandler.cpp" />
@@ -760,6 +761,7 @@
     <ClInclude Include="..\shared\database\UserPersonalRankSet.h" />
     <ClInclude Include="..\shared\database\ZoneInfoSet.h" />
     <ClInclude Include="AISocket.h" />
+    <ClInclude Include="BifrostEvents.h" />
     <ClInclude Include="Bot.h" />
     <ClInclude Include="ChatHandler.h" />
     <ClInclude Include="ConsoleInputThread.h" />
