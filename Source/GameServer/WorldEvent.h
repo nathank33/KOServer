@@ -28,6 +28,17 @@ const uint8 QUEST_END_OPCODE = 5;
 
 const std::chrono::seconds QUEST_SUBMISSION_DELAY(5);
 
+struct SpawnPosition {
+	uint8 byZone;
+	float fX;
+	float fY;
+	float fZ;
+	uint16 sRadius;
+};
+
+//const std::vector<SpawnPosition> HUMAN_SPAWN_POSITIONS{
+//};
+
 class CWorldEvent {
 public:
 	CWorldEvent(CGameServerDlg* gameServer);
@@ -52,5 +63,4 @@ private:
 	bool m_started;
 	std::chrono::system_clock::time_point m_startTime;
 	std::chrono::system_clock::time_point m_lastQuestSubmissionTime;
-	std::vector<uint8> m_zones;
 };

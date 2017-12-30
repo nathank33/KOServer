@@ -749,6 +749,8 @@ public:
 	void WriteUpgradeLogFile(std::string & logMessage);
 	void WriteCheatLogFile(std::string & logMessage);
 
+	bool m_aiServerConnected = false;
+
 	// WorldEvent Fields
 	std::unique_ptr<CWorldEventManager> m_pWorldEventManager;
 

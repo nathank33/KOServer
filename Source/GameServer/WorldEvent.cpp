@@ -1,13 +1,8 @@
 #include "stdafx.h"
 #include "WorldEvent.h"
 
-const uint16 QUEST_START = 20000;
-const uint16 QUEST_EXCHANGE = 20005;
-const uint16 QUEST_END = 20000;
-
 CWorldEvent::CWorldEvent(CGameServerDlg* gameServer) {
 	m_gameServer = gameServer;
-	m_zones = {ZONE_RONARK_LAND};
 }
 
 bool CWorldEvent::Start() {

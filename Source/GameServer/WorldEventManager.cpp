@@ -14,10 +14,10 @@ CWorldEventManager::CWorldEventManager(CGameServerDlg* gameServer) {
 void CWorldEventManager::Tick() {
 	// Try to start a new event.
 	if (m_startedEvents.size() == 0
-		&& std::chrono::system_clock::now() >= m_lastEventStartTime + WORLD_EVENT_DELAY) {
-		// TODO: Fix this timing issue. The AIServer may not be ready to event stuff.
-		// We need to wait until everything is loaded up.
-		// StartEvent(GetRandomEvent());
+		&& std::chrono::system_clock::now() >= m_lastEventStartTime + WORLD_EVENT_DELAY
+		&& m_gameServer->m_aiServerConnected) {
+		// Some events spawn event monsters. We need the AIServer to be ready to do so.
+		StartEvent(GetRandomEvent());
 	}
 	// Try to stop any started events. This needs to be a range-based for loop
 	// because the stop method may delete elements.

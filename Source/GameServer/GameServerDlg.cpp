@@ -1254,6 +1254,7 @@ void CGameServerDlg::AIServerConnect() {
 
 		TRACE("**** AISocket Connect Success!! , server = %s:%d ****\n", pSock->GetRemoteIP().c_str(), pSock->GetRemotePort());
 	}
+	m_aiServerConnected = true;
 }
 
 /**
