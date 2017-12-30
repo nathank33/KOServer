@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "../shared/globals.h"
 #include "../shared/DateTime.h"
-#include <cmath>
 #include "DBAgent.h"
 #define VIP_VAULT_KEY	800442000
 

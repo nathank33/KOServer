@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "../shared/KOSocketMgr.h"
-#include <boost\foreach.hpp>
+
 using namespace std;
 
 void CUser::PartyProcess(Packet & pkt) {

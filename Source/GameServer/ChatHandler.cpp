@@ -2,9 +2,6 @@
 #include "DBAgent.h"
 #include "../shared/DateTime.h"
 #include "../shared/packets.h"
-#include <boost\foreach.hpp>
-#include <boost\algorithm\string.hpp>
-#include <chrono>
 
 using std::string;
 using namespace std::chrono;

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "ConsoleInputThread.h"
-#include <conio.h>
 
 static Thread s_consoleInputThread;
 

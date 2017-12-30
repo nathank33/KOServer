@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "KnightsManager.h"
-#include <boost\foreach.hpp>
 
 void CUser::V3_QuestDataRequest() {
 	Packet result(WIZ_QUEST, uint8(1));
@@ -312,8 +311,8 @@ bool CUser::V3_QuestRunEvent(_QUEST_HELPER * pQuestHelper, uint32 nEventID, int8
 		return false;
 
 	// Lookup the corresponding NPC.
-	if (pQuestHelper->strLuaFilename == "01_main.lua" 
-			|| pQuestHelper->strLuaFilename == "World_Events.lua") {
+	if (pQuestHelper->strLuaFilename == "01_main.lua"
+		|| pQuestHelper->strLuaFilename == "World_Events.lua") {
 		m_sEventNid = 10000;
 	}
 

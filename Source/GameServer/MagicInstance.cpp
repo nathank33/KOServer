@@ -3,7 +3,6 @@
 #include "../shared/KOSocketMgr.h"
 #include "MagicProcess.h"
 #include "MagicInstance.h"
-#include <boost\foreach.hpp>
 
 using std::string;
 using std::vector;

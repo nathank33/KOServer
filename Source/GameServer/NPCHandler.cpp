@@ -3,7 +3,6 @@
 #include "KnightsManager.h"
 #include "KingSystem.h"
 #include "DBAgent.h"
-#include <boost\foreach.hpp>
 #include "../shared/DateTime.h"
 
 using namespace std;

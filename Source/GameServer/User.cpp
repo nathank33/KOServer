@@ -6,7 +6,6 @@
 #include "DBAgent.h"
 #include <algorithm>
 #include "../shared/DateTime.h"
-#include <boost\foreach.hpp>
 
 using namespace std;
 

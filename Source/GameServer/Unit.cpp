@@ -8,7 +8,6 @@
 #	include "../AIServer/Npc.h"
 #	include "../AIServer/User.h"
 #endif
-#include <cfloat>
 
 Unit::Unit(UnitType unitType)
 	: m_pMap(nullptr), m_pRegion(nullptr), m_sRegionX(0), m_sRegionZ(0), m_unitType(unitType) {

@@ -6,16 +6,9 @@
 #include "../shared/Ini.h"
 #include "../shared/DateTime.h"
 
-#include <time.h>
-#include <iostream>
-#include <fstream>
 #include "Map.h"
-
 #include "AISocket.h"
-
 #include "DBAgent.h"
-
-#include <boost\foreach.hpp>
 
 using namespace std;
 using namespace std::chrono;

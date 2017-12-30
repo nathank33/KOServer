@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include <boost\foreach.hpp>
 
 using std::string;
 
