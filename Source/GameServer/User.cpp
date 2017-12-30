@@ -7,6 +7,7 @@
 #include <algorithm>
 #include "../shared/DateTime.h"
 #include <boost\foreach.hpp>
+#include "Elo.cpp"
 
 using namespace std;
 
@@ -239,6 +240,9 @@ void CUser::Initialize() {
 
 	if (isInParty())
 		PartyRemove(GetSocketID());
+
+	//jamie elo variables
+	m_elo3, m_elo5 = 1200;
 }
 
 bool CUser::HandlePacket(Packet & pkt) {
@@ -2668,6 +2672,35 @@ void CUser::PointChange(Packet & pkt) {
 	result << m_iMaxHp << m_iMaxMp << m_sTotalHit << m_sMaxWeight;
 	Send(&result);
 	SendItemMove(1);
+}
+
+//jamie elo method
+
+//changes a users elo. needs to be called for each person in an arena
+void CUser::EloChange(CUser *killer)
+{
+	/*
+	//check first if 3s or 5s was played
+	if (arena3)
+	{
+		a = elo::Player::Player(&g_pMain->GetUserPtr(uid), m_elo3);
+	}
+
+	//if not 3s then 5s
+	else
+	{
+		a = elo::Player::Player(&g_pMain->GetUserPtr(uid), m_elo5);
+	}
+	*/
+	
+	elo::Player kill(killer->m_elo3, 0, true);
+	elo::Player die(this->m_elo3, 0, false);
+
+	elo::Manager::game(kill, die, elo::Manager::Win);
+
+	printf(killer->GetUserInfo.m_strUserID + " wins, and has : " + kill.getRank() + " elo. " + this->GetUserInfo.m_strUserID + " died, and has : " + die.getRank() + " elo.");
+
+
 }
 
 /**
@@ -5716,6 +5749,9 @@ void CUser::OnDeath(Unit *pKiller) {
 					} else {
 						if (isInArena() || isInPartyArena()) {
 							// Show death notices in the arena
+							//jamie fooling around
+							EloChange(pUser);
+							//
 							noticeType = DeathNoticeCoordinates;
 						} else {
 							uint16 bonusNP = 0;
@@ -6642,7 +6678,8 @@ void CUser::HandleMiningThing(Packet & pkt) {
 	}
 }
 
-void CUser::HandleSoccer(Packet & pkt) {}
+void CUser::HandleSoccer(Packet & pkt) {
+}
 
 /// Fish Stard
 void CUser::HandleFishingStart(Packet & pkt) {

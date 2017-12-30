@@ -391,6 +391,10 @@ public:
 	float    m_LastX;
 	float    m_LastZ;
 
+	//jamie elo variables
+	uint16 m_elo3;
+	uint16 m_elo5;
+
 public:
 	INLINE bool isMeChatroom(uint16 Room) { return m_ChatRoomIndex == Room; };
 	INLINE bool  isGenieActive() { return m_bGenieStatus; }
@@ -1195,6 +1199,9 @@ public:
 	void SiegeWarFareNpc(Packet & pkt);
 	void LogosShout(Packet & pkt);
 
+	//jamie elo change method
+	void EloChange(CUser *killer);
+
 	void RemoveRegionChat();
 
 	virtual void GetInOut(Packet & result, uint8 bType);
@@ -1260,7 +1267,6 @@ public:
 
 	void V3_QuestDataRequest();
 	void V3_QuestProcess(Packet & pkt);
-	void V3_QuestProcessHelper(uint8 opcode, uint32 nQuestID);
 	void V3_QuestEvent(uint16 sQuestID, uint8 bQuestState);
 	void V3_QuestExecuteHelper(_QUEST_HELPER * pQuestHelper);
 	void V3_QuestCheckFulfill(_QUEST_HELPER * pQuestHelper);

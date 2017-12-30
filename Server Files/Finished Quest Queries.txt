@@ -51,3 +51,12 @@ WHERE strLuaFilename = '14435_Moradon.lua' AND nIndex = '3996'
 UPDATE [kn_online].[dbo].[QUEST_TALK]
 SET strTalk = 'You can do this, right?'
 WHERE iNum = '44214'
+
+/*
+Cheina, Asga Village quests
+*/
+
+--For lvl 56 quest Grell
+UPDATE [kn_online].[dbo].[QUEST_MONSTER]
+SET sCount1 = '20'
+WHERE sQuestNum = '874'
