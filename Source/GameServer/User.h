@@ -1267,6 +1267,7 @@ public:
 
 	void V3_QuestDataRequest();
 	void V3_QuestProcess(Packet & pkt);
+	void V3_QuestProcessHelper(uint8 opcode, uint32 nQuestID);
 	void V3_QuestEvent(uint16 sQuestID, uint8 bQuestState);
 	void V3_QuestExecuteHelper(_QUEST_HELPER * pQuestHelper);
 	void V3_QuestCheckFulfill(_QUEST_HELPER * pQuestHelper);

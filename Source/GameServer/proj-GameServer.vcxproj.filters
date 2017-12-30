@@ -180,6 +180,9 @@
     <ClCompile Include="BifrostEvents.cpp">
       <Filter>WorldEvents</Filter>
     </ClCompile>
+    <ClCompile Include="Elo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Define.h">
@@ -478,6 +481,9 @@
     </ClInclude>
     <ClInclude Include="BifrostEvents.h">
       <Filter>WorldEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="Elo.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

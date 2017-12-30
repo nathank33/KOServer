@@ -6,7 +6,7 @@
 #include "DBAgent.h"
 #include <algorithm>
 #include "../shared/DateTime.h"
-#include "Elo.cpp"
+#include "Elo.h"
 
 using namespace std;
 
@@ -2677,26 +2677,22 @@ void CUser::PointChange(Packet & pkt) {
 
 //changes a users elo. needs to be called for each person in an arena
 void CUser::EloChange(CUser *killer) {
-	/*
 	//check first if 3s or 5s was played
-	if (arena3)
-	{
-		a = elo::Player::Player(&g_pMain->GetUserPtr(uid), m_elo3);
-	}
+	//if (arena3) {
+	//	a = elo::Player::Player(&g_pMain->GetUserPtr(uid), m_elo3);
+	//}
 
-	//if not 3s then 5s
-	else
-	{
-		a = elo::Player::Player(&g_pMain->GetUserPtr(uid), m_elo5);
-	}
-	*/
+	////if not 3s then 5s
+	//else {
+	//	a = elo::Player::Player(&g_pMain->GetUserPtr(uid), m_elo5);
+	//}
 
-	elo::Player kill(killer->m_elo3, 0, true);
-	elo::Player die(this->m_elo3, 0, false);
+	//elo::EloPlayer kill(killer->m_elo3, 0, true);
+	//elo::EloPlayer die(this->m_elo3, 0, false);
 
-	elo::Manager::game(kill, die, elo::Manager::Win);
+	//elo::EloManager::game(kill, die, elo::EloResult::Win);
 
-	printf(killer->GetUserInfo.m_strUserID + " wins, and has : " + kill.getRank() + " elo. " + this->GetUserInfo.m_strUserID + " died, and has : " + die.getRank() + " elo.");
+	//printf(killer->GetUserInfo.m_strUserID + " wins, and has : " + kill.getRank() + " elo. " + this->GetUserInfo.m_strUserID + " died, and has : " + die.getRank() + " elo.");
 }
 
 /**

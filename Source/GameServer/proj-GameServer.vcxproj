@@ -573,6 +573,7 @@
     <ClCompile Include="ConsoleInputThread.cpp" />
     <ClCompile Include="DatabaseThread.cpp" />
     <ClCompile Include="DBAgent.cpp" />
+    <ClCompile Include="Elo.cpp" />
     <ClCompile Include="GameServerDlg.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -769,6 +770,7 @@
     <ClInclude Include="DatabaseThread.h" />
     <ClInclude Include="DBAgent.h" />
     <ClInclude Include="Define.h" />
+    <ClInclude Include="Elo.h" />
     <ClInclude Include="GameServerDlg.h" />
     <ClInclude Include="GameDefine.h" />
     <ClInclude Include="GameEvent.h" />
