@@ -1,5 +1,5 @@
-#include "Elo.h"
 #include "stdafx.h"
+#include "Elo.h"
 
 float elo::EloManager::ScoreToOverPass = 0;
 float elo::EloManager::BasicRank = 0;

@@ -6,7 +6,9 @@ std::default_random_engine s_randEngine;
 
 CWorldEventManager::CWorldEventManager(CGameServerDlg* gameServer) {
 	m_gameServer = gameServer;
-	m_events.insert(std::make_pair(WORLD_EVENT_BIFROST_EASY, std::make_shared<CBifrostEventEasy>(m_gameServer)));
+	m_events.insert(std::make_pair(WORLD_EVENT_BIFROST_ASHITON, std::make_shared<CBifrostEventAshiton>(m_gameServer)));
+	m_events.insert(std::make_pair(WORLD_EVENT_BIFROST_WRATH, std::make_shared<CBifrostEventAshiton>(m_gameServer)));
+	m_events.insert(std::make_pair(WORLD_EVENT_BIFROST_ENVY, std::make_shared<CBifrostEventAshiton>(m_gameServer)));
 	m_lastEventStartTime = std::chrono::system_clock::time_point::min();
 }
 
@@ -67,14 +69,6 @@ bool CWorldEventManager::StopEvent(uint8 eventId) {
 	return true;
 }
 
-bool CWorldEventManager::StartBifrostEvent() {
-	return StartEvent(WORLD_EVENT_BIFROST_EASY);
-}
-
-bool CWorldEventManager::StopBifrostEvent() {
-	return StopEvent(WORLD_EVENT_BIFROST_EASY);
-}
-
 uint8 CWorldEventManager::GetRandomEvent() {
 	std::uniform_int_distribution<int> randDistribution(0, m_events.size() - 1);
 	auto randomInt = randDistribution(s_randEngine);
@@ -93,4 +87,28 @@ void CWorldEventManager::RefreshEvents(CUser* pUser) {
 			eventPair.second->StartUser(pUser);
 		}
 	}
+}
+
+bool CWorldEventManager::StartBifrostEventAshiton() {
+	return StartEvent(WORLD_EVENT_BIFROST_ASHITON);
+}
+
+bool CWorldEventManager::StopBifrostEventAshiton() {
+	return StopEvent(WORLD_EVENT_BIFROST_ASHITON);
+}
+
+bool CWorldEventManager::StartBifrostEventWrath() {
+	return StartEvent(WORLD_EVENT_BIFROST_WRATH);
+}
+
+bool CWorldEventManager::StopBifrostEventWrath() {
+	return StopEvent(WORLD_EVENT_BIFROST_WRATH);
+}
+
+bool CWorldEventManager::StartBifrostEventEnvy() {
+	return StartEvent(WORLD_EVENT_BIFROST_ENVY);
+}
+
+bool CWorldEventManager::StopBifrostEventEnvy() {
+	return StopEvent(WORLD_EVENT_BIFROST_ENVY);
 }

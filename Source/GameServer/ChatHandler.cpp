@@ -947,8 +947,12 @@ COMMAND_HANDLER(CGameServerDlg::HandleOpenEventCommand) {
 	std::string eventName = vargs.front();
 	vargs.pop_front();
 
-	if (boost::iequals(eventName, "bifrost")) {
-		return g_pMain->m_pWorldEventManager->StartBifrostEvent();
+	if (boost::iequals(eventName, "bifrost_ashiton")) {
+		return g_pMain->m_pWorldEventManager->StartBifrostEventAshiton();
+	} else	if (boost::iequals(eventName, "bifrost_wrath")) {
+		return g_pMain->m_pWorldEventManager->StartBifrostEventWrath();
+	} else if (boost::iequals(eventName, "bifrost_envy")) {
+		return g_pMain->m_pWorldEventManager->StartBifrostEventEnvy();
 	}
 	return false;
 }
@@ -964,8 +968,12 @@ COMMAND_HANDLER(CGameServerDlg::HandleCloseEventCommand) {
 	std::string eventName = vargs.front();
 	vargs.pop_front();
 
-	if (boost::iequals(eventName, "bifrost")) {
-		return g_pMain->m_pWorldEventManager->StopBifrostEvent();
+	if (boost::iequals(eventName, "bifrost_ashiton")) {
+		return g_pMain->m_pWorldEventManager->StopBifrostEventAshiton();
+	} else 	if (boost::iequals(eventName, "bifrost_wrath")) {
+		return g_pMain->m_pWorldEventManager->StopBifrostEventWrath();
+	} else if (boost::iequals(eventName, "bifrost_envy")) {
+		return g_pMain->m_pWorldEventManager->StopBifrostEventEnvy();
 	}
 	return false;
 }

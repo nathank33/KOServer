@@ -20,7 +20,7 @@ public:
 
 	std::vector<SpawnMonster> m_spawnMonsters{
 		SpawnMonster{MON_ASHITON},
-		SpawnMonster{MON_PRIDE},
+		SpawnMonster{MON_EGO},
 		SpawnMonster{MON_GLUTTON}
 	};
 };

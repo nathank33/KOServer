@@ -1,7 +1,7 @@
 #pragma once
 
 const uint16 MON_ASHITON = 6651;
-const uint16 MON_PRIDE = 5851;
+const uint16 MON_EGO = 5851;
 const uint16 MON_GLUTTON = 5951;
 const uint16 MON_WRATH = 6051;
 const uint16 MON_SLOTH = 6151;

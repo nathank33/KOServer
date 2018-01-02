@@ -2,18 +2,31 @@
 #include "BifrostEvents.h"
 #include "WorldEvent.h"
 
-bool CBifrostEventEasy::Start() {
+bool CBifrostEventAshiton::Start() {
 	if (!CWorldEvent::Start()) {
 		return false;
 	}
-	m_gameServer->SpawnEventNpc(MON_GREED, true, ZONE_RONARK_LAND, 1769, 0, 1160, SPAWN_COUNT, 50, SPAWN_DURATION, SPAWN_REGEN, SPAWN_NATION);
+	std::uniform_int_distribution<int> distrib(1, 8);
+	for (int i = 0; i < 3; i++) {
+		for (auto spawnMon : m_spawnMonsters) {
+			auto orcCount = distrib(m_rand);
+			auto humanCount = distrib(m_rand);
+			auto orcPos = GetRandomOrcPosition();
+			auto humanPos = GetRandomHumanPosition();
+
+			m_gameServer->SpawnEventNpc(spawnMon.sSid, true, ZONE_RONARK_LAND, orcPos.fX, 0, orcPos.fZ, orcCount, orcPos.sRadius, spawnMon.sDuration, spawnMon.sRegenTime, spawnMon.bNation);
+			m_gameServer->SpawnEventNpc(spawnMon.sSid, true, ZONE_RONARK_LAND, humanPos.fX, 0, humanPos.fZ, humanCount, humanPos.sRadius, spawnMon.sDuration, spawnMon.sRegenTime, spawnMon.bNation);
+		}
+	}
 	return true;
 }
 
-bool CBifrostEventEasy::Stop() {
+bool CBifrostEventAshiton::Stop() {
 	if (!CWorldEvent::Stop()) {
 		return false;
 	}
-	m_gameServer->KillNpcType(MON_GREED);
+	for (auto spawnMon : m_spawnMonsters) {
+		m_gameServer->KillNpcType(spawnMon.sSid);
+	}
 	return true;
 }

@@ -2,9 +2,9 @@
 #include "WorldEvent.h"
 #include "GameServerDlg.h"
 
-#define WORLD_EVENT_BIFROST_EASY 1
-#define WORLD_EVENT_BIFROST_MEDIUM 2
-#define WORLD_EVENT_BIFROST_HARD 3
+#define WORLD_EVENT_BIFROST_ASHITON 1
+#define WORLD_EVENT_BIFROST_WRATH 2
+#define WORLD_EVENT_BIFROST_ENVY 3
 
 const std::chrono::minutes WORLD_EVENT_DELAY(45);
 const std::chrono::minutes WORLD_EVENT_DURATION(30);
@@ -16,8 +16,12 @@ public:
 	void Tick();
 	bool StartEvent(uint8 eventId);
 	bool StopEvent(uint8 eventId);
-	bool StartBifrostEvent();
-	bool StopBifrostEvent();
+	bool StartBifrostEventAshiton();
+	bool StopBifrostEventAshiton();
+	bool StartBifrostEventWrath();
+	bool StopBifrostEventWrath();
+	bool StartBifrostEventEnvy();
+	bool StopBifrostEventEnvy();
 	uint8 GetRandomEvent();
 	/* Closes quest windows that might still be on the users screen, if they logged out
 	while participating in an event. */

@@ -61,3 +61,13 @@ void CWorldEvent::Tick() {
 		}
 	}
 }
+
+SpawnPosition CWorldEvent::GetRandomOrcPosition() {
+	std::uniform_int_distribution<int> distrib(0, ORC_SPAWN_POSITIONS.size() - 1);
+	return ORC_SPAWN_POSITIONS[distrib(m_rand)];
+}
+
+SpawnPosition CWorldEvent::GetRandomHumanPosition() {
+	std::uniform_int_distribution<int> distrib(0, HUMAN_SPAWN_POSITIONS.size() - 1);
+	return HUMAN_SPAWN_POSITIONS[distrib(m_rand)];
+}
